@@ -1,0 +1,2 @@
+databasepassword=JMAggKG9Obh2UUko
+coonectionstring=mongodb+srv://bakerboonsa:<db_password>@cluster0.kuatt3d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
