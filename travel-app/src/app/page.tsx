@@ -12,9 +12,7 @@ export default function Home() {
     { name: "Culture", href: "/interests/culture", image: "/sof.jpg" },
     { name: "Relaxation", href: "/interests/relaxation", image: "/coffe.jpg" },
     { name: "Animal", href: "/interests/relaxation", image: "/harar.jpg" },
-    // { name: "Culture", href: "/interests/culture", image: "/sof.jpg" },
-    { name: "Forest", href: "/interests/relaxation", image: "/nyala.webp" },
-    { name: "Water", href: "/interests/relaxation", image: "/langanno.jpg" },
+   
   ];
 
   return (
@@ -153,6 +151,7 @@ export default function Home() {
   </div>
      </div>
 
+          {/* iconic  */}
      <div className="max-w-6xl mx-auto px-4 ">
       <h1 className="text-2xl md:text-2xl font-bold mt-20 pl-3">Iconic place you need to see</h1>
 
@@ -161,7 +160,7 @@ export default function Home() {
           <Link
             key={interest.name}
             href={interest.href}
-            className="relative w-full md:w-[45%] lg:w-[30%] h-88 rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+            className="relative w-full md:w-[45%] lg:w-[20%] h-78 rounded-xl overflow-hidden shadow hover:shadow-lg transition"
           >
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -174,6 +173,51 @@ export default function Home() {
         ))}
       </div>
     </div>
+    <div className="w-full bg-emerald-950 py-12 px-4 md:px-16 my-10 rounded-xl shadow-md">
+  <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto gap-10">
+
+    {/* Left Section with Logo and Text */}
+    <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left space-y-4">
+      
+      {/* Logo */}
+      <Image
+        src="/globe.svg"
+        alt="Logo"
+        width={80}
+        height={80}
+        className="mb-2"
+      />
+      
+      {/* Heading */}
+      <h2 className="text-3xl md:text-6xl font-bold text-white pt-2 leading-tight">Travelers Choice Awards Best of the Best</h2>
+      
+      {/* Paragraph */}
+      <p className="text-gray-300 text-base md:text-lg max-w-md">
+        Find breathtaking destinations and unique experiences tailored for you.
+      </p>
+      
+      {/* Button */}
+      <button className="bg-white text-black font-semibold px-6 py-3 rounded-md hover:bg-green-700 hover:text-white transition">
+         See the Winners
+      </button>
+    </div>
+
+    {/* Right Image */}
+    <div className="w-full md:w-1/2 flex justify-center">
+      <div className="w-full md:w-[90%] h-[300px] md:h-[500px] rounded-xl overflow-hidden shadow-lg">
+        <Image
+          src="/wanchi.jpg"
+          alt="Travel Destination"
+          width={600}
+          height={500}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 
     </div>
