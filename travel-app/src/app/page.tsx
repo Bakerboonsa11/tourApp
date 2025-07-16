@@ -4,8 +4,19 @@ import Navbar from "@/components/customComponent/navigation";
 import { Button } from "@/components/ui/button";
 import ByInterest from "@/components/customComponent/byInterest";
 import Carousel from "@/components/customComponent/corselAddis";
+import Link from "next/link";
 import Image from "next/image";
 export default function Home() {
+  const interests = [
+    { name: "Adventure", href: "/interests/adventure", image: "/wanchi.jpg" },
+    { name: "Culture", href: "/interests/culture", image: "/sof.jpg" },
+    { name: "Relaxation", href: "/interests/relaxation", image: "/coffe.jpg" },
+    { name: "Animal", href: "/interests/relaxation", image: "/harar.jpg" },
+    // { name: "Culture", href: "/interests/culture", image: "/sof.jpg" },
+    { name: "Forest", href: "/interests/relaxation", image: "/nyala.webp" },
+    { name: "Water", href: "/interests/relaxation", image: "/langanno.jpg" },
+  ];
+
   return (
     <div className="bg-white min-h-screen overflow-x-hidden">
       <Navbar />
@@ -113,7 +124,58 @@ export default function Home() {
      </div>
      <Carousel/>
      <Carousel/>
-     
+  
+
+     {/* imagerightflex */}
+     <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md mt-10 gap-8">
+  
+  {/* Left Text Section */}
+  <div className="w-full md:w-1/2 space-y-4 text-center md:text-left">
+    <h2 className="text-3xl md:text-5xl font-bold text-black">Discover Oromia</h2>
+    <p className="text-gray-700 text-base md:text-lg">
+      Find breathtaking destinations and unique experiences tailored for you.
+    </p>
+    <button className="bg-black text-white font-semibold px-6 py-3 rounded-md hover:bg-green-700 transition">
+      learn more
+    </button>
+  </div>
+
+  {/* Right Image Section */}
+  <div className="w-full md:w-1/2 flex justify-center">
+   
+     <Image
+         src="/wanchi.jpg"
+         alt="Dynamic Travel Image"
+         width={250}
+         height={400}
+     className="rounded-xl w-[300px] md:w-[450px] object-cover"
+       />
+  </div>
+     </div>
+
+     <div className="max-w-6xl mx-auto px-4 ">
+      <h1 className="text-2xl md:text-2xl font-bold mt-20 pl-3">Iconic place you need to see</h1>
+
+      <div className="flex flex-col md:flex-row flex-wrap items-center justify-center mt-6 gap-8">
+        {interests.map((interest) => (
+          <Link
+            key={interest.name}
+            href={interest.href}
+            className="relative w-full md:w-[45%] lg:w-[30%] h-88 rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${interest.image})` }}
+            ></div>
+            <div className="absolute bottom-0 left-0 bg-black/50 text-white p-3 text-lg font-bold w-full">
+              {interest.name}
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+
+
     </div>
   );
 }
