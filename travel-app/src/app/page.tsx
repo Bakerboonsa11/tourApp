@@ -32,12 +32,14 @@ export default function Home() {
       </div>
      <ByInterest />
      <Carousel/>
+
+     {/* rotateimage */}
      <div className="flex flex-wrap md:flex-nowrap items-start justify-between mt-20 p-4 md:p-6 gap-6 bg-gray-100 max-w-6xl mx-auto rounded-xl mx-4">
      
      {/* rotated image  */}
      <div className="w-full md:w-auto flex justify-center md:justify-start">
        <Image
-         src="/coffe.jpg"
+         src="/harar.jpg"
          alt="Dynamic Travel Image"
          width={250}
          height={400}
@@ -70,12 +72,13 @@ export default function Home() {
      </div>
      
      </div>
+     {/* rotateimage */}
      <div className="flex flex-wrap md:flex-nowrap items-start justify-between mt-20 p-4 md:p-6 gap-6 bg-gray-100 max-w-6xl mx-auto rounded-xl mx-4">
      
      {/* rotated image  */}
      <div className="w-full md:w-auto flex justify-center md:justify-start">
        <Image
-         src="/coffe.jpg"
+         src="/redfox.jpg"
          alt="Dynamic Travel Image"
          width={250}
          height={400}
@@ -108,6 +111,8 @@ export default function Home() {
      </div>
      
      </div>
+     <Carousel/>
+     <Carousel/>
      
     </div>
   );
