@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2017",
+    "typeRoots": ["./types", "./node_modules/@types"],
+    // "types": ["next-auth"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
