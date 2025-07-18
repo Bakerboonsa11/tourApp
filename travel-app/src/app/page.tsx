@@ -7,6 +7,10 @@ import Carousel from "@/components/customComponent/corselAddis";
 import Link from "next/link";
 import Image from "next/image";
 export default function Home() {
+
+
+
+  
   const interests = [
     { name: "Adventure", href: "/interests/adventure", image: "/wanchi.jpg" },
     { name: "Culture", href: "/interests/culture", image: "/sof.jpg" },
@@ -14,7 +18,7 @@ export default function Home() {
     { name: "Animal", href: "/interests/relaxation", image: "/harar.jpg" },
    
   ];
-
+  
   return (
     <div className="bg-white min-h-screen overflow-x-hidden">
       <Navbar />
