@@ -1,0 +1,132 @@
+import mongoose, { Schema, Document } from 'mongoose';
+
+// TypeScript Interface
+export interface ITour extends Document {
+  name: string;
+  slug: string;
+  description: string;
+  region: string;
+  typeOfTour: string[];
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: 'easy' | 'medium' | 'difficult';
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[];
+  coverImage: string;
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+    address: string;
+    description: string;
+  };
+  createdAt: Date;
+  startDates: Date[];
+  guides: mongoose.Types.ObjectId[];
+}
+
+const tourSchema = new Schema<ITour>({
+  name: {
+    type: String,
+    required: [true, 'A tour must have a name'],
+    unique: true,
+    trim: true,
+    maxlength: [40, 'A tour name must be less than or equal to 40 characters'],
+    minlength: [5, 'A tour name must be more than or equal to 5 characters'],
+  },
+  slug: {
+    type: String,
+    unique: true,
+    lowercase: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+    required: [true, 'A tour must have a description'],
+  },
+
+  region: {
+    type: String,
+    required: [true, 'A tour must have a region'],
+    trim: true,
+  },
+
+  typeOfTour: {
+    type: [String],
+    required: [true, 'Please specify at least one type of tour'],
+    enum: ['adventure', 'water', 'forest', 'culture', 'wildlife', 'city', 'mountain', 'religious'],
+  },
+
+  price: {
+    type: Number,
+    required: [true, 'A tour must have a price'],
+  },
+  duration: {
+    type: Number,
+    required: [true, 'A tour must have a duration'],
+  },
+  maxGroupSize: {
+    type: Number,
+    required: [true, 'A tour must have a maximum group size'],
+  },
+  difficulty: {
+    type: String,
+    required: [true, 'A tour must have a difficulty'],
+    enum: ['easy', 'medium', 'difficult'],
+  },
+  ratingsAverage: {
+    type: Number,
+    default: 4.5,
+    min: [1, 'Rating must be above 1.0'],
+    max: [5, 'Rating must be below 5.0'],
+    set: (val: number) => Math.round(val * 10) / 10,
+  },
+  ratingsQuantity: {
+    type: Number,
+    default: 0,
+  },
+  images: {
+    type: [String],
+    default: [],
+  },
+  coverImage: {
+    type: String,
+    required: [true, 'A tour must have a cover image'],
+  },
+  location: {
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point'],
+    },
+    coordinates: {
+      type: [Number],
+      required: [true, 'Location coordinates required'],
+    },
+    address: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+  },
+  startDates: [Date],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  guides: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+});
+
+// Indexes
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+tourSchema.index({ location: '2dsphere' });
+
+const TourModel = mongoose.models.Tour || mongoose.model<ITour>('Tour', tourSchema);
+
+export default TourModel;

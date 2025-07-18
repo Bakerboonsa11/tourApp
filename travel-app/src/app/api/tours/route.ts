@@ -1,21 +1,14 @@
-import { connectDB } from "./../../../lib/db";
-import mongoose from "mongoose";
+import { NextRequest } from 'next/server';
+import {connectDB }from './../../../lib/db';
+import TourModel from '@/model/tours';
+import { createOne, getAll,createMany } from '../../../lib/factoryfun';
 
-const tourSchema = new mongoose.Schema({
-  name: String,
-  price: Number,
-});
-const Tour = mongoose.models.Tour || mongoose.model("Tour", tourSchema);
-
-export async function GET() {
+export const GET = async (req: NextRequest) => {
   await connectDB();
-  const tours = await Tour.find();
-  return Response.json({ tours });
-}
+  return getAll(TourModel)(req);
+};
 
-export async function POST(request: Request) {
+export const POST = async (req: NextRequest) => {
   await connectDB();
-  const data = await request.json();
-  const newTour = await Tour.create(data);
-  return Response.json(newTour);
-}
+  return createMany(TourModel)(req);
+};
