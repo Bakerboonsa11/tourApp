@@ -101,7 +101,7 @@ export const getAll = <T extends Document>(Model: Model<T>) =>
     try {
       const url = new URL(req.url);
       const queryParams = Object.fromEntries(url.searchParams.entries());
-
+      console.log("getone is alerted")
       const features = new AppFeatures(Model.find(), queryParams)
         .filter()
         .sort()
@@ -109,7 +109,7 @@ export const getAll = <T extends Document>(Model: Model<T>) =>
         // .pagination(); Uncomment if pagination needed
 
       const instanceFiltered = await features.databaseQuery;
-
+      console.log("Filtered Instances:", instanceFiltered);
       return NextResponse.json({
         status: "success",
         length: instanceFiltered.length,
