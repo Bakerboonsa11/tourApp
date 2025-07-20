@@ -1,10 +1,9 @@
-// app/api/initiate-payment/route.ts (Next.js App Router)
-
+// app/api/initiate-payment/route.ts
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const { amount, email, first_name, last_name, phone_number, tx_ref, return_url } = await request.json();
-  console.log("Payment request data:", { amount, email, first_name, last_name, phone_number, tx_ref, return_url });
+  const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId, } = await request.json();
+  console.log("Tour ID and User ID from request body:", tourId);
 
   const chapaRes = await fetch('https://api.chapa.co/v1/transaction/initialize', {
     method: 'POST',
@@ -21,14 +20,24 @@ export async function POST(request: Request) {
       phone_number,
       tx_ref,
       return_url,
+      metadata: {
+        tourId,
+        // optional: userId if needed
+      },
+      customization: {
+        title: "Oromia Tours",
+        description: "Secure booking through Chapa",
+        logo: "https://yourdomain.com/logo.png"
+      }
     }),
   });
+  
+  
 
   const chapaData = await chapaRes.json();
-  console.log("Chapa response data:", chapaData);
 
   if (chapaData.status !== 'success') {
-    return NextResponse.json({ error: 'Failed to initialize payment' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to initialize payment', details: chapaData }, { status: 500 });
   }
 
   return NextResponse.json({ checkout_url: chapaData.data.checkout_url });

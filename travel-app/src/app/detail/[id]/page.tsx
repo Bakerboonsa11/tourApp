@@ -46,6 +46,7 @@ export default function TourDetailPage() {
   };
   const params = useParams();
   const id = params?.id;
+  console.log("Tour ID when it is in the page:", id);
   const [currentour, setCurrentTour] = useState<ITour[]>([]);
     // const [filteredTours, setFilteredTours] = useState<ITour[]>([]);
     // const [searchQuery, setSearchQuery] = useState('');
@@ -56,18 +57,22 @@ export default function TourDetailPage() {
     const handlePayment = async () => {
       setPaymentLoading(true);
   
-      const tx_ref = `tx-${Date.now()}`;
+      // const tx_ref = `tx-${Date.now()}`;
+      const tx_ref = `tx-${id}-${Date.now()}`;
+
       const res = await fetch('/api/initiate-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          tourId: id,
           amount: 200,
           email: 'example@gmail.com',
           first_name: 'John',
           last_name: 'Doe',
           phone_number: '0912345678',
           tx_ref,
-          return_url: 'http://localhost:3000/payment-success',
+          return_url: `http://localhost:3000/payment-success?tx_ref=${tx_ref}`,
+
         }),
       });
   

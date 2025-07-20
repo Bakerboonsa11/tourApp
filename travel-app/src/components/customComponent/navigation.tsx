@@ -16,7 +16,7 @@ export default function Navbar() {
         
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <Image src="/logo.png" alt="logo" width={40} height={40} className="rounded-full" />
+          <Image src="/visitoro3.jpg" alt="logo" width={100} height={100} className="rounded-full" />
           <Link href="/" className="text-2xl font-bold text-black-600 no-underline">
             Visit Oromia
           </Link>

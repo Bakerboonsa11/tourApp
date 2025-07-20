@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
 interface ITour {
+  _id: string;
   name: string;
   slug: string;
   description: string;
@@ -141,45 +142,6 @@ export default function ToursPage() {
             </CardFooter>
           </Card>
         ))}
-      </section>
-
-      {/* Testimonials */}
-      <section className="bg-green-50 p-6 rounded-xl space-y-6">
-        <h2 className="text-3xl font-bold text-center">What Travelers Say 💬</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-white p-4 rounded-xl shadow">
-            <p>"Absolutely the best tour I’ve had. The guides were friendly, and I got to experience real Oromia."</p>
-            <p className="text-right font-semibold mt-2">— Lensa D.</p>
-          </div>
-          <div className="bg-white p-4 rounded-xl shadow">
-            <p>"Everything was organized perfectly. Highly recommend for solo travelers."</p>
-            <p className="text-right font-semibold mt-2">— Samuel A.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-bold text-center">Frequently Asked Questions ❓</h2>
-        <div className="space-y-3">
-          <div className="bg-muted p-4 rounded-xl">
-            <h3 className="font-semibold">How do I book a tour?</h3>
-            <p>Click on View Tour and proceed to booking, or contact us via the booking page.</p>
-          </div>
-          <div className="bg-muted p-4 rounded-xl">
-            <h3 className="font-semibold">Are tours customizable?</h3>
-            <p>Yes! We can tailor tours to your preferences — cultural, adventure, or relaxation.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="bg-black rounded-xl p-8 text-center text-white space-y-4 shadow-lg">
-        <h2 className="text-3xl font-bold">Don’t Miss Out!</h2>
-        <p>Join hundreds of travelers exploring Oromia’s hidden beauty.</p>
-        <Button asChild className="bg-white text-black font-bold">
-          <Link href="/bookings">Book Your Tour Today</Link>
-        </Button>
       </section>
 
       {loading && <p className="text-center text-lg">Loading tours...</p>}

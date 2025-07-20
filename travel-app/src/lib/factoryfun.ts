@@ -69,10 +69,13 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
   };
 
 // GET ONE
+
+
 export const getOne = <T extends Document>(Model: Model<T>) =>
-  async (_req: NextRequest, params: { id: string }) => {
-    const id = params?.id;
-    console.log("id is:", id);
+  async (_req: NextRequest, context: { params: { id: string } }) => {
+    const { id } = context.params;  // no need to await here because you await context in route
+    console.log('id is:', id);
+
     if (!id) {
       return NextResponse.json({ message: 'No ID provided' }, { status: 400 });
     }
@@ -95,6 +98,9 @@ export const getOne = <T extends Document>(Model: Model<T>) =>
       return NextResponse.json({ message: errorMessage }, { status: 500 });
     }
   };
+
+
+
 
 // GET ALL
 export const getAll = <T extends Document>(Model: Model<T>) =>
