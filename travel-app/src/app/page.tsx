@@ -21,7 +21,7 @@ export default function Home() {
   
   return (
     <div className="bg-white min-h-screen overflow-x-hidden">
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* Heading */}
       <h1 className="text-4xl md:text-6xl font-bold text-center mt-10">Where to?</h1>

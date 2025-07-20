@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SessionWrapper } from "./../components/customComponent/session-provider"; // new client component
+import { SessionWrapper } from "./../components/customComponent/session-provider";
+import Navbar from "@/components/customComponent/navigation";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <SessionWrapper>
+          <Navbar /> {/* ✅ Corrected here */}
           {children}
         </SessionWrapper>
       </body>
