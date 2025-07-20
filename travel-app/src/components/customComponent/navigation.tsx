@@ -24,7 +24,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6 items-center">
-          <Link href="/tours" className="hover:text-green-700 no-underline text-black">Tours</Link>
+          <Link href="/tours/All" className="hover:text-green-700 no-underline text-black">Tours</Link>
           <Link href="/bookings" className="hover:text-green-700 no-underline text-black">Bookings</Link>
           <Link href="/dashboard" className="hover:text-green-700 no-underline text-black">Dashboard</Link>
 

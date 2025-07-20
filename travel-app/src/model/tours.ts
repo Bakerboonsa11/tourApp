@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 // TypeScript Interface
 export interface ITour extends Document {
+    // _id: mongoose.Types.ObjectId;
   name: string;
   slug: string;
   description: string;

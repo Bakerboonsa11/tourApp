@@ -72,6 +72,7 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
 export const getOne = <T extends Document>(Model: Model<T>) =>
   async (_req: NextRequest, params: { id: string }) => {
     const id = params?.id;
+    console.log("id is:", id);
     if (!id) {
       return NextResponse.json({ message: 'No ID provided' }, { status: 400 });
     }

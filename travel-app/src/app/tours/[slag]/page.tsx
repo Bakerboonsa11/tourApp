@@ -136,7 +136,7 @@ export default function ToursPage() {
             </CardContent>
             <CardFooter className="p-4">
               <Button asChild className="w-full">
-                <Link href={`/tours/${tour.slug}`}>View Tour</Link>
+                <Link href={`/detail/${tour._id}`}>View Tour</Link>
               </Button>
             </CardFooter>
           </Card>
