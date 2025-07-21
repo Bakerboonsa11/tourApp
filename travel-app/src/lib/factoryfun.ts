@@ -9,7 +9,9 @@ export const createOne = <T extends Document>(Model: Model<T>) =>
   async (req: NextRequest) => {
     try {
       const body = await req.json();
+      console.log("Request body:", body);
       const createdInstance = await Model.create(body);
+      console.log("Created Instance:", createdInstance);
       return NextResponse.json({
         status: "success",
         message: "Data created successfully",
@@ -50,7 +52,9 @@ export const deleteOne = <T extends Document>(Model: Model<T>) =>
 export const updateOne = <T extends Document>(Model: Model<T>) =>
   async (req: NextRequest, params: { id: string }) => {
     try {
+      console.log("Update request received");
       const body = await req.json();
+      console.log("Request body:", body);
       const { id } = params;
       const updatedInstance = await Model.findByIdAndUpdate(id, body, {
         new: true,
@@ -133,6 +137,7 @@ export const createMany = <T extends Document>(Model: Model<T>) =>
   async (req: NextRequest) => {
     try {
       const body = await req.json();
+      console.log("Request body:", body);
 
       if (!Array.isArray(body) || body.length === 0) {
         return NextResponse.json({ status: "fail", message: "Request body must be a non-empty array of documents" }, { status: 400 });

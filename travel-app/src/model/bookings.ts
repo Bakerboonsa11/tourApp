@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types, Query ,HydratedDocument} from 'mongoose';
+import mongoose, { Schema, Document, Types, Query, HydratedDocument } from 'mongoose';
 
 export interface IBooking extends Document {
   tour: Types.ObjectId;
@@ -10,7 +10,7 @@ export interface IBooking extends Document {
   transaction: {
     tx_ref: string;
     chapa_id?: string;
-    payment_method?: string;
+    payment_method?: 'chapa' | 'paypal' | 'stripe';
     payment_status: 'pending' | 'paid' | 'failed';
     payment_date?: Date;
   };
@@ -24,10 +24,10 @@ const bookingSchema = new Schema<IBooking>(
       required: [true, 'Booking must belong to a tour'],
     },
     email: {
-        type: String,
-        required: [true, 'User must have an email'],
-        unique: true,
-      },
+      type: String,
+      required: [true, 'User must have an email'],
+      // Removed unique: true to allow multiple bookings by same email
+    },
     price: {
       type: Number,
       required: [true, 'Booking must have a price'],
@@ -60,27 +60,44 @@ const bookingSchema = new Schema<IBooking>(
       },
       payment_status: {
         type: String,
-        enum: ['pending', 'paid', 'failed'], // ✅ define valid statuses
+        enum: ['pending', 'paid', 'failed'],
         default: 'pending',
       },
       payment_date: {
         type: Date,
       },
-    }
-    
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Auto-populate tour and user info when fetching bookings
-bookingSchema.pre(/^find/, function (next) {
-    const query = this as Query<HydratedDocument<IBooking>[], HydratedDocument<IBooking>>;
-    query.populate('tour');
-    next();
-  });
+// Compound unique index to prevent duplicate booking for same tour and email
+bookingSchema.index({ tour: 1, email: 1 }, { unique: true });
 
-const BookingModel = mongoose.models.Booking || mongoose.model<IBooking>('Booking', bookingSchema);
+// Auto-populate tour info on any find query
+bookingSchema.pre(/^find/, function (
+  this: Query<HydratedDocument<IBooking>[], HydratedDocument<IBooking>>,
+  next
+) {
+  this.populate('tour');
+  next();
+});
+
+// Automatically set payment_date when payment_status changes to 'paid'
+bookingSchema.pre('save', function (next) {
+  if (
+    this.isModified('transaction.payment_status') &&
+    this.transaction.payment_status === 'paid' &&
+    !this.transaction.payment_date
+  ) {
+    this.transaction.payment_date = new Date();
+  }
+  next();
+});
+
+const BookingModel =
+  mongoose.models.Booking || mongoose.model<IBooking>('Booking', bookingSchema);
 
 export default BookingModel;

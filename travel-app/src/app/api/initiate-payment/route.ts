@@ -27,7 +27,9 @@ export async function POST(request: Request) {
       customization: {
         title: "Oromia Tours",
         description: "Secure booking through Chapa",
-        logo: "https://yourdomain.com/logo.png"
+        // logo: "https://yourdomain.com/logo.png",
+        logo: "http://localhost:3000/visitoro2.png", // Use your actual logo URL
+
       }
     }),
   });

@@ -71,9 +71,9 @@ export default function Navbar() {
               {session?.user ? (
                 <>
                   <div className="flex items-center space-x-3">
-                  
+                 
                     <Image
-                     src={`/${session.user.image}` || '/globe.svg'}
+                     src={`/${session.user.image}` || '/profile.png'}
                       alt="profile"
                       width={36}
                       height={36}

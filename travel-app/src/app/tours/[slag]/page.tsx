@@ -8,6 +8,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription }
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
+import { useSession } from 'next-auth/react';
+
 interface ITour {
   _id: string;
   name: string;
@@ -17,7 +19,13 @@ interface ITour {
   region: string;
   typeOfTour: string[];
   images: { coverImage: string }[];
+  startDates: string[]; // add this
+  endDate?: string;
+  likes: string[]; // Instead of { userId: string }[]
+
 }
+
+
 
 export default function ToursPage() {
   const [allTours, setAllTours] = useState<ITour[]>([]);
@@ -25,17 +33,21 @@ export default function ToursPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [loading, setLoading] = useState(false);
-  const [likes, setLikes] = useState<Record<string, number>>({});
+  const [likes, setLikes] = useState<Record<string, { userId: string }[]>>({});
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [currentCommentTour, setCurrentCommentTour] = useState<string | null>(null);
   const [comment, setComment] = useState('');
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchTours = async () => {
       setLoading(true);
       try {
         const res = await axios.get('/api/tours');
-        const fetchedTours: ITour[] = res.data.instanceFiltered || [];
+        const fetchedTours = res.data.instanceFiltered.map((tour: any) => ({
+          ...tour,
+          likes: tour.likes.map((like: string) => like.toString()), // convert ObjectIds to strings
+        }));
         setAllTours(fetchedTours);
         setFilteredTours(fetchedTours);
       } catch (err) {
@@ -46,6 +58,7 @@ export default function ToursPage() {
     };
     fetchTours();
   }, []);
+  
 
   useEffect(() => {
     let filtered = [...allTours];
@@ -62,9 +75,33 @@ export default function ToursPage() {
     new Set(allTours.flatMap(tour => tour.typeOfTour.map(type => type.toLowerCase())))
   );
 
-  const handleLike = (id: string) => {
-    setLikes(prev => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+
+  
+  const handleLike = async (tourId: string, currentLikes: string[]) => {
+    try {
+      const userEmail = session?.user?.email;
+      if (!userEmail) return console.error('User not logged in');
+  
+      const userRes = await axios.get(`/api/user/${userEmail}`);
+      const userId = userRes.data.data._id;
+  
+      const alreadyLiked = currentLikes.includes(userId);
+  
+      const updatedLikes = alreadyLiked
+        ? currentLikes.filter(id => id !== userId)
+        : [...currentLikes, userId];
+  
+      await axios.patch(`/api/tours/${tourId}`, { likes: updatedLikes });
+  
+      setLikes(prev => ({ ...prev, [tourId]: updatedLikes }));
+    } catch (error) {
+      console.error('Failed to like tour:', error);
+    }
   };
+  
+  
+  
+  
 
   const openCommentModal = (id: string) => {
     setCurrentCommentTour(id);
@@ -76,6 +113,43 @@ export default function ToursPage() {
     console.log(`Comment for Tour ID ${currentCommentTour}: ${comment}`);
     setShowCommentModal(false);
   };
+
+  const getTourStatus = (startDates: string[], endDate?: string) => {
+    if (!endDate || !startDates || startDates.length === 0) 
+      return { label: 'No Date', color: 'bg-gray-500' };
+    
+    const today = new Date();
+    const end = new Date(endDate);
+    const starts = startDates.map(dateStr => new Date(dateStr)).sort((a, b) => a.getTime() - b.getTime());
+  
+    // If tour is finished
+    if (today > end) {
+      return { label: 'Finished', color: 'bg-red-500' };
+    }
+  
+    // If today is before the earliest start date
+    if (today < starts[0]) {
+      const diffDays = Math.ceil((starts[0].getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      return { label: `Starts in ${diffDays} day${diffDays > 1 ? 's' : ''}`, color: 'bg-green-500' };
+    }
+  
+    // If today is between any start date and end date => Ongoing
+    for (const start of starts) {
+      if (today >= start && today <= end) {
+        const diffDaysLeft = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDaysLeft === 0) {
+          return { label: 'Last Day', color: 'bg-yellow-500' };
+        }
+        return { label: `${diffDaysLeft} day${diffDaysLeft > 1 ? 's' : ''} left`, color:'bg-red-100' };
+      }
+    }
+  
+    // If today is after all start dates but before end date (unlikely, but fallback)
+    const diffDaysLeft = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    return { label: `${diffDaysLeft} day${diffDaysLeft > 1 ? 's' : ''} left`, color: 'bg-green-500' };
+  };
+  
+  
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-16">
@@ -135,37 +209,55 @@ export default function ToursPage() {
 
       {/* Tour Cards */}
       <section className="grid md:grid-cols-3 gap-6">
-        {filteredTours.map((tour) => (
-          <Card key={tour.slug} className="hover:shadow-xl transition">
-            <CardHeader className="p-0">
-              <Image
-                src={tour.images[0]?.coverImage || '/wanchi.jpg'}
-                alt={tour.name}
-                width={500}
-                height={300}
-                className="rounded-t-xl object-cover h-56 w-full"
-              />
-            </CardHeader>
-            <CardContent className="p-4 space-y-2">
-              <CardTitle>{tour.name}</CardTitle>
-              <CardDescription>{tour.description.slice(0, 80)}...</CardDescription>
-              <Badge variant="outline">${tour.price}</Badge>
-              <div className="flex justify-between items-center pt-2 gap-2">
-                <Button variant="secondary" onClick={() => handleLike(tour._id)}>
-                  ❤️ {likes[tour._id] || 0} Likes
-                </Button>
-                <Button variant="outline" onClick={() => openCommentModal(tour._id)}>
-                  Leave a Comment
-                </Button>
-              </div>
-            </CardContent>
-            <CardFooter className="p-4">
-              <Button asChild className="w-full">
-                <Link href={`/detail/${tour._id}`}>View Tour</Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+      {filteredTours.map((tour) => {
+        // alert(tour.endDate);
+        console.log("tour is ", tour);
+        console.log( "end date is ",tour.endDate);
+        const { label, color } = getTourStatus(tour.startDates, tour.endDate);
+
+  
+  return (
+    <Card key={tour.slug} className="hover:shadow-xl transition">
+      <CardHeader className="p-0">
+        <Image
+          src={tour.images[0]?.coverImage || '/wanchi.jpg'}
+          alt={tour.name}
+          width={500}
+          height={300}
+          className="rounded-t-xl object-cover h-56 w-full"
+        />
+      </CardHeader>
+      
+      <CardContent className="p-4 space-y-2">
+        <CardTitle>{tour.name}</CardTitle>
+        <CardDescription>{tour.description.slice(0, 80)}...</CardDescription>
+
+        {/* ✅ Now color and label are accessible */}
+        <Badge className={`${color} text-white font-bold w-fit`}>
+          {label}
+        </Badge>
+
+        <Badge variant="outline">${tour.price}</Badge>
+        <div className="flex justify-between items-center pt-2 gap-2">
+        <Button variant="secondary" onClick={() => handleLike(tour._id, tour.likes)}>
+  ❤️❤️ {likes[tour._id]?.length ?? tour.likes.length} Likes
+
+</Button>
+
+          <Button variant="outline" onClick={() => openCommentModal(tour._id)}>
+            Leave a Comment
+          </Button>
+        </div>
+      </CardContent>
+      <CardFooter className="p-4">
+        <Button asChild className="w-full">
+          <Link href={`/detail/${tour._id}`}>View Tour</Link>
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+})}
+
       </section>
 
       {loading && <p className="text-center text-lg">Loading tours...</p>}

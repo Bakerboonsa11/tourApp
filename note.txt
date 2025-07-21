@@ -1,2 +1,4 @@
-databasepassword=JMAggKG9Obh2UUko
-coonectionstring=mongodb+srv://bakerboonsa:<db_password>@cluster0.kuatt3d.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+FUTURES
+- ADD LIKES AND COMMENT PROPERTIES IN THE TOURE MODEL
+- IN FRONT END BASED ON THE DATE OF TOUR AND THE  SOMEDAYS LEFT ON TOURS AND TOUR FINESHED STATUS BY COMPARING WITH THE CURRENT DATE
+- ADD SHADCN DARK AND WHITE MODEL

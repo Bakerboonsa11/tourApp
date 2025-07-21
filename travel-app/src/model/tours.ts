@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 // TypeScript Interface
 export interface ITour extends Document {
-    // _id: mongoose.Types.ObjectId;
   name: string;
   slug: string;
   description: string;
@@ -22,11 +21,29 @@ export interface ITour extends Document {
     address: string;
     description: string;
   };
-  createdAt: Date;
   startDates: Date[];
+  endDate: Date;
+  likes: mongoose.Types.ObjectId[]; // ✅ updated here
+  comments: {
+    message: string;
+    userId: mongoose.Types.ObjectId;
+    userImage: string;
+  }[];
+  createdAt: Date;
   guides: mongoose.Types.ObjectId[];
 }
 
+// ✅ Comment schema
+const commentSchema = new Schema(
+  {
+    message: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userImage: { type: String },
+  },
+  { _id: false }
+);
+
+// ✅ Tour schema
 const tourSchema = new Schema<ITour>({
   name: {
     type: String,
@@ -46,19 +63,16 @@ const tourSchema = new Schema<ITour>({
     trim: true,
     required: [true, 'A tour must have a description'],
   },
-
   region: {
     type: String,
     required: [true, 'A tour must have a region'],
     trim: true,
   },
-
   typeOfTour: {
     type: [String],
     required: [true, 'Please specify at least one type of tour'],
     enum: ['adventure', 'water', 'forest', 'culture', 'wildlife', 'city', 'mountain', 'religious'],
   },
-
   price: {
     type: Number,
     required: [true, 'A tour must have a price'],
@@ -105,29 +119,42 @@ const tourSchema = new Schema<ITour>({
       type: [Number],
       required: [true, 'Location coordinates required'],
     },
-    address: {
-      type: String,
-    },
-    description: {
-      type: String,
-    },
+    address: String,
+    description: String,
   },
   startDates: [Date],
+  endDate: {
+    type: Date,
+    required: [true, 'A tour must have an end date'],
+  },
+
+  // ✅ Updated likes
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+
+  comments: [commentSchema],
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  guides: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  guides: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
-// Indexes
+// ✅ Indexes
 tourSchema.index({ price: 1, ratingsAverage: -1 });
-tourSchema.index({ slug: 1 });
+// tourSchema.index({ slug: 1 });
 tourSchema.index({ location: '2dsphere' });
 
+// ✅ Final model
 const TourModel = mongoose.models.Tour || mongoose.model<ITour>('Tour', tourSchema);
 
 export default TourModel;
