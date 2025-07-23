@@ -1,9 +1,18 @@
 // app/api/initiate-payment/route.ts
 import { NextResponse } from 'next/server';
-
+import BookingModel from '@/model/bookings';
+import { connectDB } from '@/lib/db';
+import { signOut, useSession } from "next-auth/react";
 export async function POST(request: Request) {
-  const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId, } = await request.json();
+  const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId,userEmail } = await request.json();
   console.log("Tour ID and User ID from request body:", tourId);
+ 
+  await connectDB();
+  const existing = await BookingModel.findOne({ tour: tourId, email: userEmail });
+if (existing) {
+  return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
+}
+   
 
   const chapaRes = await fetch('https://api.chapa.co/v1/transaction/initialize', {
     method: 'POST',
@@ -14,7 +23,7 @@ export async function POST(request: Request) {
     body: JSON.stringify({
       amount,
       currency: 'ETB',
-      email,
+      userEmail,
       first_name,
       last_name,
       phone_number,

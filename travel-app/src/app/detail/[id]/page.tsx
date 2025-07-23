@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { useSession } from 'next-auth/react';
 const Map = dynamic(() => import('../../../components/customComponent/Map'), { ssr: false });
 // 
 
@@ -44,9 +45,13 @@ export default function TourDetailPage() {
     ratingsAverage: 4.8,
     ratingsQuantity: 122,
   };
+    const { data: session } = useSession();
+    console.log("Session Data: user", session?.user);
+    
   const params = useParams();
   const id = params?.id;
   console.log("Tour ID when it is in the page:", id);
+  console.log('session usser', session?.user);
   const [currentour, setCurrentTour] = useState<ITour[]>([]);
     // const [filteredTours, setFilteredTours] = useState<ITour[]>([]);
     // const [searchQuery, setSearchQuery] = useState('');
@@ -60,14 +65,17 @@ export default function TourDetailPage() {
       // const tx_ref = `tx-${Date.now()}`;
       const tx_ref = `tx-${id}-${Date.now()}`;
 
+
       const res = await fetch('/api/initiate-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+     
           tourId: id,
           amount: 200,
-          email: 'example@gmail.com',
-          first_name: 'John',
+          userEmail: session?.user?.email || '',
+          first_name: session?.user?.name || 'John',
+          
           last_name: 'Doe',
           phone_number: '0912345678',
           tx_ref,

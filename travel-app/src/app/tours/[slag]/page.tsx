@@ -7,6 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
+
+import { usePathname } from 'next/navigation';
+
+
+
 
 import { useSession } from 'next-auth/react';
 
@@ -28,10 +35,19 @@ interface ITour {
 
 
 export default function ToursPage() {
+  const pathname = usePathname();
+  console.log("PATHNAME:", pathname);
+  
+  const parts = pathname.split('/');
+  const initialType = parts.length > 2 ? parts[2] : 'All';
+  console.log("Initial Type from URL:", initialType);
+// const initialType = searchParams.get('slag') || 'All';
+console.log("Initial Type from URL:", initialType);
+const [selectedType, setSelectedType] = useState(initialType);
   const [allTours, setAllTours] = useState<ITour[]>([]);
   const [filteredTours, setFilteredTours] = useState<ITour[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState('All');
+  // const [selectedType, setSelectedType] = useState('All');
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState<Record<string, { userId: string }[]>>({});
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -44,7 +60,7 @@ export default function ToursPage() {
       setLoading(true);
       try {
         const res = await axios.get('/api/tours');
-        const fetchedTours = res.data.instanceFiltered.map((tour: any) => ({
+        const fetchedTours = res.data.instanceFiltered.map((tour:ITour) => ({
           ...tour,
           likes: tour.likes.map((like: string) => like.toString()), // convert ObjectIds to strings
         }));

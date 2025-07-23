@@ -8,15 +8,22 @@ import { Menu } from "lucide-react";
 import Image from "next/image";
 
 export default function Navbar() {
+  // const { data: session } = useSession();
+ 
   const { data: session } = useSession();
-  console.log("Session Data:", session?.user);
+  console.log("Session Data: in the navigation ", session?.user);
+
+
+
+console.log("Session:", session);
+
   return (
-    <header className="sticky top-0 z-50 bg-white-50 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white-50 ">
       <div className="container mx-auto max-w-5xl flex justify-between items-center p-4">
         
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <Image src="/visitoro3.jpg" alt="logo" width={100} height={100} className="rounded-full" />
+          <Image  src="/visitoro3.jpg" alt="logo" width={100} height={100} className="rounded-full" />
           <Link href="/" className="text-2xl font-bold text-black-600 no-underline">
             Visit Oromia
           </Link>
@@ -26,15 +33,15 @@ export default function Navbar() {
         <nav className="hidden md:flex space-x-6 items-center">
           <Link href="/tours/All" className="hover:text-green-700 no-underline text-black">Tours</Link>
           <Link href="/bookings" className="hover:text-green-700 no-underline text-black">Bookings</Link>
-          <Link href="/dashboard" className="hover:text-green-700 no-underline text-black">Dashboard</Link>
+          <Link href="/dashboard/admin" className="hover:text-green-700 no-underline text-black">Dashboard</Link>
 
           {session?.user ? (
             <div className="flex items-center space-x-4">
               <Image
-                src={session.user.image || '/globe.svg'}
+                src={session.user.image || '/pro.avif'}
                 alt="profile"
-                width={36}
-                height={36}
+                width={46}
+                height={46}
                 className="rounded-full"
               />
               <Button 
@@ -64,14 +71,15 @@ export default function Navbar() {
           <SheetContent side="right">
             <div className="flex flex-col space-y-4 mt-8">
               <Link href="/" className="text-lg no-underline text-black">Home</Link>
-              <Link href="/tours" className="text-lg no-underline text-black">Tours</Link>
+              <Link href="/tours/All" className="text-lg no-underline text-black">Tours</Link>
               <Link href="/bookings" className="text-lg no-underline text-black">Bookings</Link>
               <Link href="/dashboard" className="text-lg no-underline text-black">Dashboard</Link>
 
               {session?.user ? (
                 <>
                   <div className="flex items-center space-x-3">
-                 
+                  
+                  
                     <Image
                      src={`/${session.user.image}` || '/profile.png'}
                       alt="profile"
