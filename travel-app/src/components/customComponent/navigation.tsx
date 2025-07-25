@@ -6,12 +6,32 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function Navbar() {
   // const { data: session } = useSession();
- 
-  const { data: session } = useSession();
-  console.log("Session Data: in the navigation ", session?.user);
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      console.log("Session loaded:", session);
+    }
+  }, [status, session]);
+
+  useEffect(() => {
+    console.log("User Role:", session?.user?.role);
+  }, [session]);
+  
+
+
+  if (status === "loading") {
+    return null; // or show a loading spinner
+  }
+  
+
+
+
+
 
 
 
@@ -33,7 +53,14 @@ console.log("Session:", session);
         <nav className="hidden md:flex space-x-6 items-center">
           <Link href="/tours/All" className="hover:text-green-700 no-underline text-black">Tours</Link>
           <Link href="/bookings" className="hover:text-green-700 no-underline text-black">Bookings</Link>
-          <Link href="/dashboard/admin" className="hover:text-green-700 no-underline text-black">Dashboard</Link>
+{session?.user && (
+  <Link
+    href={`/dashboard/${session.user.role}`}
+    className="hover:text-green-700 no-underline text-black"
+  >
+    Dashboard
+  </Link>
+)}
 
           {session?.user ? (
             <div className="flex items-center space-x-4">
@@ -73,7 +100,7 @@ console.log("Session:", session);
               <Link href="/" className="text-lg no-underline text-black">Home</Link>
               <Link href="/tours/All" className="text-lg no-underline text-black">Tours</Link>
               <Link href="/bookings" className="text-lg no-underline text-black">Bookings</Link>
-              <Link href="/dashboard/user" className="text-lg no-underline text-black">Dashboard</Link>
+              <Link href={`/dashboard/${session?.user.role}`} className="text-lg no-underline text-black">Dashboard</Link>
 
               {session?.user ? (
                 <>

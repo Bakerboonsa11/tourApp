@@ -11,11 +11,62 @@ import mongoose from 'mongoose';
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { email: string } }
 ) {
   await connectDB();
-  return deleteOne(UserModel)(req, context.params);
+  const { email } = context.params;
+  console.log('Email in DELETE:', email);
+
+  try{
+    const deletedUser = await UserModel.findOneAndDelete({ email });
+    if (!deletedUser) {
+      return NextResponse.json(
+        { status: "fail", message: "No user found with this email" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({ status: "success", deletedUser: deletedUser }, { status: 200 });
+  }
+  catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+  // return deleteOne(UserModel)(req, context.params);
 }
+// /app/api/user/[email]/route.ts
+
+
+export async function PATCH(req: NextRequest, context: { params: { email: string } }) {
+  await connectDB();
+
+  const { email } = context.params;
+  const body = await req.json();
+
+  try {
+    console.log("Update request for email:", email);
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { email },
+      body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedUser) {
+      return NextResponse.json(
+        { status: "fail", message: "No user found with this email" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ status: "success", updatedTo: updatedUser });
+  }catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}
+
 // export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
 //   return updateOne(userModel)(req, params);
 // };

@@ -54,15 +54,20 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
     try {
       console.log("Update request received");
       const body = await req.json();
-      console.log("Request body:", body);
       const { id } = params;
-      const updatedInstance = await Model.findByIdAndUpdate(id, body, {
-        new: true,
-        runValidators: true,
-      });
+      const email = id;
+
+      const updatedInstance = await Model.findOneAndUpdate(
+        { email }, // filter
+        body,      // update
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
 
       if (!updatedInstance) {
-        return NextResponse.json({ status: "fail", message: "No document found with this ID to update" }, { status: 404 });
+        return NextResponse.json({ status: "fail", message: "No user found with this email to update" }, { status: 404 });
       }
 
       return NextResponse.json({ status: "success", updatedTo: updatedInstance });
@@ -71,6 +76,7 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
       return NextResponse.json({ status: "fail", message: errorMessage }, { status: 500 });
     }
   };
+
 
 // GET ONE
 
