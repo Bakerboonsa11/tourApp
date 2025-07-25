@@ -8,6 +8,9 @@ import UserTable from '../../../components/dashboardcomponents/admin/usertable';
 import GuideManagement from '@/components/dashboardcomponents/admin/guidemanagment';
 import BookingsSection from '@/components/dashboardcomponents/admin/bookings';
 import ToursManagement from '@/components/dashboardcomponents/admin/tourmangment';
+import { useRouter, usePathname } from 'next/navigation';
+import { Home, Users, Map } from 'lucide-react';
+import clsx from 'clsx';
 import {
   BarChart,
   Bar,
@@ -19,6 +22,15 @@ import {
   Pie,
   Cell,
 } from 'recharts';
+// Define nav items here and pass to Sidebar
+const navItems = [
+  { section: 'admin', label: 'Dashboard', Icon: Home },
+  { section: 'user', label: 'Users', Icon: Users },
+  { section: 'guide', label: 'Guides', Icon: Map },
+  { section: 'bookings', label: 'bookings', Icon: Map },
+  { section: 'tours', label: 'tours', Icon: Map },
+];
+
 
 const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
 
@@ -166,8 +178,9 @@ export default function AdminDashboard() {
     <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-tr from-stone-100 via-white to-emerald-50">
       {/* Sidebar on top for mobile, side for desktop */}
       <div className="w-full md:w-64 flex-shrink-0">
-        <Sidebar />
-      </div>
+  <Sidebar navItems={navItems} />
+</div>
+
       <div className="flex-1 flex flex-col">
         <Topbar />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>

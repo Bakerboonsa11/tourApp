@@ -73,7 +73,7 @@ console.log("Session:", session);
               <Link href="/" className="text-lg no-underline text-black">Home</Link>
               <Link href="/tours/All" className="text-lg no-underline text-black">Tours</Link>
               <Link href="/bookings" className="text-lg no-underline text-black">Bookings</Link>
-              <Link href="/dashboard" className="text-lg no-underline text-black">Dashboard</Link>
+              <Link href="/dashboard/user" className="text-lg no-underline text-black">Dashboard</Link>
 
               {session?.user ? (
                 <>

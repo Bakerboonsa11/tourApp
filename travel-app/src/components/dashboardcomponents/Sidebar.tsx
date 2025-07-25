@@ -1,31 +1,40 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Home, Users, Map } from 'lucide-react';
+import { LucideIcon, HelpCircle, Info } from 'lucide-react';
 import clsx from 'clsx';
 
-const navItems = [
-  { section: 'admin', label: 'Dashboard', Icon: Home },
-  { section: 'user', label: 'Users', Icon: Users },
-  { section: 'guide', label: 'Guides', Icon: Map },
-  { section: 'bookings', label: 'bookings', Icon: Map },
-  { section: 'tours', label: 'tours', Icon: Map },
-];
+type NavItem = {
+  section: string;
+  label: string;
+  Icon: LucideIcon;
+};
 
-export function Sidebar() {
+type SidebarProps = {
+  navItems: NavItem[];
+};
+
+export function Sidebar({ navItems }: SidebarProps) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname(); // e.g., "/dashboard/user" or "/dashboard/admin"
   const searchParams = useSearchParams();
   const currentSection = searchParams.get('section') || 'admin';
 
+  // Extract the dashboard base path segment dynamically:
+  // We assume the path structure is "/dashboard/{role}" or similar
+  // So split pathname and get the second segment after "dashboard"
+  const pathSegments = pathname?.split('/') || [];
+  // e.g. ['', 'dashboard', 'user']
+  const dashboardRole = pathSegments[2] || 'user'; // fallback to 'user' if missing
+
   const handleNavigate = (section: string) => {
-    router.push(`/dashboard/admin?section=${section}`);
+    router.push(`/dashboard/${dashboardRole}?section=${section}`);
   };
 
   return (
     <aside className="w-64 bg-white border-r border-gray-300 shadow-lg flex flex-col h-screen">
       <div className="px-8 py-6 font-extrabold text-2xl tracking-wide text-green-700 border-b border-gray-200 select-none">
-        Travel Admin
+        Travel {dashboardRole}
       </div>
       <nav className="flex flex-col flex-grow px-4 py-6 space-y-1">
         {navItems.map(({ section, label, Icon }) => {
@@ -52,8 +61,29 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="px-6 py-4 border-t border-gray-200 text-xs text-gray-500 select-none">
-        &copy; 2025 Oromia Tours
+
+      {/* Bottom Static Section */}
+      <div className="px-6 py-6 border-t border-gray-200 bg-green-50 select-none flex flex-col gap-4">
+        {/* Help Link */}
+        <button
+          onClick={() => alert('Contact support at support@traveladmin.com')}
+          className="flex items-center gap-2 text-green-700 hover:text-green-900 font-semibold text-sm"
+          type="button"
+        >
+          <HelpCircle className="w-4 h-4" />
+          Need help? Contact support
+        </button>
+
+        {/* App Version */}
+        <div className="flex items-center gap-2 text-xs text-green-600 font-mono select-text">
+          <Info className="w-4 h-4" />
+          <span>Version 2.3.1</span>
+        </div>
+
+        {/* Motivational Quote */}
+        <blockquote className="text-xs text-green-700 italic border-l-2 border-green-400 pl-3">
+          “Adventure awaits those who dare to explore.”
+        </blockquote>
       </div>
     </aside>
   );
