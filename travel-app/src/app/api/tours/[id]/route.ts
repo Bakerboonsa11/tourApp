@@ -5,8 +5,9 @@ import { getOne,createOne,updateOne } from '../../../../lib/factoryfun';
 
 export const GET = async (req: NextRequest, context: { params: { id: string } }) => {
   await connectDB();
-  return getOne(TourModel)(req, context);
+  return getOne(TourModel, req, context); // ✅ no function call chaining
 };
+
 
 
 export const POST = async (req: NextRequest) => {

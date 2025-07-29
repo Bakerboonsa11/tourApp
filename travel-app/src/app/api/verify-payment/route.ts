@@ -66,6 +66,7 @@ export const GET = async (req: NextRequest) => {
     
   const booking = await BookingModel.create({
     tour: id,
+    user: token.id, // Use the user ID from the token
     startDate: tour.start_date,
     duration: tour.duration,
     email: userEmail,

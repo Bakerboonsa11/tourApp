@@ -56,9 +56,11 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
       const body = await req.json();
       const { id } = params;
       const email = id;
+      console.log("Request body:", body);
+      console.log("Email for update:", email);
 
       const updatedInstance = await Model.findOneAndUpdate(
-        { email }, // filter
+        { _id:id }, // filter
         body,      // update
         {
           new: true,
@@ -81,15 +83,18 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
 // GET ONE
 
 
-export const getOne = <T extends Document>(Model: Model<T>) =>
-  async (_req: NextRequest, context: { params: { id: string } }) => {
-    const { id } = context.params;  // no need to await here because you await context in route
-    console.log('id is:', id);
+export const getOne = <T extends Document>(
+  Model: Model<T>,
+  req: NextRequest,
+  context: { params: { id: string } }
+) => {
+  const { id } = context.params;
 
-    if (!id) {
-      return NextResponse.json({ message: 'No ID provided' }, { status: 400 });
-    }
+  if (!id) {
+    return NextResponse.json({ message: 'No ID provided' }, { status: 400 });
+  }
 
+  return new Promise(async (resolve) => {
     try {
       let doc;
       if (mongoose.Types.ObjectId.isValid(id)) {
@@ -99,15 +104,17 @@ export const getOne = <T extends Document>(Model: Model<T>) =>
       }
 
       if (!doc) {
-        return NextResponse.json({ message: 'No document found' }, { status: 404 });
+        return resolve(NextResponse.json({ message: 'No document found' }, { status: 404 }));
       }
 
-      return NextResponse.json({ status: 'success', data: doc }, { status: 200 });
+      return resolve(NextResponse.json({ status: 'success', data: doc }, { status: 200 }));
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      return NextResponse.json({ message: errorMessage }, { status: 500 });
+      return resolve(NextResponse.json({ message: errorMessage }, { status: 500 }));
     }
-  };
+  });
+};
+
 
 
 

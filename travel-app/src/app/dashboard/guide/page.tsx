@@ -3,7 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import { Sidebar } from '../../../components/dashboardcomponents/Sidebar';
 import { Topbar } from '../../../components/dashboardcomponents/topbar';
-import { Button } from '@/components/ui/button';
 import GuideLocations from '../../../components/dashboardcomponents/guide/location';
 import GuideBookings from '../../../components/dashboardcomponents/guide/bookings';
 import GuideSettings from '../../../components/dashboardcomponents/guide/setting';

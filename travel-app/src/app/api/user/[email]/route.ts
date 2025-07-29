@@ -1,13 +1,7 @@
 import { NextRequest,NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import UserModel from '@/model/user';
-import { updateOne, deleteOne,getOne,createOne } from '../../../../lib/factoryfun';
-import mongoose from 'mongoose';
 
-// export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
-//     console.log("the delete is hitted")
-//   return deleteOne(userModel)(req, params);
-// };
 
 export async function DELETE(
   req: NextRequest,

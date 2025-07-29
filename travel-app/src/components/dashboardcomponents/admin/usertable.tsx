@@ -134,9 +134,9 @@ export default function UserTable() {
                 <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Admin">Admin</SelectItem>
-                <SelectItem value="User">User</SelectItem>
-                <SelectItem value="Editor">Editor</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
+                <SelectItem value="user">User</SelectItem>
+                <SelectItem value="guide">Editor</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -70,24 +70,8 @@ const navItems = [
 
 const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
 
-// const userStats = [
-//   { name: 'Jan', users: 300 },
-//   { name: 'Feb', users: 450 },
-//   { name: 'Mar', users: 500 },
-// ];
 
-// const tourTypes = [
-//   { name: 'Cultural', value: 12 },
-//   { name: 'Hiking', value: 19 },
-//   { name: 'Wildlife', value: 9 },
-// ];
-
-// const guideStats = [
-//   { name: 'Jan', guides: 10 },
-//   { name: 'Feb', guides: 16 },
-//   { name: 'Mar', guides: 14 },
-// ];
-
+ 
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -103,6 +87,9 @@ export default function AdminDashboard() {
   const [guideStats, setGuideStats] = useState<{ name: string; guides: number }[]>([]);
 
   const [loading, setLoading] = useState(true);
+  
+  
+  
 
   useEffect(() => {
     const fetchAllData = async () => {

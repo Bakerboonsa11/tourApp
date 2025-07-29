@@ -1,7 +1,9 @@
 import mongoose, { Schema, Document, Types, Query, HydratedDocument } from 'mongoose';
 
+
 export interface IBooking extends Document {
   tour: Types.ObjectId;
+  user: Types.ObjectId;
   email: string;
   price: number;
   createdAt: Date;
@@ -22,6 +24,11 @@ const bookingSchema = new Schema<IBooking>(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Tour',
       required: [true, 'Booking must belong to a tour'],
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserModel',
+      required: [true, 'Booking must belong to a user'],
     },
     email: {
       type: String,
@@ -84,6 +91,9 @@ bookingSchema.pre(/^find/, function (
   this.populate('tour');
   next();
 });
+// Auto-populate tour and user info on any find query
+
+
 
 // Automatically set payment_date when payment_status changes to 'paid'
 bookingSchema.pre('save', function (next) {

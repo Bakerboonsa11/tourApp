@@ -2,7 +2,6 @@
 import { NextResponse } from 'next/server';
 import BookingModel from '@/model/bookings';
 import { connectDB } from '@/lib/db';
-import { signOut, useSession } from "next-auth/react";
 export async function POST(request: Request) {
   const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId,userEmail } = await request.json();
   console.log("Tour ID and User ID from request body:", tourId);
