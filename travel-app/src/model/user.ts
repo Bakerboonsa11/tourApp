@@ -9,6 +9,15 @@ interface IUser extends Document {
   password: string;
   image?: string;
   createdAt: Date;
+  location?: string;
+  phoneNumber?: string;
+  socialMedia?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    linkedin?: string;
+    [key: string]: string | undefined; // for flexibility
+  };
 }
 
 // Define the schema
@@ -27,13 +36,27 @@ const userSchema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required:true,
+    required: true,
     minlength: 6,
   },
- 
   image: {
     type: String,
-    
+  },
+  location: {
+    type: String,
+  },
+  phoneNumber: {
+    type: String,
+  },
+  socialMedia: {
+    type: Map,
+    of: String,
+    default: {
+      facebook: '',
+      twitter: '',
+      instagram: '',
+      linkedin: '',
+    },
   },
   createdAt: {
     type: Date,

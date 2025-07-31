@@ -17,19 +17,34 @@ import { usePathname } from 'next/navigation';
 
 import { useSession } from 'next-auth/react';
 
-interface ITour {
+
+export interface ITour {
   _id: string;
   name: string;
   slug: string;
   description: string;
-  price: number;
   region: string;
-  typeOfTour: string[];
-  images: { coverImage: string }[];
-  startDates: string[]; // add this
-  endDate?: string;
-  likes: string[]; // Instead of { userId: string }[]
-
+  typeOfTour: string[]; // assuming it's an array of categories like ['nature', 'cave', 'hiking']
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: 'easy' | 'medium' | 'difficult';
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[]; // array of image filenames or URLs
+  coverImage: string;
+  location: {
+    type?: string;
+    coordinates?: number[];
+    description?: string;
+    address?: string;
+  };
+  startDates: string[]; // ISO date strings
+  endDate: string; // ISO date string
+  likes: string[]; // array of user IDs or emails
+  comments: Comment[]; // you can define Comment type separately
+  createdAt: string; // ISO date string
+  guides: string[]; // array of guide user IDs
 }
 
 
@@ -236,7 +251,7 @@ const [selectedType, setSelectedType] = useState(initialType);
     <Card key={tour.slug} className="hover:shadow-xl transition">
       <CardHeader className="p-0">
         <Image
-          src={tour.images[0]?.coverImage || '/wanchi.jpg'}
+          src={`/toursphoto/${tour?.coverImage}` || '/wanchi.jpg'}
           alt={tour.name}
           width={500}
           height={300}

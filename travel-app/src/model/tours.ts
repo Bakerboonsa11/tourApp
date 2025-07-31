@@ -71,8 +71,9 @@ const tourSchema = new Schema<ITour>({
   typeOfTour: {
     type: [String],
     required: [true, 'Please specify at least one type of tour'],
-    enum: ['adventure', 'water', 'forest', 'culture', 'wildlife', 'city', 'mountain', 'religious'],
-  },
+    // no enum here, so any string allowed
+  }
+  ,
   price: {
     type: Number,
     required: [true, 'A tour must have a price'],
@@ -148,6 +149,23 @@ const tourSchema = new Schema<ITour>({
     },
   ],
 });
+tourSchema.virtual('status').get(function (this: ITour) {
+  const now = new Date();
+
+  const hasFutureStart = this.startDates.some(date => date > now);
+  const hasPastStart = this.startDates.some(date => date <= now);
+  const isAfterEnd = this.endDate && now > this.endDate;
+
+  if (isAfterEnd) return 'finished';
+  if (hasPastStart && !isAfterEnd) return 'active';
+  if (hasFutureStart) return 'pending';
+
+  return 'unknown';
+});
+
+tourSchema.set('toObject', { virtuals: true });
+tourSchema.set('toJSON', { virtuals: true });
+
 
 // ✅ Indexes
 tourSchema.index({ price: 1, ratingsAverage: -1 });

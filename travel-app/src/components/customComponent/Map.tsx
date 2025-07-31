@@ -1,10 +1,11 @@
 'use client';
+
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect } from 'react';
 
-// Local marker icons setup (assuming you have these in your public/leaflet folder)
+// ✅ Custom icon fix for default marker paths
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: '/leaflet/marker-icon-2x.png',
   iconUrl: '/leaflet/marker-icon.png',
@@ -16,31 +17,25 @@ type MapProps = {
   address: string;
 };
 
-// ✅ Optional component to locate user and show marker
 function LocateUser() {
   const map = useMap();
 
   useEffect(() => {
     if (!map) return;
-    if (!navigator.geolocation) {
-      console.warn('Geolocation is not supported by your browser');
-      return;
-    }
+    if (!navigator.geolocation) return;
 
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          L.marker([latitude, longitude], { title: 'Your Location' })
-            .addTo(map)
-            .bindPopup('You are here')
-            .openPopup();
-        },
-        (err) => {
-          const errorMessage = err.message || 'Geolocation not available';
-          console.warn('Geolocation error:', errorMessage);
-        }
-      );
-      
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        L.marker([latitude, longitude], { title: 'Your Location' })
+          .addTo(map)
+          .bindPopup('You are here')
+          .openPopup();
+      },
+      (err) => {
+        console.warn('Geolocation error:', err.message || 'Unavailable');
+      }
+    );
   }, [map]);
 
   return null;
@@ -57,13 +52,11 @@ export default function Map({ coordinates, address }: MapProps) {
         scrollWheelZoom={false}
         className="h-full w-full"
       >
-        {/* ✅ Clean light theme OpenStreetMap */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM contributors</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* ✅ Main Location Marker */}
         <Marker position={[lat, lng]}>
           <Popup>
             <div className="space-y-1">
@@ -80,7 +73,6 @@ export default function Map({ coordinates, address }: MapProps) {
           </Popup>
         </Marker>
 
-        {/* ✅ User Location Marker */}
         <LocateUser />
       </MapContainer>
     </div>

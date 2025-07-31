@@ -69,9 +69,10 @@ export async function GET(
   req: NextRequest,
   context: { params: { email: string } }  // NOT Promise
 ) {
+  console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
   await connectDB();
   const { email } = context.params;
-  console.log('Email in POST:', email);
+  console.log('Email in POST: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', email);
   if (!email) {
     return NextResponse.json({ message: 'No email provided' }, { status: 400 });
   }

@@ -1,18 +1,56 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CheckCircle, CalendarCheck2, Star, PlaneTakeoff } from 'lucide-react';
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+  password?: string;
+  createdAt: string;
+}
+
 export default function UserDashboardOverview() {
+  const { data: session } = useSession();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const email = session?.user?.email;
+    if (!email) return; // ensures it's a string
+  
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+        const userData: User = response.data.data;
+        setUser(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchUserData();
+  }, [session]);
+  
+
   return (
     <div className="space-y-6">
       {/* Greeting */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-emerald-700">Welcome back, Boonsa!</h1>
-        <p className="text-muted-foreground mt-1">Here’s what’s happening with your account today.</p>
+        <h1 className="text-3xl font-bold tracking-tight text-emerald-700">
+          Welcome back, {user?.name || 'User'}!
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Here’s what’s happening with your account today.
+        </p>
       </div>
 
       {/* User Info */}
@@ -20,18 +58,29 @@ export default function UserDashboardOverview() {
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="h-14 w-14">
             <AvatarImage src="/avatar.png" alt="User" />
-            <AvatarFallback>BB</AvatarFallback>
+            <AvatarFallback>{user?.name?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle>Boonsa Baker</CardTitle>
-            <p className="text-sm text-muted-foreground">boonsa@example.com</p>
+            <CardTitle>{user?.name || 'Unknown User'}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {user?.email || 'unknown@example.com'}
+            </p>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm">Member since: <strong>March 2023</strong></p>
+          <p className="text-sm">
+            Member since:{' '}
+            <strong>
+              {user?.createdAt
+                ? new Date(user.createdAt).toLocaleDateString()
+                : 'Unknown'}
+            </strong>
+          </p>
           <p className="text-sm text-muted-foreground mt-1">
             Last login:{' '}
-            <span className="font-semibold text-emerald-600">July 23, 2025</span>
+            <span className="font-semibold text-emerald-600">
+              {new Date().toLocaleDateString()} {/* You could replace this with real last login if available */}
+            </span>
           </p>
         </CardContent>
       </Card>
@@ -80,9 +129,7 @@ export default function UserDashboardOverview() {
               <p className="font-medium">Mount Kenya Expedition</p>
               <p className="text-sm text-muted-foreground">June 2025</p>
             </div>
-            <Badge
-              className="flex items-center gap-1 bg-green-100 text-green-700 border border-green-300"
-            >
+            <Badge className="flex items-center gap-1 bg-green-100 text-green-700 border border-green-300">
               <CheckCircle className="w-4 h-4" />
               Confirmed
             </Badge>

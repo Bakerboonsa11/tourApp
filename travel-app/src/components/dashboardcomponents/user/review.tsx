@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -10,62 +10,123 @@ import {
 import { StarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { format } from 'date-fns';
 
-const reviews = [
-  {
-    id: 1,
-    tourName: 'Safari Adventure',
-    date: '2024-07-10',
-    rating: 5,
-    comment: 'Amazing experience! Highly recommend.',
-    status: 'Published',
-  },
-  {
-    id: 2,
-    tourName: 'Mountain Escape',
-    date: '2024-07-05',
-    rating: 4,
-    comment: 'Beautiful scenery and great guide.',
-    status: 'Pending',
-  },
-  {
-    id: 3,
-    tourName: 'City Lights Tour',
-    date: '2024-07-01',
-    rating: 2,
-    comment: 'Too crowded, not what I expected.',
-    status: 'Rejected',
-  },
-  {
-    id: 4,
-    tourName: 'Coastal Cruise',
-    date: '2024-06-28',
-    rating: 5,
-    comment: 'Perfect weather and food!',
-    status: 'Published',
-  },
-  
-];
-
+export interface Tour {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  region: string;
+  typeOfTour: string[];
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: 'easy' | 'medium' | 'difficult';
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[];
+  coverImage: string;
+  location: {
+    type?: string;
+    coordinates?: number[];
+    description?: string;
+    address?: string;
+  };
+  startDates: string[];
+  endDate: string;
+  likes: string[];
+  comments: {
+    userId: string;
+    message: string;
+    createdAt: string;
+  }[];
+  createdAt: string;
+  guides: string[];
+  __v: number;
+}
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+  password?: string;
+  createdAt: string;
+}
 export default function ReviewsSection() {
   const [searchTerm, setSearchTerm] = useState('');
+  const { data: session } = useSession();
+  const email = session?.user?.email;
+  const [user, setUser] = useState<User | null>(null);
+  const [reviewedTours, setReviewedTours] = useState<Tour[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredReviews = reviews.filter((review) =>
-    review.tourName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredReviews = reviewedTours.filter((tour) =>
+    tour.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const borderColors = [
+    'border-emerald-500',
+    'border-indigo-500',
+    'border-rose-500',
+    'border-yellow-500',
+    'border-blue-500',
+    'border-orange-500',
+    'border-cyan-500',
+    'border-fuchsia-500',
+  ];
+
+  useEffect(() => {
+    if (!email) return;
+
+    const fetchAllData = async () => {
+      try {
+        const tourRes = await axios.get('/api/tours');
+        const alltours = tourRes.data.instanceFiltered || [];
+
+        const userRes = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+        const userData = userRes.data.data;
+        setUser(userData);
+
+        const userReviews = alltours.filter((tour: Tour) =>
+          tour.comments?.some(comment => comment.userId === userData._id)
+        );
+
+        setReviewedTours(userReviews);
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, [email]);
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Add Review Card */}
-      <Card className="bg-gradient-to-r from-emerald-100 via-white to-emerald-50 border-l-4 border-emerald-400 shadow-md">
+      {/* Add Review Form */}
+      <Card className="bg-gradient-to-tr from-emerald-100 via-white to-emerald-50 border-l-4 border-emerald-400 shadow-lg rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-xl">Add a Review</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-emerald-800">
+            Add a Review
+          </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <Input placeholder="Tour name..." className="sm:w-1/3" />
           <Input placeholder="Your comment..." className="sm:flex-1" />
-          <Input type="number" min={1} max={5} placeholder="Rating (1-5)" className="w-24" />
-          <Button>Add Review</Button>
+          <Input
+            type="number"
+            min={1}
+            max={5}
+            placeholder="Rating (1–5)"
+            className="w-24"
+          />
+          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            Submit
+          </Button>
         </CardContent>
       </Card>
 
@@ -74,44 +135,79 @@ export default function ReviewsSection() {
         <Input
           type="text"
           placeholder="Search by tour name..."
-          className="w-full sm:max-w-sm"
+          className="w-full sm:max-w-sm rounded-lg border-gray-300"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      {/* Scrollable Review List */}
+      {/* Review Cards */}
       <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 custom-scrollbar">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {filteredReviews.map((review) => (
-            <Card
-              key={review.id}
-              className={`border-l-4 shadow ${
-                review.status === 'Published'
-                  ? 'border-green-500'
-                  : review.status === 'Pending'
-                  ? 'border-yellow-500'
-                  : 'border-red-500'
-              }`}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg">{review.tourName}</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  {review.date} &mdash;{' '}
-                  <span className="capitalize">{review.status}</span>
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-1 mb-2">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <StarIcon key={i} className="w-4 h-4 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-sm text-gray-700">{review.comment}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {loading ? (
+          <p className="text-center text-gray-500">Loading your reviews...</p>
+        ) : filteredReviews.length === 0 ? (
+          <p className="text-center text-gray-500">No reviews found.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredReviews.map((tour, tourIdx) =>
+              tour.comments
+                .filter((c) => c.userId === user?._id)
+                .map((comment, idx) => (
+                  <Card
+                    key={`${tour._id}-${idx}`}
+                    className={`shadow-md border-l-4 rounded-xl bg-white p-3 ${
+                      borderColors[(tourIdx + idx) % borderColors.length]
+                    }`}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-xl font-semibold text-gray-800">
+                        {tour.name}
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        {comment.createdAt &&
+                        !isNaN(Date.parse(comment.createdAt))
+                          ? format(new Date(comment.createdAt), 'PPP')
+                          : 'Unknown date'}
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center gap-1 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <StarIcon
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < 4 ? 'text-yellow-400' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Stylized User Comment */}
+                      <div className="mb-3 border-l-4 border-emerald-400 bg-emerald-50/40 p-3 rounded-md text-gray-800 italic relative">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="absolute top-2 left-2 w-4 h-4 text-emerald-400"
+                          fill="currentColor"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M6.854 5.146a.5.5 0 0 1 .146.354v5a.5.5 0 0 1-1 0V6.707L4.854 8.854a.5.5 0 1 1-.708-.708l2.5-2.5a.5.5 0 0 1 .708 0zM13 1.5A1.5 1.5 0 0 1 14.5 3v10A1.5 1.5 0 0 1 13 14.5H3A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h10zm-1 1H4a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5z" />
+                        </svg>
+                        <span className="pl-6 block">{comment.message}</span>
+                      </div>
+
+                      {/* Additional Tour Info */}
+                      <div className="text-sm text-gray-600 space-y-1">
+                        <p><strong>Region:</strong> {tour.region}</p>
+                        <p><strong>Price:</strong> ${tour.price}</p>
+                        <p><strong>Difficulty:</strong> {tour.difficulty}</p>
+                        <p><strong>Duration:</strong> {tour.duration} days</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
