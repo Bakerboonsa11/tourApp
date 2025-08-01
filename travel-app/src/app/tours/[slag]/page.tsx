@@ -7,15 +7,77 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-
-
 import { usePathname } from 'next/navigation';
-
-
-
-
 import { useSession } from 'next-auth/react';
+import { useSpring, animated } from '@react-spring/web';
+import { HelpCircle, Quote, Info, PhoneCall } from 'lucide-react';
+
+
+
+
+ function InfoSections() {
+  const fadeIn = useSpring({
+    from: { opacity: 0, transform: 'translateY(40px)' },
+    to: { opacity: 1, transform: 'translateY(0px)' },
+    config: { tension: 220, friction: 20 },
+    delay: 100,
+  });
+}
+const sections = [
+  {
+    title: 'Frequently Asked Questions ❓',
+    bg: 'bg-slate-100',
+    icon: <HelpCircle className="text-blue-600 w-6 h-6" />,
+    content: (
+      <ul className="list-disc space-y-2 px-5 text-gray-700 text-lg">
+        <li>How to book tours?</li>
+        <li>Can I get a refund?</li>
+        <li>How early should I book?</li>
+        <li>Do you offer private tours?</li>
+      </ul>
+    ),
+  },
+  {
+    title: 'Customer Testimonials 💬',
+    bg: 'bg-blue-100',
+    icon: <Quote className="text-purple-600 w-6 h-6" />,
+    content: (
+      <>
+        <p className="text-gray-800 text-lg italic">“Amazing experience with Oromia Tours. Highly recommend!”</p>
+        <p className="text-gray-800 text-lg italic">“Everything was smooth and well organized.”</p>
+      </>
+    ),
+  },
+  {
+    title: 'About Oromia Tours',
+    bg: 'bg-purple-100',
+    icon: <Info className="text-indigo-600 w-6 h-6" />,
+    content: (
+      <p className="text-gray-700 text-lg">
+        Oromia Tours was founded by passionate locals to showcase the beauty of Oromia to the world.
+      </p>
+    ),
+  },
+  {
+    title: 'Contact Us 📞',
+    bg: 'bg-gray-200',
+    icon: <PhoneCall className="text-green-600 w-6 h-6" />,
+    content: (
+      <p className="text-gray-800 text-lg">
+        For any queries, call us at <strong>+251-912-345-678</strong> or email at{' '}
+        <a href="mailto:info@oromiatours.com" className="text-blue-600 underline">
+          info@oromiatours.com
+        </a>
+      </p>
+    ),
+    centered: true,
+  },
+];
+
+
+
+
+
 
 
 export interface ITour {
@@ -46,12 +108,45 @@ export interface ITour {
   createdAt: string; // ISO date string
   guides: string[]; // array of guide user IDs
 }
+const testimonials = [
+  { id: 1, name: 'Amina', avatar: '/avatars/amina.jpg', text: 'Amazing experience with Oromia Tours. Highly recommend!' },
+  { id: 2, name: 'Dawit', avatar: '/avatars/dawit.jpg', text: 'Everything was smooth and well organized.' },
+];
+type Comment = {
+  message: string;
+  userId: string; // or userId
+  userImage: Date;
+};
+
+
+// FAQ questions and answers
+const faqs = [
+  { question: 'How to book tours?', answer: 'You can book tours easily by selecting your preferred tour and clicking the Book Now button.' },
+  { question: 'Can I get a refund?', answer: 'Refund policies vary by tour. Please check the tour details or contact support for info.' },
+  { question: 'How early should I book?', answer: 'It is recommended to book at least 2 weeks in advance to secure your spot.' },
+  { question: 'Do you offer private tours?', answer: 'Yes, we offer private tours. Contact us to customize your experience.' },
+];
 
 
 
 export default function ToursPage() {
   const pathname = usePathname();
   console.log("PATHNAME:", pathname);
+
+
+  const fadeIn = useSpring({
+    from: { opacity: 0, transform: 'translateY(40px)' },
+    to: { opacity: 1, transform: 'translateY(0px)' },
+    config: { tension: 220, friction: 20 },
+    delay: 100,
+  });
+
+  // State for which FAQ is open (-1 means all closed)
+  const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? -1 : index);
+  };
   
   const parts = pathname.split('/');
   const initialType = parts.length > 2 ? parts[2] : 'All';
@@ -140,8 +235,33 @@ const [selectedType, setSelectedType] = useState(initialType);
     setShowCommentModal(true);
   };
 
-  const handleSubmitComment = () => {
+  const handleSubmitComment = async () => {
     console.log(`Comment for Tour ID ${currentCommentTour}: ${comment}`);
+    //  find tour by the id 
+    try {
+      console.log("Fetching tour with ID:", currentCommentTour);
+      const res = await axios.get(`/api/tours/${currentCommentTour}`);
+      const user=await axios.get(`/api/user/${session?.user?.email}`);
+      const fetchedTour: ITour = res.data.data;
+      const newComment = {
+        message: comment,
+        userId: session?.user.id, // get this from session or context
+        userImage: session?.user.image || '', // get this from session or context
+        name: session?.user.name || `${user.data.first_name}`, // get this from session or context
+      };
+      const updatedComments = [...fetchedTour.comments, newComment];
+       const dataAfterResponse=await axios.patch(`/api/tours/${currentCommentTour}`, { comments: updatedComments });
+      console.log("Fetched Tour:mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",newComment);
+      // setCurrentTour(fetchedTour);
+      
+      console.log("Fetched Tours:", fetchedTour);
+      // setFilteredTours(fetchedTours);
+    } catch (err) {
+      console.error('Error fetching tours:', err);
+    } finally {
+      setLoading(false);
+    }
+    // update the comments array of the tour
     setShowCommentModal(false);
   };
 
@@ -314,31 +434,114 @@ const [selectedType, setSelectedType] = useState(initialType);
       )}
 
       {/* Static Sections */}
-      <section className="p-10 bg-slate-100 rounded-xl space-y-4 shadow">
-        <h2 className="text-3xl font-bold">Frequently Asked Questions ❓</h2>
-        <ul className="list-disc space-y-2 px-5">
-          <li>How to book tours?</li>
-          <li>Can I get a refund?</li>
-          <li>How early should I book?</li>
-          <li>Do you offer private tours?</li>
-        </ul>
-      </section>
+       <div className="max-w-7xl mx-auto p-6 space-y-16">
+      {/* Your existing tour hero, filters, tour cards, modals... */}
 
-      <section className="p-10 bg-blue-100 rounded-xl space-y-4 shadow">
-        <h2 className="text-3xl font-bold">Customer Testimonials 💬</h2>
-        <p>“Amazing experience with Oromia Tours. Highly recommend!”</p>
-        <p>“Everything was smooth and well organized.”</p>
-      </section>
+      {/* Static Sections with animation */}
+      <div className="max-w-6xl mx-auto p-6 space-y-10">
 
-      <section className="p-10 bg-purple-100 rounded-xl space-y-4 shadow">
-        <h2 className="text-3xl font-bold">About Oromia Tours</h2>
-        <p>Oromia Tours was founded by passionate locals to showcase the beauty of Oromia to the world.</p>
-      </section>
+{/* FAQ Section */}
+<animated.section
+  style={fadeIn}
+  className="bg-green-50 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
+>
+  <div className="flex items-center gap-3 mb-6">
+    <HelpCircle className="text-green-700 w-6 h-6" />
+    <h2 className="text-3xl font-extrabold text-green-900">Frequently Asked Questions ❓</h2>
+  </div>
 
-      <section className="p-10 bg-gray-200 rounded-xl space-y-4 shadow text-center">
-        <h2 className="text-3xl font-bold">Contact Us 📞</h2>
-        <p>For any queries, call us at +251-912-345-678 or email at info@oromiatours.com</p>
-      </section>
+  <ul className="divide-y divide-green-200">
+    {faqs.map(({ question, answer }, i) => (
+      <li
+        key={i}
+        className="py-3 cursor-pointer select-none"
+        onClick={() => openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i)}
+        aria-expanded={openFaqIndex === i}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') {
+          openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i);
+        }}}
+      >
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-green-900">{question}</h3>
+          <span
+            className="text-2xl transition-transform duration-300 text-green-700"
+            style={{ transform: openFaqIndex === i ? 'rotate(45deg)' : 'rotate(0deg)' }}
+          >
+            +
+          </span>
+        </div>
+        {openFaqIndex === i && (
+          <p className="mt-2 text-green-800">{answer}</p>
+        )}
+      </li>
+    ))}
+  </ul>
+</animated.section>
+
+{/* Testimonials Section */}
+<animated.section
+  style={fadeIn}
+  className="bg-amber-50 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
+>
+  <div className="flex items-center gap-3 mb-6">
+    <Quote className="text-amber-700 w-6 h-6" />
+    <h2 className="text-3xl font-extrabold text-amber-900">Customer Testimonials 💬</h2>
+  </div>
+
+  <div className="flex flex-col divide-y divide-amber-300">
+    {testimonials.map(({ id, name, avatar, text }) => (
+      <div key={id} className="py-4 flex items-start gap-4">
+        <img
+          src={avatar}
+          alt={`${name} avatar`}
+          className="w-12 h-12 rounded-full object-cover border-2 border-amber-600 flex-shrink-0"
+        />
+        <div>
+          <h4 className="font-semibold text-amber-900">{name}</h4>
+          <p className="text-amber-700 italic mt-1">{text}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</animated.section>
+
+{/* About Section */}
+<animated.section
+  style={fadeIn}
+  className="bg-green-100 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
+>
+  <div className="flex items-center gap-3 mb-6">
+    <Info className="text-green-800 w-6 h-6" />
+    <h2 className="text-3xl font-extrabold text-green-900">About Oromia Tours</h2>
+  </div>
+  <p className="text-green-800 text-lg leading-relaxed">
+    Oromia Tours was founded by passionate locals to showcase the beauty of Oromia to the world.
+    Our mission is to provide authentic and unforgettable travel experiences while supporting local communities.
+  </p>
+</animated.section>
+
+{/* Contact Section */}
+<animated.section
+  style={fadeIn}
+  className="bg-amber-100 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300 text-center"
+>
+  <div className="flex items-center justify-center gap-3 mb-6">
+    <PhoneCall className="text-amber-700 w-6 h-6" />
+    <h2 className="text-3xl font-extrabold text-amber-900">Contact Us 📞</h2>
+  </div>
+  <p className="text-amber-800 text-lg max-w-xl mx-auto">
+    For any queries, call us at <strong>+251-912-345-678</strong> or email at{' '}
+    <a href="mailto:info@oromiatours.com" className="text-amber-700 underline hover:text-amber-900 transition">
+      info@oromiatours.com
+    </a>
+  </p>
+</animated.section>
+
+</div>
+
+    </div>
 
     </div>
   );

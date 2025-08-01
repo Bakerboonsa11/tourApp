@@ -45,7 +45,7 @@ export default function Home() {
     </p>
     <div className="flex justify-center md:justify-start">
       <Link
-        href="/tours"
+        href={"/tours"}
         className="bg-black text-white hover:bg-white hover:text-black transition px-6 py-3 rounded-full font-medium shadow-md"
       >
         Book Now
@@ -58,83 +58,82 @@ export default function Home() {
      <Carousel/>
 
      {/* rotateimage */}
-     <div className="flex flex-wrap md:flex-nowrap items-start justify-between mt-20 p-4 md:p-6 gap-6 bg-gray-100 max-w-6xl mx-auto rounded-xl mx-4">
-     
-     {/* rotated image  */}
-     <div className="w-full md:w-auto flex justify-center md:justify-start">
-       <Image
-         src="/harar.jpg"
-         alt="Dynamic Travel Image"
-         width={250}
-         height={400}
-         className="rounded-xl transition-all duration-700 rotate-6"
-       />
-     </div>
-     
-     {/* Text Section */}
-     <div className="flex flex-col justify-between text-black flex-1 h-full">
-     
-       {/* Heading */}
-       <h2 className="text-xl md:text-3xl font-bold mb-2 text-center md:text-left">
-         Find things to do for everything you are into
-       </h2>
-     
-       {/* Description and Button Container */}
-       <div className="flex flex-col justify-between h-full flex-1 mt-4">
-     
-         <p className="text-sm md:text-base text-gray-700 mb-3 text-center md:text-left">
-           Browse 40,000+ experiences and book with us
-         </p>
-     
-         <div className="flex justify-center md:justify-end mt-auto">
-           <Button className="bg-black text-white hover:bg-neutral-800 text-sm md:text-base">
-             Book Now
-           </Button>
-         </div>
-     
-       </div>
-     </div>
-     
-     </div>
+     <div className="mt-20 p-4 md:p-6 max-w-6xl mx-auto rounded-xl bg-gray-100 flex flex-col md:flex-row items-center md:items-start gap-8 shadow-sm">
+          {/* Rotated Image */}
+          <div className="md:shrink-0">
+            <Image
+              src="/static/relaxation2.webp"
+              alt="Dynamic Travel Image"
+              width={250}
+              height={400}
+              className="rounded-xl rotate-6 shadow-lg transition-transform duration-500"
+            />
+          </div>
+
+          {/* Text Content */}
+          <div className="flex flex-col justify-between h-full text-black flex-1">
+            {/* Heading */}
+            <h2 className="text-2xl md:text-4xl font-bold text-center md:text-left mb-4">
+              Find things to do for everything youre into
+            </h2>
+
+            {/* Description */}
+            <p className="text-gray-700 text-sm md:text-base text-center md:text-left mb-6">
+              Browse 40,000+ experiences and book with us
+            </p>
+
+            {/* Call to Action Button */}
+            <div className="flex justify-center md:justify-start">3
+            <Link href='/tours'>
+
+              <Button className="bg-black hover:bg-neutral-800 text-white text-sm md:text-base px-6 py-2 rounded-full shadow-md transition duration-300">
+                Book Now
+              </Button>
+             </Link>
+            </div>
+          </div>
+        </div>
+
      {/* rotateimage */}
-     <div className="flex flex-wrap md:flex-nowrap items-start justify-between mt-20 p-4 md:p-6 gap-6 bg-gray-100 max-w-6xl mx-auto rounded-xl mx-4">
-     
-     {/* rotated image  */}
-     <div className="w-full md:w-auto flex justify-center md:justify-start">
-       <Image
-         src="/redfox.jpg"
-         alt="Dynamic Travel Image"
-         width={250}
-         height={400}
-         className="rounded-xl transition-all duration-700 rotate-6"
-       />
-     </div>
-     
-     {/* Text Section */}
-     <div className="flex flex-col justify-between text-black flex-1 h-full">
-     
-       {/* Heading */}
-       <h2 className="text-xl md:text-3xl font-bold mb-2 text-center md:text-left">
-         Find things to do for everything you are into
-       </h2>
-     
-       {/* Description and Button Container */}
-       <div className="flex flex-col justify-between h-full flex-1 mt-4">
-     
-         <p className="text-sm md:text-base text-gray-700 mb-3 text-center md:text-left">
-           Browse 40,000+ experiences and book with us
-         </p>
-     
-         <div className="flex justify-center md:justify-end mt-auto">
-           <Button className="bg-black text-white hover:bg-neutral-800 text-sm md:text-base">
-             Book Now
-           </Button>
-         </div>
-     
-       </div>
-     </div>
-     
-     </div>
+     <div className="relative isolate max-w-6xl mx-auto p-6 md:p-10 mt-20 bg-gradient-to-br from-white via-gray-100 to-gray-200 rounded-3xl shadow-xl backdrop-blur-sm border border-gray-300/50 mx-4">
+          {/* Rotated image with shadow */}
+          <div className="flex flex-wrap md:flex-nowrap gap-8 items-center">
+            
+            <div className="w-full md:w-auto flex justify-center md:justify-start">
+              <Image
+                src="/static/adventure2.webp"
+                alt="Dynamic Travel"
+                width={250}
+                height={400}
+                className="rounded-2xl shadow-xl rotate-6 hover:rotate-3 transition-transform duration-500 ease-in-out"
+              />
+            </div>
+
+            {/* Text content */}
+            <div className="flex flex-col justify-between text-black flex-1 h-full">
+              
+              <h2 className="text-2xl md:text-4xl font-extrabold leading-tight text-center md:text-left">
+                Discover your next adventure
+              </h2>
+
+              <p className="mt-4 text-base md:text-lg text-gray-700 text-center md:text-left max-w-prose">
+                Over <span className="font-semibold text-black">40,000+ experiences</span> are waiting for you. Explore caves, mountains, lakes and more — all curated for your next journey.
+              </p>
+
+              <div className="flex justify-center md:justify-start mt-6">
+              
+              <Link href="/tours/all">
+              <Button className="bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 rounded-full px-6 py-2 text-sm md:text-base shadow-lg transition-transform hover:scale-105">
+                Book Now
+              </Button>
+            </Link>
+
+              
+              </div>
+            </div>
+          </div>
+        </div>
+
      <Carousel/>
      <Carousel/>
   
@@ -174,7 +173,7 @@ export default function Home() {
         {interests.map((interest) => (
           <Link
             key={interest.name}
-            href={interest.href}
+            href={`/tours/${interest.name.toLowerCase()}`}
             className="relative w-full md:w-[45%] lg:w-[20%] h-78 rounded-xl overflow-hidden shadow hover:shadow-lg transition"
           >
             <div

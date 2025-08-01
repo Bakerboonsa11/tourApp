@@ -45,9 +45,11 @@ export interface ITour {
 }
 
 export interface Comment {
-  user: string;
-  text: string;
-  createdAt: string;
+  message: string;
+  userId: string;
+  userImage: string;
+  name:string;
+  createdAt: string; // ISO date string
 }
 
 export default function TourDetailPage() {
@@ -102,7 +104,7 @@ export default function TourDetailPage() {
           userEmail: session?.user?.email || '',
           first_name: session?.user?.name || 'John',
           
-          last_name: 'Doe',
+          last_name: '',
           phone_number: '0912345678',
           tx_ref,
           return_url: `http://localhost:3000/payment-success?tx_ref=${tx_ref}`,
@@ -126,7 +128,7 @@ export default function TourDetailPage() {
           const fetchedTour: ITour = res.data.data;
           setCurrentTour(fetchedTour);
           
-          console.log("Fetched Tours:", fetchedTour);
+          console.log("Fetched Tours: bbbbbbbbbbbbbbbbbbbbbbbbbbb", fetchedTour);
           // setFilteredTours(fetchedTours);
         } catch (err) {
           console.error('Error fetching tours:', err);
@@ -165,50 +167,83 @@ export default function TourDetailPage() {
     return (
       <div className="max-w-7xl mx-auto p-6 space-y-16">
         {/* Hero Section */}
-       <section className="space-y-6 text-center relative">
-          <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
-            <Image
-              src={
-                currentour?.coverImage
-                  ? `/toursphoto/${currentour.coverImage}`
-                  : '/default-cover.jpg'
-              }
-              alt={currentour?.name || 'Tour Cover'}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 1200px"
-              priority
-            />
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-red-600 text-white px-4 py-2 rounded-full shadow-lg">
-                Oromia 🌄
-              </Badge>
-            </div>
+        <section className="space-y-6 text-center relative">
+  <div className="relative w-full h-[400px] rounded-xl overflow-hidden">
+    <Image
+      src={
+        currentour?.coverImage
+          ? `/toursphoto/${currentour.coverImage}`
+          : '/default-cover.jpg'
+      }
+      alt={currentour?.name || 'Tour Cover'}
+      fill
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 1200px"
+      priority
+    />
+    <div className="absolute top-4 left-4">
+      <Badge className="bg-red-600 text-white px-4 py-2 rounded-full shadow-lg">
+        Oromia 🌄
+      </Badge>
+    </div>
+  </div>
+
+  <h1 className="text-5xl font-bold text-emerald-900">{currentour?.name}</h1>
+
+  <div className="flex justify-center gap-3 flex-wrap">
+    <Badge variant="outline" className="bg-emerald-100 text-emerald-800">
+      {currentour?.region}
+    </Badge>
+    {currentour?.typeOfTour.map(type => (
+      <Badge
+        key={type}
+        className="bg-emerald-100 text-emerald-800 capitalize"
+      >
+        {type}
+      </Badge>
+    ))}
+  </div>
+
+  <p className="text-2xl font-bold text-green-700">
+    Starting from ${currentour?.price}
+  </p>
+  <p className="text-gray-600">
+    {currentour?.ratingsAverage} ★ ({currentour?.ratingsQuantity} reviews)
+  </p>
+
+  {/* Comments Section */}
+  <div className="max-w-3xl mx-auto mt-8">
+  <h2 className="text-2xl font-semibold text-emerald-800 mb-4">User Comments 💬</h2>
+
+  <div className="h-60 overflow-y-auto bg-white rounded-xl shadow-inner px-4 py-3 space-y-3 border border-emerald-200">
+    {Array.isArray(currentour?.comments) && currentour.comments.length > 0 ? (
+      currentour.comments.map((comment, index) => (
+        <div
+          key={index}
+          className="flex items-start gap-3 text-left bg-emerald-50 hover:bg-emerald-100 transition rounded-md px-4 py-3 shadow-sm"
+        >
+          <Image
+            src={comment.userImage || '/pro.avif'}
+            alt="User"
+            width={40}
+            height={40}
+            className="rounded-full object-cover"
+          />
+          <div className="flex flex-col">
+            <p className="text-sm text-gray-800 font-semibold mb-1">{comment.message}</p>
+            <p className="text-xs text-gray-500 italic">{comment.name || 'Anonymous'}</p>
           </div>
+          <p className="text-xs text-gray-400">{new Date(comment.createdAt).toLocaleDateString()}</p>
+        </div>
+      ))
+    ) : (
+      <p className="text-sm text-gray-400">No comments yet.</p>
+    )}
+  </div>
+</div>
 
-          <h1 className="text-5xl font-bold text-emerald-900">{currentour?.name}</h1>
+</section>
 
-          <div className="flex justify-center gap-3 flex-wrap">
-            <Badge variant="outline" className="bg-emerald-100 text-emerald-800">
-              {currentour?.region}
-            </Badge>
-            {currentour?.typeOfTour.map(type => (
-              <Badge
-                key={type}
-                className="bg-emerald-100 text-emerald-800 capitalize"
-              >
-                {type}
-              </Badge>
-            ))}
-          </div>
-
-          <p className="text-2xl font-bold text-green-700">
-            Starting from ${currentour?.price}
-          </p>
-          <p className="text-gray-600">
-            {currentour?.ratingsAverage} ★ ({currentour?.ratingsQuantity} reviews)
-          </p>
-        </section>
 
         {/* Description */}
         <section className="space-y-4">
