@@ -43,7 +43,7 @@ console.log("Session:", session);
         
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <Image  src="/visitoro3.jpg" alt="logo" width={100} height={100} className="rounded-full" />
+          <Image  src="/static/log.png" alt="logo" width={100} height={100} className="rounded-full" />
           <Link href="/" className="text-2xl font-bold text-black-600 no-underline">
             Visit Oromia
           </Link>
@@ -80,11 +80,12 @@ console.log("Session:", session);
             </div>
           ) : (
             <Link
-              href="/login"
-              className="bg-black text-white hover:bg-neutral-800 px-4 py-2 rounded-md no-underline"
-            >
-              Login
-            </Link>
+            href="/login"
+            className="inline-block bg-green-600 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out"
+          >
+            Login
+          </Link>
+          
           )}
         </nav>
 

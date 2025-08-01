@@ -28,21 +28,32 @@ export default function Home() {
       <p className="text-center text-base md:text-lg mt-4">Explore the beauty of Oromia</p>
 
       {/* DYNAMIC IMAGE FLEXBOX */}
-      <div className="flex flex-col md:flex-row items-center justify-between mt-20 p-6 md:p-10 gap-8 bg-green-500 max-w-6xl mx-auto rounded-xl mx-4">
-        <div className="w-full md:w-1/2">
-          <Slideshow />
-        </div>
+      <div className="flex flex-col md:flex-row items-center justify-between mt-20 p-6 md:p-12 gap-10 bg-gradient-to-br from-green-400 via-emerald-500 to-lime-500 max-w-7xl mx-auto rounded-3xl shadow-xl backdrop-blur-xl mx-4">
+  {/* Left: Slideshow or Image */}
+  <div className="w-full md:w-1/2 rounded-xl overflow-hidden shadow-lg">
+    <Slideshow />
+  </div>
 
-        <div className="w-full md:w-1/2 space-y-4 text-black text-center md:text-left pl-4 md:pl-8">
-          <h2 className="text-3xl md:text-6xl font-bold text-center">Find things to do for everything you are into</h2>
-          <p className="text-base md:text-md text-center text-white/80">
-            Browse over 40,000+ experiences and book with us
-          </p>
-          <div className="flex justify-center md:justify-center">
-            <Button className="bg-black text-white hover:bg-neutral-800">Book Now</Button>
-          </div>
-        </div>
-      </div>
+  {/* Right: Content */}
+  <div className="w-full md:w-1/2 space-y-6 text-white text-center md:text-left px-4 md:px-8">
+    <h2 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-lg">
+      Discover the Best <span className="text-black/90">Experiences</span><br />
+      for Every Interest
+    </h2>
+    <p className="text-lg md:text-xl text-white/80 font-light">
+      Choose from over <span className="font-semibold text-white">40,000+</span> unforgettable adventures — book instantly.
+    </p>
+    <div className="flex justify-center md:justify-start">
+      <Link
+        href="/tours"
+        className="bg-black text-white hover:bg-white hover:text-black transition px-6 py-3 rounded-full font-medium shadow-md"
+      >
+        Book Now
+      </Link>
+    </div>
+  </div>
+</div>
+
      <ByInterest />
      <Carousel/>
 
