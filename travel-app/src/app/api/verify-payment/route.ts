@@ -3,6 +3,7 @@ import BookingModel from '@/model/bookings';
 import TourModel from '@/model/tours';
 import { connectDB } from '@/lib/db';
 import { start } from 'repl';
+import UserModel from '../../../model/user';
 
 import { getToken } from "next-auth/jwt";
 
@@ -31,6 +32,12 @@ export const GET = async (req: NextRequest) => {
       Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}`,
     },
   });
+  if (!chapaRes.ok) {
+    const text = await chapaRes.text(); // Read raw text
+    console.error("Chapa error response:", text); // Helpful log
+    return NextResponse.json({ message: 'Failed to verify payment with Chapa' }, { status: 500 });
+  }
+  
 
   const chapaData = await chapaRes.json();
   console.log("Chapa verification response:", chapaData);
@@ -63,10 +70,15 @@ export const GET = async (req: NextRequest) => {
     if (existing) {
       return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
     }
+    const userDoc = await UserModel.findOne({ email: token.email });
+
+if (!userDoc) {
+  return NextResponse.json({ message: 'User not found in DB' }, { status: 404 });
+}
     
   const booking = await BookingModel.create({
     tour: id,
-    user: token.id, // Use the user ID from the token
+    user: userDoc._id, // Use the user ID from the token
     startDate: tour.start_date,
     duration: tour.duration,
     email: userEmail,

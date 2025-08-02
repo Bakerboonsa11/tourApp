@@ -55,29 +55,46 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
       console.log("Update request received");
       const body = await req.json();
       const { id } = params;
-      const email = id;
-      console.log("Request body:", body);
-      console.log("Email for update:", email);
 
-      const updatedInstance = await Model.findOneAndUpdate(
-        { _id:id }, // filter
-        body,      // update
+      console.log("Request body:", body);
+      console.log("id for update:", id);
+
+      const comment = body.comments?.[0];
+
+      if (!comment) {
+        return NextResponse.json({ status: "fail", message: "No comment data provided" }, { status: 400 });
+      }
+
+      // Ensure userId is cast to ObjectId
+
+      const updatedInstance = await Model.updateOne(
+        { _id: id },
         {
-          new: true,
-          runValidators: true,
+          $push: {
+            comments: {
+              message: comment.message,
+              userId: comment.userId, // ✅ use string directly
+              userImage: comment.userImage,
+              name: comment.name,
+              createdAt: new Date(),
+            },
+          },
         }
       );
+      
 
       if (!updatedInstance) {
-        return NextResponse.json({ status: "fail", message: "No user found with this email to update" }, { status: 404 });
+        return NextResponse.json({ status: "fail", message: "No document found to update" }, { status: 404 });
       }
 
       return NextResponse.json({ status: "success", updatedTo: updatedInstance });
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error("Update error:", errorMessage);
       return NextResponse.json({ status: "fail", message: errorMessage }, { status: 500 });
     }
   };
+
 
 
 // GET ONE

@@ -38,7 +38,7 @@ export interface ITour extends Document {
 const commentSchema = new Schema(
   {
     message: { type: String, required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: String, ref: 'User', required: true },
     userImage: { type: String },
     name: { type: String },
     createdAt: { type: Date, default: Date.now },

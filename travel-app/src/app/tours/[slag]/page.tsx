@@ -239,7 +239,7 @@ const [selectedType, setSelectedType] = useState(initialType);
     console.log(`Comment for Tour ID ${currentCommentTour}: ${comment}`);
     //  find tour by the id 
     try {
-      console.log("Fetching tour with ID:", currentCommentTour);
+      console.log("Fetching tour with ID: llllllllllllllllllllllllllllllllllllll", currentCommentTour);
       const res = await axios.get(`/api/tours/${currentCommentTour}`);
       const user=await axios.get(`/api/user/${session?.user?.email}`);
       const fetchedTour: ITour = res.data.data;
@@ -494,7 +494,7 @@ const [selectedType, setSelectedType] = useState(initialType);
     {testimonials.map(({ id, name, avatar, text }) => (
       <div key={id} className="py-4 flex items-start gap-4">
         <img
-          src={avatar}
+          src={'/pro.avif'}
           alt={`${name} avatar`}
           className="w-12 h-12 rounded-full object-cover border-2 border-amber-600 flex-shrink-0"
         />

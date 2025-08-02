@@ -3,7 +3,9 @@ import { NextResponse } from 'next/server';
 import BookingModel from '@/model/bookings';
 import { connectDB } from '@/lib/db';
 export async function POST(request: Request) {
-  const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId,userEmail } = await request.json();
+ const body = await request.json();
+ const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId,userEmail } = body;
+ console.log("Request body:", body);
   console.log("Tour ID and User ID from request body:", tourId);
  
   await connectDB();
@@ -24,7 +26,6 @@ if (existing) {
       currency: 'ETB',
       userEmail,
       first_name,
-      last_name,
       phone_number,
       tx_ref,
       return_url,

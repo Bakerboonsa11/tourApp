@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
+import { Currency } from 'lucide-react';
 const Map = dynamic(() => import('../../../components/customComponent/Map'), { ssr: false });
 // 
 
@@ -17,6 +18,7 @@ const Map = dynamic(() => import('../../../components/customComponent/Map'), { s
 
 export interface ITour {
   _id: string;
+  status: string;
   name: string;
   slug: string;
   description: string;
@@ -52,6 +54,7 @@ export interface Comment {
   createdAt: string; // ISO date string
 }
 
+
 export default function TourDetailPage() {
   // const tour = {
   //   name: 'Bale Mountain Adventure',
@@ -81,43 +84,110 @@ export default function TourDetailPage() {
   console.log("Tour ID when it is in the page:", id);
   console.log('session usser', session?.user);
   const [currentour, setCurrentTour] = useState<ITour | null>(null);
-  // const [filteredTours, setFilteredTours] = useState<ITour[]>([]);
-    // const [searchQuery, setSearchQuery] = useState('');
-    // const [selectedType, setSelectedType] = useState('All');
-    const [loading, setLoading] = useState(false);
-    const [paymentloading, setPaymentLoading] = useState(false);
+   const [showCommentModal, setShowCommentModal] = useState(false);
+    const [currentCommentTour, setCurrentCommentTour] = useState<string | null>(null);
+    const [comment, setComment] = useState('');
+   const [loading, setLoading] = useState(false);
+   const [paymentLoading, setPaymentLoading] = useState(false);
+    
+    const [allComments, setAllComments] = useState<Comment[]>([]);
+     const openCommentModal = (id: string) => {
+        setCurrentCommentTour(id);
+        setComment('');
+        setShowCommentModal(true);
+      };
+    
+      const handleSubmitComment = async () => {
+        try {
+          const user = await axios.get(`/api/user/${session?.user?.email}`);
+          const userId=session?.user?.id
+          const newComment: Comment = {
+            message: comment,
+            userId: userId || session?.user?.id || '',
+            userImage: session?.user.image || '',
+            name: session?.user.name || user.data.first_name,
+            createdAt: new Date().toISOString(),
+          };
+          
+      
+          const updatedComments = [...(currentour?.comments ?? []), newComment];
+      
+          const res = await axios.patch(`/api/tours/${id}`, {
+            comments: updatedComments,
+          });
+         
+          setAllComments(updatedComments)
+          console.log("Comment successfully updated:", res.data);
+        } catch (err) {
+          console.error('Error submitting comment:', err);
+        } finally {
+          setLoading(false);
+          setShowCommentModal(false);
+        }
+      };
+      
 
     const handlePayment = async () => {
-      setPaymentLoading(true);
-  
-      // const tx_ref = `tx-${Date.now()}`;
-      const tx_ref = `tx-${id}-${Date.now()}`;
-
-
-      const res = await fetch('/api/initiate-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-     
-          tourId: id,
-          amount: 200,
-          userEmail: session?.user?.email || '',
-          first_name: session?.user?.name || 'John',
-          
-          last_name: '',
-          phone_number: '0912345678',
-          tx_ref,
-          return_url: `http://localhost:3000/payment-success?tx_ref=${tx_ref}`,
-
-        }),
-      });
-  
-      const data = await res.json();
-      if (data.checkout_url) window.location.href = data.checkout_url;
-      else alert('Payment failed, please try again.');
-  
-      setLoading(false);
+      if (!session || !session.user) {
+        alert("Please log in first to book a tour.");
+        return;
+      }
+    
+      if (!id || !currentour) {
+        alert("Tour data is missing.");
+        return;
+      }
+    
+      // ⛔️ Stop if tour is finished
+      if (currentour?.status === 'finished') {
+        alert("This tour has already finished. You cannot book it.");
+        return;
+      }
+    
+      // ⛔️ Stop if tour is active but not pending
+      if (currentour.status === 'active') {
+        alert("This tour is already booked or process.");
+        return;
+      }
+    
+      try {
+        setPaymentLoading(true);
+    
+        const tx_ref = `tx-${id}-${Date.now()}`;
+        console.log("current tour is: ", currentour);
+    
+        const res = await fetch('/api/initiate-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tourId: id,
+            amount: 200,
+            userEmail: session.user.email,
+            first_name: session.user.name || 'John',
+            phone_number: '0912345678',
+            tx_ref,
+            return_url: `http://localhost:3000/payment-success?tx_ref=${tx_ref}`,
+          }),
+        });
+    
+        const data = await res.json();
+    
+        if (res.ok && data.checkout_url) {
+          window.location.href = data.checkout_url;
+        } else {
+          console.error("Payment error:", data);
+          alert(data.message || "Payment initiation failed.");
+        }
+    
+      } catch (err) {
+        console.error("Payment exception:", err);
+        alert("An unexpected error occurred.");
+      } finally {
+        setPaymentLoading(false);
+      }
     };
+    
+    
   
     useEffect(() => {
       const fetchTours = async () => {
@@ -127,8 +197,9 @@ export default function TourDetailPage() {
           const res = await axios.get(`/api/tours/${id}`);
           const fetchedTour: ITour = res.data.data;
           setCurrentTour(fetchedTour);
+          setAllComments(fetchedTour.comments || []);
           
-          console.log("Fetched Tours: bbbbbbbbbbbbbbbbbbbbbbbbbbb", fetchedTour);
+          console.log("current tour is vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ",fetchedTour)
           // setFilteredTours(fetchedTours);
         } catch (err) {
           console.error('Error fetching tours:', err);
@@ -140,28 +211,7 @@ export default function TourDetailPage() {
       fetchTours();
       
     }, []);
-  
-    // useEffect(() => {
-    //   let filtered = [...allTours];
-  
-    //   if (selectedType !== 'All') {
-    //     filtered = filtered.filter(tour =>
-    //       tour.typeOfTour.includes(selectedType.toLowerCase())
-    //     );
-    //   }
-  
-    //   if (searchQuery.trim()) {
-    //     filtered = filtered.filter(tour =>
-    //       tour.name.toLowerCase().includes(searchQuery.toLowerCase())
-    //     );
-    //   }
-  
-    //   setFilteredTours(filtered);
-    // }, [selectedType, searchQuery, allTours]);
-  
-    // const tourTypes = Array.from(
-    //   new Set(allTours.flatMap(tour => tour.typeOfTour.map(type => type.toLowerCase())))
-    // );
+
 
 
     return (
@@ -216,8 +266,9 @@ export default function TourDetailPage() {
   <h2 className="text-2xl font-semibold text-emerald-800 mb-4">User Comments 💬</h2>
 
   <div className="h-60 overflow-y-auto bg-white rounded-xl shadow-inner px-4 py-3 space-y-3 border border-emerald-200">
-    {Array.isArray(currentour?.comments) && currentour.comments.length > 0 ? (
-      currentour.comments.map((comment, index) => (
+  {Array.isArray(allComments) && allComments.length > 0 ? (
+    <>
+      {allComments.map((comment, index) => (
         <div
           key={index}
           className="flex items-start gap-3 text-left bg-emerald-50 hover:bg-emerald-100 transition rounded-md px-4 py-3 shadow-sm"
@@ -235,11 +286,44 @@ export default function TourDetailPage() {
           </div>
           <p className="text-xs text-gray-400">{new Date(comment.createdAt).toLocaleDateString()}</p>
         </div>
-      ))
-    ) : (
-      <p className="text-sm text-gray-400">No comments yet.</p>
-    )}
-  </div>
+      ))}
+    </>
+  ) : (
+    <p className="text-sm text-gray-400">No comments yet.</p>
+    
+  )}
+</div>
+  {showCommentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-80 space-y-4 shadow-xl">
+            <h2 className="text-xl font-bold text-center">Leave a Comment</h2>
+            <textarea
+              className="w-full border p-2 rounded"
+              placeholder="Your comment..."
+              rows={4}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <div className="flex justify-between">
+              <Button variant="secondary" onClick={() => setShowCommentModal(false)}>Cancel</Button>
+              <Button onClick={handleSubmitComment}>Post</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+{/* Place the button *outside* the scrollable container */}
+<div className="mt-4">
+  <Button onClick={() => {
+    if (typeof id === 'string') {
+      openCommentModal(id);
+    }
+    
+  }}>
+    Leave a Comment
+  </Button>
+</div>
+
 </div>
 
 </section>
@@ -325,8 +409,8 @@ export default function TourDetailPage() {
     
         {/* CTA */}
         <section className="text-center bg-emerald-700 p-8 rounded-xl space-y-4 text-white">
-          <h2 className="text-4xl font-bold">Ready to Explore the Bale Mountains?</h2>
-          <p className="text-lg">Book your adventure today and experience the raw beauty of Oromia.</p>
+          <h2 className="text-4xl font-bold">{`Ready to Explore the ${currentour?.name}?`}</h2>
+          <p className="text-lg">{`Book your ${currentour?.typeOfTour[0]} today and experience the raw beauty of Oromia.`}</p>
           <Button
             onClick={handlePayment}
             className="bg-white text-emerald-800 font-bold text-lg px-8 py-4 rounded-xl"

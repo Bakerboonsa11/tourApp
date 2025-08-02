@@ -71,12 +71,12 @@ console.log("Session:", session);
                 height={46}
                 className="rounded-full"
               />
-              <Button 
-                onClick={() => signOut({ callbackUrl: '/' })} 
-                className="bg-black text-white hover:bg-neutral-800"
-              >
-                Sign Out
-              </Button>
+                 <Button 
+                  onClick={() => signOut({ callbackUrl: '/' })} 
+                  className="inline-block bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out ring-2 ring-green-500 hover:ring-green-700"
+                >
+                  Sign Out
+                </Button>
             </div>
           ) : (
             <Link
@@ -118,16 +118,20 @@ console.log("Session:", session);
                     <p className="text-sm">{session.user.name}</p>
                   </div>
                   <Button 
-                    onClick={() => signOut({ callbackUrl: '/' })} 
-                    className="bg-black text-white hover:bg-neutral-800"
-                  >
-                    Sign Out
-                  </Button>
+                  onClick={() => signOut({ callbackUrl: '/' })} 
+                  className="inline-block bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out ring-2 ring-green-500 hover:ring-green-700"
+                >
+                  Sign Out
+                </Button>
+
                 </>
               ) : (
-                <Link href="/login">
-                  <Button className="bg-black text-white hover:bg-neutral-800 w-full">Login</Button>
-                </Link>
+                <Link
+                href="/login"
+                className="inline-block bg-green-600 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out"
+              >
+                Login
+              </Link>
               )}
             </div>
           </SheetContent>

@@ -45,7 +45,7 @@ export default function Home() {
     </p>
     <div className="flex justify-center md:justify-start">
       <Link
-        href={"/tours"}
+        href={"/tours/all"}
         className="bg-black text-white hover:bg-white hover:text-black transition px-6 py-3 rounded-full font-medium shadow-md"
       >
         Book Now
