@@ -4,6 +4,9 @@ import Navbar from "@/components/customComponent/navigation";
 import { Button } from "@/components/ui/button";
 import ByInterest from "@/components/customComponent/byInterest";
 import Carousel from "@/components/customComponent/corselAddis";
+import CardCarouselCH from "@/components/customComponent/courselChipest";
+import CardCarouselCurrent from "@/components/customComponent/courselCurrentLocation";
+
 import Link from "next/link";
 import Image from "next/image";
 export default function Home() {
@@ -134,29 +137,30 @@ export default function Home() {
           </div>
         </div>
 
-     <Carousel/>
-     <Carousel/>
+     <CardCarouselCurrent/>
+     <CardCarouselCH/>
   
 
      {/* imagerightflex */}
-     <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md mt-10 gap-8">
+     <div className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md mt-10 gap-8 mt-30">
   
   {/* Left Text Section */}
-  <div className="w-full md:w-1/2 space-y-4 text-center md:text-left">
+  <div className="w-full md:w-1/2 space-y-4 text-center md:text-left ">
     <h2 className="text-3xl md:text-5xl font-bold text-black">Discover Oromia</h2>
     <p className="text-gray-700 text-base md:text-lg">
       Find breathtaking destinations and unique experiences tailored for you.
     </p>
-    <button className="bg-black text-white font-semibold px-6 py-3 rounded-md hover:bg-green-700 transition">
-      learn more
-    </button>
+    <button className="bg-green-600 text-white font-bold px-8 py-3 rounded-2xl shadow-lg hover:bg-green-700 hover:scale-105 transition-all duration-300 ease-in-out ring-2 ring-green-400 hover:ring-green-300">
+  Learn More
+</button>
+
   </div>
 
   {/* Right Image Section */}
   <div className="w-full md:w-1/2 flex justify-center">
    
      <Image
-         src="/wanchi.jpg"
+         src="/static/cave3.avif"
          alt="Dynamic Travel Image"
          width={250}
          height={400}
@@ -166,7 +170,7 @@ export default function Home() {
      </div>
 
           {/* iconic  */}
-     <div className="max-w-6xl mx-auto px-4 ">
+     <div className="max-w-6xl mx-auto px-4 m-30 ">
       <h1 className="text-2xl md:text-2xl font-bold mt-20 pl-3">Iconic place you need to see</h1>
 
       <div className="flex flex-col md:flex-row flex-wrap items-center justify-center mt-6 gap-8">

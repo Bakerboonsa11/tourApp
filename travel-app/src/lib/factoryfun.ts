@@ -55,36 +55,21 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
       console.log("Update request received");
       const body = await req.json();
       const { id } = params;
-
+      const email = id;
       console.log("Request body:", body);
-      console.log("id for update:", id);
+      console.log("id for update:", email);
 
-      const comment = body.comments?.[0];
-
-      if (!comment) {
-        return NextResponse.json({ status: "fail", message: "No comment data provided" }, { status: 400 });
-      }
-
-      // Ensure userId is cast to ObjectId
-
-      const updatedInstance = await Model.updateOne(
-        { _id: id },
+      const updatedInstance = await Model.findOneAndUpdate(
+        { _id :id }, // filter
+        body,      // update
         {
-          $push: {
-            comments: {
-              message: comment.message,
-              userId: comment.userId, // ✅ use string directly
-              userImage: comment.userImage,
-              name: comment.name,
-              createdAt: new Date(),
-            },
-          },
+          new: true,
+          runValidators: true,
         }
       );
-      
 
       if (!updatedInstance) {
-        return NextResponse.json({ status: "fail", message: "No document found to update" }, { status: 404 });
+        return NextResponse.json({ status: "fail", message: "No data found with this credential to update" }, { status: 404 });
       }
 
       return NextResponse.json({ status: "success", updatedTo: updatedInstance });
@@ -94,7 +79,6 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
       return NextResponse.json({ status: "fail", message: errorMessage }, { status: 500 });
     }
   };
-
 
 
 // GET ONE

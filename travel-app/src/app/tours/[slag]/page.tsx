@@ -165,6 +165,7 @@ const [selectedType, setSelectedType] = useState(initialType);
   const [comment, setComment] = useState('');
   const { data: session } = useSession();
 
+
   useEffect(() => {
     const fetchTours = async () => {
       setLoading(true);
@@ -176,6 +177,7 @@ const [selectedType, setSelectedType] = useState(initialType);
         }));
         setAllTours(fetchedTours);
         setFilteredTours(fetchedTours);
+        
       } catch (err) {
         console.error('Error fetching tours:', err);
       } finally {
@@ -239,7 +241,6 @@ const [selectedType, setSelectedType] = useState(initialType);
     console.log(`Comment for Tour ID ${currentCommentTour}: ${comment}`);
     //  find tour by the id 
     try {
-      console.log("Fetching tour with ID: llllllllllllllllllllllllllllllllllllll", currentCommentTour);
       const res = await axios.get(`/api/tours/${currentCommentTour}`);
       const user=await axios.get(`/api/user/${session?.user?.email}`);
       const fetchedTour: ITour = res.data.data;
@@ -251,7 +252,6 @@ const [selectedType, setSelectedType] = useState(initialType);
       };
       const updatedComments = [...fetchedTour.comments, newComment];
        const dataAfterResponse=await axios.patch(`/api/tours/${currentCommentTour}`, { comments: updatedComments });
-      console.log("Fetched Tour:mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",newComment);
       // setCurrentTour(fetchedTour);
       
       console.log("Fetched Tours:", fetchedTour);
@@ -388,16 +388,23 @@ const [selectedType, setSelectedType] = useState(initialType);
           {label}
         </Badge>
 
-        <Badge variant="outline">${tour.price}</Badge>
+        <Badge variant="outline">💵{tour.price}</Badge>
         <div className="flex justify-between items-center pt-2 gap-2">
         <Button variant="secondary" onClick={() => handleLike(tour._id, tour.likes)}>
   ❤️❤️ {likes[tour._id]?.length ?? tour.likes.length} Likes
 
 </Button>
 
-          <Button variant="outline" onClick={() => openCommentModal(tour._id)}>
-            Leave a Comment
-          </Button>
+<Button
+  onClick={() => openCommentModal(tour._id)}
+  className="flex items-center gap-2 bg-white text-green-700 border-2 border-green-600 px-5 py-2 rounded-full font-semibold hover:bg-green-600 hover:text-white hover:scale-105 transition-all duration-300 shadow-md ring-1 ring-green-300 hover:ring-green-500"
+>
+  💬 Leave a Comment 
+  <span className="ml-1 bg-green-100 text-green-800 text-sm font-medium px-2 py-0.5 rounded-full shadow-inner">
+    {tour.comments?.length || 0}
+  </span>
+</Button>
+
         </div>
       </CardContent>
       <CardFooter className="p-4">
@@ -415,23 +422,50 @@ const [selectedType, setSelectedType] = useState(initialType);
 
       {/* Comment Modal */}
       {showCommentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-80 space-y-4 shadow-xl">
-            <h2 className="text-xl font-bold text-center">Leave a Comment</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-6">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-gray-200 p-6 sm:p-8 animate-fade-in">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowCommentModal(false)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition"
+            >
+              ✕
+            </button>
+
+            {/* Header */}
+            <h2 className="text-center text-2xl font-bold text-green-700 mb-4">
+              💬 Leave Your Thoughts
+            </h2>
+
+            {/* Textarea */}
             <textarea
-              className="w-full border p-2 rounded"
-              placeholder="Your comment..."
-              rows={4}
+              className="w-full resize-none rounded-2xl border border-green-300 bg-green-50 px-4 py-3 text-gray-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-green-400 placeholder:text-gray-500"
+              placeholder="Type your comment here..."
+              rows={5}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
-            <div className="flex justify-between">
-              <Button variant="secondary" onClick={() => setShowCommentModal(false)}>Cancel</Button>
-              <Button onClick={handleSubmitComment}>Post</Button>
+
+            {/* Buttons */}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-between">
+              <button
+                onClick={() => setShowCommentModal(false)}
+                className="w-full sm:w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-full py-2.5 transition-all shadow-sm"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleSubmitComment}
+                className="w-full sm:w-1/2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-full py-2.5 transition-all shadow-md hover:scale-105"
+              >
+                Post ✨
+              </button>
             </div>
           </div>
         </div>
       )}
+
 
       {/* Static Sections */}
        <div className="max-w-7xl mx-auto p-6 space-y-16">
@@ -532,9 +566,9 @@ const [selectedType, setSelectedType] = useState(initialType);
     <h2 className="text-3xl font-extrabold text-amber-900">Contact Us 📞</h2>
   </div>
   <p className="text-amber-800 text-lg max-w-xl mx-auto">
-    For any queries, call us at <strong>+251-912-345-678</strong> or email at{' '}
+    For any queries, call us at <strong>+251-949-303-845</strong> or email at{' '}
     <a href="mailto:info@oromiatours.com" className="text-amber-700 underline hover:text-amber-900 transition">
-      info@oromiatours.com
+      bakerboonsa@gmail.com
     </a>
   </p>
 </animated.section>

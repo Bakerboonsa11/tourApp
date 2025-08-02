@@ -158,7 +158,11 @@ export default function ByInterest() {
                     <p className="text-gray-500 text-sm line-clamp-2">
                       {tour.description.slice(0, 100)}...
                     </p>
-                    <p className="text-black text-sm font-bold">Price: ${tour.price}</p>
+                    <p className="text-sm font-bold text-gray-800 flex items-center gap-1">
+                    <span className="text-green-700 font-extrabold text-sm flex items-center gap-1">
+  💵 {tour.price.toLocaleString()} BIRR
+</span>
+</p>
 
                     <div className="text-xs text-gray-500 space-y-1">
                       {tour.startDates.map((startDate) => (

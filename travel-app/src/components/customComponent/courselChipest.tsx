@@ -1,13 +1,19 @@
 'use client';
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSession } from 'next-auth/react';
+import { useSession } from "next-auth/react";
 import clsx from "clsx";
+import Image from "next/image";
+import { Heart } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
 
 export interface ITour {
   _id: string;
@@ -38,30 +44,7 @@ export interface ITour {
   guides: string[];
 }
 
-const ADDIS_ABABA_COORDS = {
-  lat: 9.03,
-  lng: 38.74,
-};
-
-function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371;
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-    Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function deg2rad(deg: number) {
-  return deg * (Math.PI / 180);
-}
-
-export default function CardCarousel() {
+export default function CardCarouselCH() {
   const [allTours, setAllTours] = useState<ITour[]>([]);
   const [loading, setLoading] = useState(false);
   const [clickedId, setClickedId] = useState<string | null>(null);
@@ -74,25 +57,18 @@ export default function CardCarousel() {
         const res = await axios.get('/api/tours');
         const fetchedTours: ITour[] = res.data.instanceFiltered || [];
 
-        const filteredTours = fetchedTours.filter(tour => {
-          if (!tour.location || !tour.location.coordinates) return false;
-          const [lng, lat] = tour.location.coordinates;
-          const dist = getDistanceFromLatLonInKm(
-            ADDIS_ABABA_COORDS.lat,
-            ADDIS_ABABA_COORDS.lng,
-            lat,
-            lng
-          );
-          return dist <= 200;
-        });
+        // ✅ Sort by price: ascending
+        const sortedTours = fetchedTours.sort((a, b) => a.price - b.price);
 
-        setAllTours(filteredTours);
+        // ✅ Set all sorted tours (no limit)
+        setAllTours(sortedTours);
       } catch (err) {
         console.error('Error fetching tours:', err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchTours();
   }, []);
 
@@ -118,16 +94,16 @@ export default function CardCarousel() {
       );
 
       setClickedId(tourId);
-      setTimeout(() => setClickedId(null), 200); // for pop animation
+      setTimeout(() => setClickedId(null), 200);
     } catch (error) {
       console.error('Failed to like tour:', error);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 space-y-4 mt-30">
-      <h2 className="text-2xl md:text-3xl font-bold text-center">Explore Experiences Near Addis Ababa</h2>
-      <p className="text-center text-gray-600">Cant-miss picks near you</p>
+    <div className="max-w-7xl mx-auto p-4 space-y-4 mt-12">
+      <h2 className="text-3xl font-bold text-center">Top Cheapest Experiences</h2>
+      <p className="text-center text-gray-600">Budget-friendly picks just for you</p>
 
       <div className="relative">
         <Carousel>

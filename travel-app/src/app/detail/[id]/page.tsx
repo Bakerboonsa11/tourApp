@@ -255,7 +255,7 @@ export default function TourDetailPage() {
   </div>
 
   <p className="text-2xl font-bold text-green-700">
-    Starting from ${currentour?.price}
+    Starting from   💵 {currentour?.price}
   </p>
   <p className="text-gray-600">
     {currentour?.ratingsAverage} ★ ({currentour?.ratingsQuantity} reviews)
@@ -293,24 +293,51 @@ export default function TourDetailPage() {
     
   )}
 </div>
-  {showCommentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-80 space-y-4 shadow-xl">
-            <h2 className="text-xl font-bold text-center">Leave a Comment</h2>
+{showCommentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-6">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-gray-200 p-6 sm:p-8 animate-fade-in">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowCommentModal(false)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition"
+            >
+              ✕
+            </button>
+
+            {/* Header */}
+            <h2 className="text-center text-2xl font-bold text-green-700 mb-4">
+              💬 Leave Your Thoughts
+            </h2>
+
+            {/* Textarea */}
             <textarea
-              className="w-full border p-2 rounded"
-              placeholder="Your comment..."
-              rows={4}
+              className="w-full resize-none rounded-2xl border border-green-300 bg-green-50 px-4 py-3 text-gray-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-green-400 placeholder:text-gray-500"
+              placeholder="Type your comment here..."
+              rows={5}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
-            <div className="flex justify-between">
-              <Button variant="secondary" onClick={() => setShowCommentModal(false)}>Cancel</Button>
-              <Button onClick={handleSubmitComment}>Post</Button>
+
+            {/* Buttons */}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-between">
+              <button
+                onClick={() => setShowCommentModal(false)}
+                className="w-full sm:w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-full py-2.5 transition-all shadow-sm"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleSubmitComment}
+                className="w-full sm:w-1/2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-full py-2.5 transition-all shadow-md hover:scale-105"
+              >
+                Post ✨
+              </button>
             </div>
           </div>
         </div>
       )}
+
 
 {/* Place the button *outside* the scrollable container */}
 <div className="mt-4">
@@ -421,7 +448,7 @@ export default function TourDetailPage() {
     
         {/* Map Section */}
         <section className="space-y-4">
-          <h2 className="text-3xl font-bold text-emerald-900">Tour Location</h2>
+          <h2 className="text-3xl font-bold text-emerald-900">{currentour?.name} Location</h2>
            {/* map */}
            {currentour?.location?.coordinates?.length === 2 && currentour?.name && (
   <Map
