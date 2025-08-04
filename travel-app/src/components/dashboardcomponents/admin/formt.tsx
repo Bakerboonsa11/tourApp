@@ -11,14 +11,18 @@ interface EditFields {
   duration: number | string;
   maxGroupSize: number | string;
   difficulty: string;
-  ratingsAverage: number | string;
-  ratingsQuantity: number | string;
+ 
   coverImage: File | null;
   photos: File[];
   startDates: string;
   endDate: string;
-  createdAt: string;
-  __v: number;
+ 
+  location: {
+    coordinates: [number, number];
+    address: string;
+    description: string;
+  };
+  
 }
 
 interface InputBlockProps {
@@ -44,15 +48,21 @@ export default function Form() {
     duration: '',
     maxGroupSize: '',
     difficulty: '',
-    ratingsAverage: '',
-    ratingsQuantity: '',
+   
     coverImage: null,
     photos: [],
     startDates: '',
     endDate: '',
-    createdAt: '',
-    __v: 0,
+
+    location: {
+      coordinates: [0, 0],
+      address: '',
+      description: '',
+    },
+    
   });
+
+  const [isediting, setIsEditing] = useState(false);
 
   const handleFieldChange = (field: keyof EditFields, value: unknown) => {
     setEditFields((prev) => ({
@@ -61,10 +71,45 @@ export default function Form() {
     }));
   };
 
-  const handleSaveEdit = () => {
-    console.log('Saving:', editFields);
-    // TODO: Implement actual save logic, e.g. API call with FormData for files
+  const handleSaveEdit = async () => {
+    const formData = new FormData();
+  
+    formData.append('name', editFields.name);
+    formData.append('slug', editFields.slug);
+    formData.append('description', editFields.description);
+    formData.append('region', editFields.region);
+    formData.append('typeOfTour', JSON.stringify(editFields.typeOfTour)); // array
+    formData.append('price', String(editFields.price));
+    formData.append('duration', String(editFields.duration));
+    formData.append('maxGroupSize', String(editFields.maxGroupSize));
+    formData.append('difficulty', editFields.difficulty);
+   
+    formData.append('startDates', editFields.startDates);
+    formData.append('endDate', editFields.endDate);
+    formData.append('location', JSON.stringify(editFields.location));
+
+  
+    if (editFields.coverImage) {
+      formData.append('coverImage', editFields.coverImage);
+    }
+  
+    for (const photo of editFields.photos) {
+      formData.append('photos', photo);
+    }
+   console.log('Form data prepared:', formData);
+    try {
+      const res = await fetch('/api/tours', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      const result = await res.json();
+      console.log('Result:', result);
+    } catch (err) {
+      console.error('Upload failed', err);
+    }
   };
+  
 
   const handleCancelEdit = () => {
     setEditFields({
@@ -77,20 +122,25 @@ export default function Form() {
       duration: '',
       maxGroupSize: '',
       difficulty: '',
-      ratingsAverage: '',
-      ratingsQuantity: '',
+   
       coverImage: null,
       photos: [],
       startDates: '',
       endDate: '',
-      createdAt: '',
-      __v: 0,
+  
+      location: {
+        coordinates: [0, 0],
+        address: '',
+        description: '',
+      },
     });
   };
 
-  return (
+  return  (
+
+    
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-2xl border border-gray-200 mt-10">
-      <h2 className="text-2xl font-bold text-blue-800 mb-6">Edit Tour Details</h2>
+      <h2 className="text-2xl font-bold text-blue-800 mb-6"> Create A New  Tour </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Text inputs */}
         <InputBlock label="Name" value={editFields.name} onChange={(val) => handleFieldChange('name', val)} />
@@ -129,6 +179,52 @@ export default function Form() {
           value={editFields.duration}
           onChange={(val) => handleFieldChange('duration', parseInt(val))}
         />
+        <InputBlock
+          label="Longitude"
+          type="number"
+          value={editFields.location.coordinates[0]}
+          onChange={(val) =>
+            handleFieldChange('location', {
+              ...editFields.location,
+              coordinates: [parseFloat(val), editFields.location.coordinates[1]],
+            })
+          }
+        />
+
+        <InputBlock
+          label="Latitude"
+          type="number"
+          value={editFields.location.coordinates[1]}
+          onChange={(val) =>
+            handleFieldChange('location', {
+              ...editFields.location,
+              coordinates: [editFields.location.coordinates[0], parseFloat(val)],
+            })
+          }
+        />
+
+        <InputBlock
+          label="Location Description"
+          value={editFields.location.description}
+          onChange={(val) =>
+            handleFieldChange('location', {
+              ...editFields.location,
+              description: val,
+            })
+          }
+        />
+
+        <InputBlock
+          label="Address"
+          value={editFields.location.address}
+          onChange={(val) =>
+            handleFieldChange('location', {
+              ...editFields.location,
+              address: val,
+            })
+          }
+        />
+
 
         <InputBlock
           label="Max Group Size"
@@ -151,19 +247,7 @@ export default function Form() {
           </select>
         </div>
 
-        <InputBlock
-          label="Ratings Average"
-          type="number"
-          value={editFields.ratingsAverage}
-          onChange={(val) => handleFieldChange('ratingsAverage', parseFloat(val))}
-        />
-
-        <InputBlock
-          label="Ratings Quantity"
-          type="number"
-          value={editFields.ratingsQuantity}
-          onChange={(val) => handleFieldChange('ratingsQuantity', parseInt(val))}
-        />
+      
 
         {/* File inputs */}
         <div>
@@ -217,12 +301,7 @@ export default function Form() {
           onChange={(val) => handleFieldChange('endDate', val)}
         />
 
-        <InputBlock
-          label="Created At"
-          type="datetime-local"
-          value={editFields.createdAt}
-          onChange={(val) => handleFieldChange('createdAt', val)}
-        />
+        
       </div>
 
       <div className="flex justify-end gap-4 mt-8">

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import Form from './formt';
 import axios from 'axios';
+import Link from 'next/link';
 export interface Tour {
   _id: string;
   name: string;
@@ -228,13 +229,15 @@ export default function ToursManagement() {
                   </Badge>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="sm" variant="outline">
-                    Edit
-                  </Button>
+                <Link href={`/edit/${tour._id}`}>
+                <Button size="sm" variant="outline">
+                  Edit
+                </Button>
+              </Link>
                   <Button size="sm" variant="destructive" disabled>
                     Delete
                   </Button>
-                  <Button size="sm" variant="ghost" disabled>
+                  <Button size="sm" variant="ghost" >
                     Archive
                   </Button>
                 </div>

@@ -17,6 +17,7 @@ interface Guide {
 interface Tour {
   _id: string;
   name: string;
+  guides?: string[];
 }
 
 type User = {
@@ -27,19 +28,26 @@ type User = {
   image: string;
   createdAt: string;
 };
-const handleAssignTour = async (email:string, tourId: string,guideId: string) => {
+
+const handleAssignTour = async (email: string, tourId: string, guideId: string, isAssigned: boolean) => {
   try {
-    const tour =await axios.get(`/api/tours/${tourId}`);
-   if (!tour.data) {
-    alert(`Assigned guide ${guideId} to tour ${tourId}`);
-  }
-  const guides= tour.data.guides || [];
-  guides[0] = guideId; // Assign the guide to the tour
-  await axios.patch(`/api/tours/${tourId}`, { guides }); // ✅ use tourId, not email
-  alert(`Assigned guide ${guideId} to tour ${tourId}`);
+    const tour = await axios.get(`/api/tours/${tourId}`);
+    if (!tour.data) {
+      alert(`Assigned guide ${guideId} to tour ${tourId}`);
+    }
+    let guides = tour.data.guides || [];
+
+    if (isAssigned) {
+      guides = guides.filter((g: string) => g !== guideId);
+    } else {
+      guides[0] = guideId; // Assign the guide to the tour
+    }
+
+    await axios.patch(`/api/tours/${tourId}`, { guides });
+    alert(`${isAssigned ? 'Unassigned' : 'Assigned'} guide ${guideId} to tour ${tourId}`);
   } catch (error) {
-    console.error('Error assigning tour:', error);
-    alert('Failed to assign tour. Please try again.');
+    console.error('Error assigning/unassigning tour:', error);
+    alert('Failed to update tour. Please try again.');
   }
 };
 
@@ -76,7 +84,6 @@ export default function GuideManagement() {
 
   const handleToggleTours = async (guideId: string) => {
     if (expandedGuideId === guideId) {
-      // Collapse if already open
       setExpandedGuideId(null);
       return;
     }
@@ -94,7 +101,7 @@ export default function GuideManagement() {
   };
 
   return (
-    <section className="bg-gradient-to-br from-cyan-50 to-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-7xl mx-auto mt-6">
+    <section className=" max-h-screen overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-cyan-300 scrollbar-track-cyan-100    bg-gradient-to-br from-cyan-50 to-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-7xl mx-auto mt-6">
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-cyan-900">Guide Management</h2>
         <p className="text-sm text-gray-600 mt-1">
@@ -135,40 +142,49 @@ export default function GuideManagement() {
 
             <div className="mt-5">
               <Button
-                className="w-full bg-cyan-600 hover:bg-cyan-700 text-white text-sm py-2 rounded-xl transition-all"
+                className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white text-sm py-2 rounded-xl transition-all font-semibold"
                 onClick={() => handleToggleTours(guide.id)}
               >
                 {expandedGuideId === guide.id ? 'Hide Tours' : 'Assign to Tour'}
               </Button>
 
               {expandedGuideId === guide.id && (
-                <div className="mt-4 space-y-2">
-                  {loadingTours ? (
-                    <p className="text-gray-500 text-sm">Loading tours...</p>
-                  ) : tours.length > 0 ? (
-                    tours.map((tour) => (
-                      <div
-                        key={tour._id}
-                        className="border border-cyan-100 bg-cyan-50 p-2 rounded-lg text-sm flex justify-between items-center"
-                      >
-                        <span>{tour.name}</span>
-                        <Button
-                          size="sm"
-                          className="text-xs"
-                          variant="outline"
-                          onClick={() => handleAssignTour(guide.email ,tour._id, guide.id)
-                         
-                          }
-                        >
-                          Assign
-                        </Button>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-gray-500">No tours found.</p>
-                  )}
-                </div>
-              )}
+  <div className="mt-4 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-cyan-300 scrollbar-track-cyan-100 rounded-lg border border-cyan-200 shadow-inner bg-white">
+    {loadingTours ? (
+      <p className="text-gray-500 text-sm p-4 text-center">Loading tours...</p>
+    ) : tours.length > 0 ? (
+      tours.map((tour) => {
+        const isAssigned = tour.guides?.includes(guide.id);
+        return (
+          <div
+            key={tour._id}
+            className="border border-cyan-100 bg-cyan-50 hover:bg-cyan-100 transition-colors p-3 rounded-xl text-sm flex justify-between items-center shadow-sm mb-2 mx-2"
+          >
+            <span className="font-medium text-gray-800 truncate max-w-[160px]">
+              {tour.name}
+            </span>
+            <Button
+              size="sm"
+              className={`text-xs font-bold px-3 py-1 rounded-lg transition-all duration-200 ${
+                isAssigned
+                  ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
+              onClick={() =>
+                handleAssignTour(guide.email, tour._id, guide.id, isAssigned ?? false)
+              }
+            >
+              {isAssigned ? 'Unassign' : 'Assign'}
+            </Button>
+          </div>
+        );
+      })
+    ) : (
+      <p className="text-sm text-gray-500 p-4 text-center">No tours found.</p>
+    )}
+  </div>
+)}
+
             </div>
           </div>
         ))}

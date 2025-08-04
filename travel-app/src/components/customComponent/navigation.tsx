@@ -52,7 +52,8 @@ console.log("Session:", session);
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6 items-center">
           <Link href="/tours/All" className="hover:text-green-700 no-underline text-black">Tours</Link>
-          <Link href="/bookings" className="hover:text-green-700 no-underline text-black">Bookings</Link>
+          <Link href="/bookings" className="hover:text-green-700 no-underline text-black">About Us</Link>
+
 {session?.user && (
   <Link
     href={`/dashboard/${session.user.role}`}
@@ -65,7 +66,7 @@ console.log("Session:", session);
           {session?.user ? (
             <div className="flex items-center space-x-4">
               <Image
-                src={session.user.image || '/pro.avif'}
+                src={'/pro.avif'}
                 alt="profile"
                 width={46}
                 height={46}
@@ -100,7 +101,8 @@ console.log("Session:", session);
             <div className="flex flex-col space-y-4 mt-8">
               <Link href="/" className="text-lg no-underline text-black">Home</Link>
               <Link href="/tours/All" className="text-lg no-underline text-black">Tours</Link>
-              <Link href="/bookings" className="text-lg no-underline text-black">Bookings</Link>
+              <Link href="/bookings" className="hover:text-green-700 no-underline text-black">About Us</Link>
+
               <Link href={`/dashboard/${session?.user.role}`} className="text-lg no-underline text-black">Dashboard</Link>
 
               {session?.user ? (
@@ -109,7 +111,7 @@ console.log("Session:", session);
                   
                   
                     <Image
-                     src={`/${session.user.image}` || '/profile.png'}
+                     src={ '/pro.avif'}
                       alt="profile"
                       width={36}
                       height={36}

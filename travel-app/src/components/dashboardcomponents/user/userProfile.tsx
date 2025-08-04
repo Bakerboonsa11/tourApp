@@ -27,23 +27,72 @@ import {
     CreditCard,
     Smartphone,
   } from "lucide-react";
+  import { useEffect,useState } from "react";
+  import axios from "axios";
+  import { useSession } from 'next-auth/react';
+
+  interface User {
+    _id: string;
+    name: string;
+    email: string;
+    role: 'user' | 'admin' | 'guide';
+    password?: string;
+    createdAt: string;
+    socialMedia: {
+      facebook: string;
+      instagram: string;
+      twitter: string;
+      linkedin: string;
+    };
+  }
+  
   
   export default function UserProfile() {
+   const { data: session } = useSession();
+   const [user ,setUser]=useState<User |null> (null)
+
+
+  useEffect(() => {
+    const email = session?.user?.email;
+    if (!email) return; // ensures it's a string
+  
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+        const userData: User = response.data.data;
+        setUser(userData);
+        console.log('user is ',userData)
+
+        // find tours
+        const tourResponse =await axios.get(`/api/tours`);
+        console.log(tourResponse.data) 
+     
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchUserData();
+  }, [session]);
     return (
       <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8">
         {/* Header */}
         <Card className="p-6">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <Avatar className="w-24 h-24">
-              <AvatarImage src="/avatar.png" alt="User profile" />
+              <AvatarImage src="/pro.avif" alt="User profile" />
               <AvatarFallback>BB</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-1 text-center md:text-left">
-              <h2 className="text-2xl font-bold">Boonssa Baker</h2>
-              <p className="text-muted-foreground">Software Engineer</p>
+              <h2 className="text-2xl font-bold">{user?.name}</h2>
+              <p className="text-muted-foreground">{user?.role}</p>
               <p className="text-sm text-muted-foreground">
-                Last login: <span className="font-semibold">July 23, 2025</span>
-              </p>
+  Last login:{' '}
+  <span className="font-semibold">
+    {user?.createdAt ? new Date(user.createdAt).toLocaleString() : 'Unknown'}
+  </span>
+</p>
+
             </div>
             <div className="mt-4 md:mt-0">
               <Button variant="outline" size="sm">Edit Profile</Button>
@@ -60,10 +109,10 @@ import {
               <CardDescription>Your personal contact details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <InfoRow icon={<Mail />} label="Email" value="boonssa@example.com" />
+              <InfoRow icon={<Mail />} label="Email" value={user?.email} />
               <InfoRow icon={<Phone />} label="Phone" value="+251 911 123 456" />
               <InfoRow icon={<MapPin />} label="Location" value="Addis Ababa, Ethiopia" />
-              <InfoRow icon={<Calendar />} label="Joined" value="Feb 12, 2024" />
+              <InfoRow icon={<Calendar />} label="Joined" value={user?.createdAt} />
             </CardContent>
           </Card>
   
@@ -74,9 +123,9 @@ import {
               <CardDescription>Connected accounts</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col space-y-2">
-              <SocialButton icon={<Twitter />} label="@boonssa" />
-              <SocialButton icon={<Linkedin />} label="linkedin.com/in/boonssa" />
-              <SocialButton icon={<Globe />} label="www.boonssa.dev" />
+              <SocialButton icon={<Twitter />} label={`${user?.socialMedia?.twitter}`} />
+              <SocialButton icon={<Linkedin />} label={`${user?.socialMedia?.linkedin}`} />
+              <SocialButton icon={<Globe />} label="www.default.dev" />
             </CardContent>
           </Card>
   
@@ -88,8 +137,8 @@ import {
             <CardContent className="space-y-3 text-sm">
               <InfoRow icon={<Lock />} label="Password" value="********" action="Change" />
               <InfoRow icon={<ShieldCheck />} label="2FA" value="Enabled" />
-              <InfoRow icon={<Smartphone />} label="Devices" value="3 connected" />
-              <InfoRow icon={<LogOut />} label="Sessions" action="Logout all" />
+              <InfoRow icon={<Smartphone />} label="Devices" value="connected" />
+              <InfoRow icon={<LogOut />} label="Sessions" action="Logout" />
             </CardContent>
           </Card>
   

@@ -57,8 +57,8 @@ export default function AdminDashboard() {
 
       {/* Content area */}
       <div className="flex-1 flex flex-col h-screen">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>
+      <Topbar role="User" imageUrl="/images/profile.jpg" />
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>
       </div>
     </div>
   );

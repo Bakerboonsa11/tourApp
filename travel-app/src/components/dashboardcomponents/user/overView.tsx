@@ -8,20 +8,75 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { CheckCircle, CalendarCheck2, Star, PlaneTakeoff } from 'lucide-react';
+import { CheckCircle, CalendarCheck2, Star, PlaneTakeoff, User } from 'lucide-react';
+import { ITour } from '@/model/tours';
 
 interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin'|'guide';
   password?: string;
   createdAt: string;
 }
+type Tour = {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  region: string;
+  typeOfTour: string[];
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: string;
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[];
+  coverImage: string;
+  location: string;
+  startDates: string[];
+  endDate: string;
+  likes: string[];
+  comments: Comment[];
+  createdAt: string;
+  guides: string[];
+  status:string
+};
+export interface Comment {
+  message: string;
+  userId: string;
+  userImage: string;
+  name:string;
+  createdAt: string; // ISO date string
+}
+export interface IBooking {
+  _id: string;
+  tour: {
+    _id:string
+    name:string
+  };// Simplified for display
+  user: string;
+  email: string;
+  price: number;
+  paid: boolean;
+  status: 'confirmed' | 'pending' | 'cancelled';
+  transaction: unknown;
+  createdAt: string;
+  updatedAt: string;
+
+}
+
 
 export default function UserDashboardOverview() {
   const { data: session } = useSession();
   const [user, setUser] = useState<User | null>(null);
+  const [reviewLength,setReviewLength]=useState<number>(0)
+  const [bookfineshed,setbookfineshed]=useState<number>(0)
+  const [pendingTours, setPendingTours] = useState<{ _id: string; name: string; status: string }[]>([]);
+  const [pendName,setNextTour]=useState<string>("")
+  const [allUserBookings,setAllBooks]= useState< IBooking[]>([]);
+
 
   useEffect(() => {
     const email = session?.user?.email;
@@ -32,6 +87,60 @@ export default function UserDashboardOverview() {
         const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
         const userData: User = response.data.data;
         setUser(userData);
+
+        // find tours
+        const tourResponse =await axios.get(`/api/tours`);
+        console.log(tourResponse.data)
+
+    //  filter for number of tours
+       const filteredtourReview= tourResponse.data.instanceFiltered.filter((tour:Tour) => tour.comments.some((comment:Comment) => comment.userId === userData?._id));
+        console.log('reviews are ',filteredtourReview)
+        setReviewLength(filteredtourReview.length)
+      
+        // filter for tours completed
+
+        const bookingResponse=await axios.get('/api/bookings')
+        const allUserBooks=bookingResponse.data.instanceFiltered.filter(
+          (book: IBooking) => book.user === userData?._id
+        );
+        setAllBooks(allUserBooks)
+        console.log('bookings are',bookingResponse)
+
+
+        const finishedTours = tourResponse.data.instanceFiltered.filter(
+          (tour: Tour) => tour.status === 'finished'
+        );
+
+        const pendingTours = tourResponse.data.instanceFiltered.filter(
+          (tour: Tour) => tour.status === 'pending'
+        );
+        
+        // Get IDs of finished tours
+        const finishedTourIds = finishedTours.map((tour: Tour) => tour._id);
+        const pendTourId=pendingTours.map((tour: Tour) => tour._id);
+        // Filter bookings for the current user and match finished tour IDs
+        const filteredTourCompleted = bookingResponse.data.instanceFiltered.filter(
+          (book: IBooking) =>
+            book.user === userData?._id && finishedTourIds.includes(book.tour._id)
+        );
+        const toursPended = bookingResponse.data.instanceFiltered.filter(
+          (book: IBooking) =>
+            book.user === userData?._id && pendTourId.includes(book.tour._id)
+        );
+        const pendedingtour=tourResponse.data.instanceFiltered.filter(
+          (tour: Tour) => tour._id === toursPended[0]?.tour._id
+        );
+
+        console.log('pended tours ',toursPended)
+        console.log('pending first tou ',pendedingtour)
+        const name=pendedingtour[0]?.name || "No Any "
+        setNextTour(name)
+        setbookfineshed(filteredTourCompleted.length)
+        setPendingTours(toursPended)
+        // console.log('tour pending is  is ',toursPended)
+        // finishedTours.map((tour)=>console.log(tour)}
+        
+     
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -91,8 +200,10 @@ export default function UserDashboardOverview() {
           <CardContent className="flex items-center gap-4 py-6">
             <CalendarCheck2 className="text-emerald-700" size={32} />
             <div>
-              <h3 className="text-lg font-semibold">3 Upcoming Trips</h3>
-              <p className="text-muted-foreground text-sm">Next: Zanzibar Tour</p>
+              <h3 className="text-lg font-semibold">{pendingTours.length} Upcoming Trips</h3>
+              <p className="text-muted-foreground text-sm mt-3 ">
+                Next: <span className="text-primary font-semibold bg-primary/10 px-2 py-1 rounded-lg ml-1">{pendName} Tour</span>
+            </p>
             </div>
           </CardContent>
         </Card>
@@ -101,7 +212,7 @@ export default function UserDashboardOverview() {
           <CardContent className="flex items-center gap-4 py-6">
             <Star className="text-blue-600" size={32} />
             <div>
-              <h3 className="text-lg font-semibold">12 Reviews Written</h3>
+              <h3 className="text-lg font-semibold">{reviewLength} Reviews Written</h3>
               <p className="text-muted-foreground text-sm">Average Rating: 4.6</p>
             </div>
           </CardContent>
@@ -111,7 +222,7 @@ export default function UserDashboardOverview() {
           <CardContent className="flex items-center gap-4 py-6">
             <PlaneTakeoff className="text-yellow-500" size={32} />
             <div>
-              <h3 className="text-lg font-semibold">7 Completed Tours</h3>
+              <h3 className="text-lg font-semibold">{bookfineshed } Completed Tours</h3>
               <p className="text-muted-foreground text-sm">Visited: 5 countries</p>
             </div>
           </CardContent>
@@ -120,30 +231,42 @@ export default function UserDashboardOverview() {
 
       {/* Recent Bookings */}
       <Card>
-        <CardHeader>
-          <CardTitle>Recent Bookings</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">Mount Kenya Expedition</p>
-              <p className="text-sm text-muted-foreground">June 2025</p>
-            </div>
-            <Badge className="flex items-center gap-1 bg-green-100 text-green-700 border border-green-300">
-              <CheckCircle className="w-4 h-4" />
-              Confirmed
-            </Badge>
-          </div>
+  <CardHeader>
+    <CardTitle>Recent Bookings</CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-3">
+    {allUserBookings?.map((book:IBooking) => (
+      <div
+        key={book._id}
+        className="flex justify-between items-center border-b pb-2 last:border-none"
+      >
+        <div>
+          <p className="font-medium">
+            {book.tour?.name || 'Unnamed Tour'}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {new Date(book.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+            })}
+          </p>
+        </div>
 
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-medium">Rwanda Gorilla Safari</p>
-              <p className="text-sm text-muted-foreground">May 2025</p>
-            </div>
-            <Badge variant="outline">Pending</Badge>
-          </div>
-        </CardContent>
-      </Card>
+        {book.status === 'confirmed' ? (
+          <Badge className="flex items-center gap-1 bg-green-100 text-green-700 border border-green-300">
+            <CheckCircle className="w-4 h-4" />
+            Confirmed
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="capitalize">
+            {book.status}
+          </Badge>
+        )}
+      </div>
+    ))}
+  </CardContent>
+</Card>
+
 
       {/* Membership + Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">

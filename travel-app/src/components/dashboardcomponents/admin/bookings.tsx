@@ -6,6 +6,7 @@ import { Types } from 'mongoose';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+
 import {
   Select,
   SelectTrigger,
@@ -15,6 +16,16 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 
+interface Transaction {
+  tx_ref: string;
+  payment_method: string;
+  payment_status: string;
+  payment_date: Date;
+}
+
+
+
+
 export interface IBooking {
   _id: Types.ObjectId;
   tour: Types.ObjectId | string;
@@ -23,10 +34,12 @@ export interface IBooking {
   price: number;
   paid: boolean;
   status: 'confirmed' | 'pending' | 'cancelled';
-  transaction: string;
+  transaction: Transaction;
   createdAt: Date | string;
   updatedAt: Date | string;
 }
+
+
 
 const statusColors = {
   confirmed: 'bg-green-100 text-green-700',
@@ -45,6 +58,7 @@ export default function BookingsSection() {
     const fetchAllData = async () => {
       try {
         const res = await axios.get('/api/bookings');
+        console.log('Fetched bookings:', res.data);
         setBookings(res.data.instanceFiltered || []);
       } catch (err) {
         console.error('Error fetching bookings:', err);
@@ -55,6 +69,201 @@ export default function BookingsSection() {
 
     fetchAllData();
   }, []);
+
+  const handleViewReceipt = async (book: IBooking) => {
+    try {
+      const res = await axios.get(`/api/receipt/${book.transaction.tx_ref}`);
+      const user = await axios.get(`/api/user/${book.email}`);
+      const data = res.data?.data;
+  
+      if (data) {
+        const receiptHTML = `
+        <html>
+          <head>
+            <title>Chapa Payment Receipt</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <style>
+              * {
+                box-sizing: border-box;
+              }
+              body {
+                font-family: 'Segoe UI', Tahoma, sans-serif;
+                background-color: #f3f4f6;
+                color: #111827;
+                margin: 0;
+                padding: 0;
+              }
+              .container {
+                max-width: 800px;
+                margin: 40px auto;
+                background: #ffffff;
+                padding: 30px;
+                border-radius: 16px;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+              }
+              .logo {
+                text-align: center;
+                margin-bottom: 24px;
+              }
+              .logo img {
+                height: 60px;
+              }
+              h2 {
+                text-align: center;
+                font-size: 28px;
+                color: #1e3a8a;
+                margin-bottom: 30px;
+              }
+              .section {
+                margin-bottom: 24px;
+              }
+              .section-title {
+                font-size: 20px;
+                margin-bottom: 12px;
+                font-weight: 600;
+                color: #374151;
+                border-bottom: 1px solid #e5e7eb;
+                padding-bottom: 6px;
+              }
+              .info {
+                margin-bottom: 8px;
+                font-size: 16px;
+                line-height: 1.5;
+              }
+              .info strong {
+                color: #374151;
+              }
+              .highlight {
+                color: #059669;
+                font-weight: 600;
+              }
+              .badge {
+                background: #1e40af;
+                color: white;
+                padding: 4px 10px;
+                border-radius: 9999px;
+                font-size: 12px;
+                float: right;
+              }
+              .footer {
+                text-align: center;
+                font-size: 14px;
+                color: #6b7280;
+                margin-top: 40px;
+              }
+              .download-btn {
+                display: block;
+                margin: 30px auto 0;
+                background-color: #1e3a8a;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+              }
+              .download-btn:hover {
+                background-color: #1d4ed8;
+              }
+      
+              @media (max-width: 600px) {
+                .container {
+                  margin: 20px;
+                  padding: 20px;
+                }
+                h2 {
+                  font-size: 22px;
+                }
+                .section-title {
+                  font-size: 18px;
+                }
+                .info {
+                  font-size: 15px;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container" id="receipt">
+              <div class="logo">
+                <img src="/static/log.png" alt="Chapa Logo" />
+              </div>
+              <h2>🧾 Payment Receipt</h2>
+      
+              <div class="section">
+                <div class="section-title">👤 Customer Info</div>
+                <div class="info"><strong>Name:</strong> ${data.first_name}</div>
+                <div class="info"><strong>Email:</strong> ${user.data.data.email}</div>
+              </div>
+      
+              <div class="section">
+                <div class="section-title">💳 Payment Details 
+                  <span class="badge">${data.status.toUpperCase()}</span>
+                </div>
+                <div class="info"><strong>Transaction ID:</strong> ${data.tx_ref}</div>
+                <div class="info"><strong>Amount:</strong> <span class="highlight">${data.amount} ${data.currency}</span></div>
+                <div class="info"><strong>Date:</strong> ${new Date(data.created_at).toLocaleString()}</div>
+              </div>
+      
+              <div class="section">
+                <div class="section-title">🌍 Tour Info</div>
+                <div class="info"><strong>Tour Name:</strong> ${data.tour?.name ?? 'N/A'}</div>
+                <div class="info"><strong>Region:</strong> ${data.tour?.region ?? 'N/A'}</div>
+                <div class="info"><strong>Duration:</strong> ${data.tour?.duration ?? 'N/A'} days</div>
+              </div>
+      
+              <div class="footer">
+                Thank you for traveling with us!<br />
+                <strong>TravelXperience Tours</strong> 🌴✨
+              </div>
+      
+              <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+              <button class="download-btn" onclick="handlecancel()">Cancel</button>
+
+            </div>
+      
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+            <script>
+              async function downloadPDF() {
+                const { jsPDF } = window.jspdf;
+                const receipt = document.getElementById('receipt');
+                const canvas = await html2canvas(receipt);
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const width = pdf.internal.pageSize.getWidth();
+                const height = (canvas.height * width) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+                pdf.save('${data.tx_ref}_receipt.pdf');
+              }
+              function handlecancel() {
+              alert('Receipt download cancelled.');
+                 window.location.reload();
+
+              }
+            </script>
+          </body>
+        </html>
+      `;
+      
+  
+        const receiptWindow = window.open('', '_blank');
+        if (receiptWindow) {
+          receiptWindow.document.write(receiptHTML);
+          receiptWindow.document.close();
+        }
+      } else {
+        alert('No receipt found.');
+      }
+    } catch (err) {
+      console.error('Failed to load receipt:', err);
+      alert('Error fetching receipt.');
+    }
+  };
+  
+  
+  
 
   const filteredBookings = bookings
     .filter((b) => {
@@ -131,7 +340,7 @@ export default function BookingsSection() {
                         {b._id.toString().slice(-6)}
                       </td>
                       <td className="p-3 text-sm text-gray-800">{b.email}</td>
-                      <td className="p-3 text-sm text-gray-600">{b.tour.toString().slice(-6)}</td>
+                      <td className="p-3 text-sm text-gray-600">{b.tour?.toString().slice(-6)}</td>
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(b.createdAt).toLocaleDateString()}
                       </td>
@@ -142,12 +351,15 @@ export default function BookingsSection() {
                       </td>
                       <td className="p-3 font-semibold text-green-700">${b.price}</td>
                       <td className="p-3 space-x-2">
-                        <Button size="sm" className="bg-cyan-600 hover:bg-cyan-700 text-white">
-                          View
-                        </Button>
-                        <Button size="sm" variant="ghost" className="text-red-600 hover:bg-red-50">
-                          Cancel
-                        </Button>
+                      <Button
+  size="sm"
+  className="bg-cyan-600 hover:bg-cyan-700 text-white"
+  onClick={() => handleViewReceipt(b)}
+>
+  View
+</Button>
+
+                       
                       </td>
                     </tr>
                   ))

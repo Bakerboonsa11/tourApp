@@ -57,16 +57,22 @@ type Tour = {
   createdAt: string;
   guides: string[];
 };
+import {
+ 
+  Globe2,
+  Compass,
+  CalendarCheck,
+} from 'lucide-react';
+
 
 // Define nav items here and pass to Sidebar
 const navItems = [
   { section: 'admin', label: 'Dashboard', Icon: Home },
   { section: 'user', label: 'Users', Icon: Users },
-  { section: 'guide', label: 'Guides', Icon: Map },
-  { section: 'bookings', label: 'bookings', Icon: Map },
-  { section: 'tours', label: 'tours', Icon: Map },
+  { section: 'guide', label: 'Guides', Icon: Compass },
+  { section: 'bookings', label: 'Bookings', Icon: CalendarCheck },
+  { section: 'tours', label: 'Tours', Icon: Globe2 },
 ];
-
 
 const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
 
@@ -421,7 +427,7 @@ export default function AdminDashboard() {
 </div>
 
       <div className="flex-1 flex flex-col">
-        <Topbar />
+      <Topbar role="Admin" imageUrl="/images/profile.jpg" />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>
       </div>
     </div>

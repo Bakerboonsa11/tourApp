@@ -92,7 +92,7 @@ export default function AdminDashboard() {
   
       {/* Content area */}
       <div className="flex-1 flex flex-col">
-        <Topbar />
+      <Topbar role="Guide" imageUrl="/images/profile.jpg" />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6">
           {renderContent()}
         </main>

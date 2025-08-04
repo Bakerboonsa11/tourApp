@@ -32,7 +32,7 @@ export function Sidebar({ navItems }: SidebarProps) {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-300 shadow-lg flex flex-col h-screen">
+    <aside className="w-64 bg-white border-r border-gray-300 shadow-lg flex flex-col h-screen mb-25">
       <div className="px-8 py-6 font-extrabold text-2xl tracking-wide text-green-700 border-b border-gray-200 select-none">
         Travel {dashboardRole}
       </div>

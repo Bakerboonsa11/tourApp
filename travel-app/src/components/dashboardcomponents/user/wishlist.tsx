@@ -33,51 +33,55 @@ const wishlistItems = [
 
 export default function Wishlist() {
   return (
-    <div className="p-6 bg-gradient-to-tr from-sky-50 via-white to-blue-100 min-h-screen">
-      <h2 className="text-4xl font-extrabold text-slate-700 mb-10 text-center">💙 My Wishlist</h2>
+    <div className="p-8 bg-gradient-to-br from-blue-100 via-white to-sky-200 min-h-screen font-sans">
+      <h2 className="text-5xl font-black text-slate-800 text-center mb-14 tracking-tight drop-shadow-lg">
+        ✨ Wishlist Wonders
+      </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {wishlistItems.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden relative flex flex-col border border-gray-100"
+            className="relative group rounded-3xl overflow-hidden backdrop-blur-md bg-white/40 shadow-xl border border-sky-100 hover:scale-[1.02] hover:shadow-2xl transition-all duration-300"
           >
-            <div className="relative h-56 w-full">
+            {/* Image Section */}
+            <div className="relative h-64 w-full overflow-hidden">
               <Image
                 src={item.image}
                 alt={item.name}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover transition-transform group-hover:scale-110 duration-500"
               />
-              <div className="absolute top-3 right-3 bg-white p-2 rounded-full shadow text-pink-600 hover:bg-pink-100 cursor-pointer">
-                <Heart className="w-5 h-5 fill-pink-500" />
+              <div className="absolute top-4 right-4 z-10">
+                <Heart className="w-6 h-6 text-pink-500 hover:scale-125 transition-transform fill-pink-300" />
               </div>
-              <div className="absolute bottom-3 left-3 bg-sky-600 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 shadow">
-                <Clock className="w-3 h-3" />
+              <div className="absolute bottom-4 left-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 shadow">
+                <Clock className="w-4 h-4" />
                 {item.duration} Days
+              </div>
+              <div className="absolute bottom-4 right-4 bg-white/80 text-sky-800 font-bold px-4 py-1 rounded-full shadow text-sm">
+                ${item.price}
               </div>
             </div>
 
-            <div className="p-5 flex-1 flex flex-col justify-between">
+            {/* Info Section */}
+            <div className="p-6 space-y-3 flex flex-col justify-between h-full">
               <div>
-                <h3 className="text-xl font-semibold text-slate-800">{item.name}</h3>
-                <div className="flex items-center text-sm text-slate-500 mt-1 gap-2">
+                <h3 className="text-2xl font-semibold text-slate-900">{item.name}</h3>
+                <div className="flex items-center text-sm text-slate-600 mt-1 gap-2">
                   <MapPin className="w-4 h-4 text-sky-600" />
                   {item.region}
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-between items-center">
-                <span className="text-lg font-bold text-sky-700">${item.price}</span>
-              </div>
-
-              <div className="mt-4 flex gap-3">
-                <Button className="w-full bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm">
+              {/* Buttons */}
+              <div className="flex gap-4 pt-4">
+                <Button className="w-full bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-xl shadow hover:brightness-110">
                   Book Now
                 </Button>
                 <Button
-                  variant="outline"
-                  className="text-red-500 border-red-300 hover:bg-red-50 rounded-xl"
+                  variant="ghost"
+                  className="text-red-500 hover:bg-red-50 border border-red-200 rounded-xl"
                 >
                   <Trash2 className="w-5 h-5" />
                 </Button>
