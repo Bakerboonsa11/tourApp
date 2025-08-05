@@ -274,7 +274,7 @@ export default function TourDetailPage() {
           className="flex items-start gap-3 text-left bg-emerald-50 hover:bg-emerald-100 transition rounded-md px-4 py-3 shadow-sm"
         >
           <Image
-            src={comment.userImage || '/pro.avif'}
+            src={'/pro.avif'}
             alt="User"
             width={40}
             height={40}

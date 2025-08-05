@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import {connectDB }from '../../../../lib/db';
 import TourModel from '@/model/tours';
-import { getOne,createOne,updateOne } from '../../../../lib/factoryfun';
+import { getOne,createOne,updateOne,deleteOne } from '../../../../lib/factoryfun';
 
 export const GET = async (req: NextRequest, context: { params: { id: string } }) => {
   await connectDB();
@@ -20,4 +20,9 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
   const { id } = await context.params;
   await connectDB();
   return updateOne(TourModel)(req, { id });
+}
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
+  await connectDB();
+  return deleteOne(TourModel)(req, { id });
 }

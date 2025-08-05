@@ -34,8 +34,14 @@ interface TourFields {
     coverImage?: string;
     images?: string[];
   }
+  type ParsedLocation = {
+    coordinates?: [number, number];
+    address?: string;
+    description?: string;
+  };
+  
 
-  function cleanFields<T extends Record<string, any>>(obj: T): Partial<T> {
+  function cleanFields<T extends Record<string, unknown>>(obj: T): Partial<T> {
     const cleaned: Partial<T> = {};
   
     for (const key in obj) {
@@ -81,26 +87,36 @@ export async function PATCH  (req: NextRequest) {
   }
 
   // Parse location
-  let locationParsed: any = {};
+
+  
+  let locationParsed: ParsedLocation = {};
+  
   try {
     locationParsed = JSON.parse(formData.get('location')?.toString() || '{}');
   } catch {
-    return NextResponse.json({ status: 'fail', message: 'Invalid location format' }, { status: 400 });
+    return NextResponse.json(
+      { status: 'fail', message: 'Invalid location format' },
+      { status: 400 }
+    );
   }
-
-  const lng = parseFloat(locationParsed.coordinates?.[0]);
-  const lat = parseFloat(locationParsed.coordinates?.[1]);
-
+  
+  const lng = parseFloat(locationParsed.coordinates?.[0]?.toString() || '');
+  const lat = parseFloat(locationParsed.coordinates?.[1]?.toString() || '');
+  
   if (isNaN(lng) || isNaN(lat)) {
-    return NextResponse.json({ status: 'fail', message: 'Invalid location coordinates' }, { status: 400 });
+    return NextResponse.json(
+      { status: 'fail', message: 'Invalid location coordinates' },
+      { status: 400 }
+    );
   }
-
+  
   const location: TourFields['location'] = {
     type: 'Point',
     coordinates: [lng, lat],
     address: locationParsed.address || '',
     description: locationParsed.description || '',
   };
+  
 
   // Parse typeOfTour safely
   let typeOfTour: string[] = [];

@@ -9,8 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { CheckCircle, CalendarCheck2, Star, PlaneTakeoff, User } from 'lucide-react';
-import { ITour } from '@/model/tours';
-
+import Link from 'next/link';
 interface User {
   _id: string;
   name: string;
@@ -276,8 +275,11 @@ export default function UserDashboardOverview() {
         </div>
         <div className="flex gap-2">
           <Button variant="default">Upgrade Plan</Button>
-          <Button variant="secondary">Edit Profile</Button>
-        </div>
+          <Button asChild variant="secondary">
+  <Link href="/edituser">Edit Profile</Link>
+</Button>      
+          
+           </div>
       </div>
     </div>
   );

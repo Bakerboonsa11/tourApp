@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -8,9 +8,45 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Bell, Lock, User2 } from 'lucide-react';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin'|'guide';
+  password?: string;
+  createdAt: string;
+}
 
 export default function Settings() {
   const [emailNotifications, setEmailNotifications] = useState(true);
+  const {data:session}=useSession()
+  const [user,setUser]=useState<User|null>(null)
+
+
+    useEffect(() => {
+      const email = session?.user?.email;
+      if (!email) return; // ensures it's a string
+    
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+          const userData: User = response.data.data;
+          setUser(userData);
+  
+    
+        
+          
+       
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+    
+      fetchUserData();
+    }, [session]);
 
   return (
     <div className="p-8 max-w-3xl mx-auto bg-white min-h-screen">
@@ -42,12 +78,12 @@ export default function Settings() {
         <TabsContent value="profile">
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" placeholder="John Doe" className="mt-1" />
+              <Label htmlFor="name">{user?.name}</Label>
+              <Input id="name" placeholder={user?.name} className="mt-1" />
             </div>
             <div>
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="you@example.com" className="mt-1" />
+              <Label htmlFor="email">{user?.email}</Label>
+              <Input id="email" type="email" placeholder={user?.name} className="mt-1" />
             </div>
             <Button className="mt-4 bg-neutral-900 text-white hover:bg-neutral-700 rounded-xl">
               Save Changes
