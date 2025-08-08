@@ -2,67 +2,101 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const bookings = [
-  {
-    id: 'B001',
-    tourist: 'Amina Yusuf',
-    tour: 'Danakil Depression Adventure',
-    date: '2025-08-10',
-    status: 'Paid',
-  },
-  {
-    id: 'B002',
-    tourist: 'Liam Johnson',
-    tour: 'Lalibela Historical Tour',
-    date: '2025-08-18',
-    status: 'Pending',
-  },
-  {
-    id: 'B003',
-    tourist: 'Chen Wei',
-    tour: 'Simien Mountains Trek',
-    date: '2025-09-02',
-    status: 'Paid',
-  },
-];
+export interface IBooking {
+  _id: string;
+  tour: {
+    _id: string;
+    name: string;
+  };
+  user: string;
+  email: string;
+  price: number;
+  paid: boolean;
+  status: 'confirmed' | 'pending' | 'cancelled';
+  transaction: unknown;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function GuideBookings() {
+  const [allUserBookings, setAllBooks] = useState<IBooking[]>([]);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const bookingResponse = await axios.get('/api/bookings');
+        setAllBooks(bookingResponse.data.instanceFiltered);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold text-green-700 mb-4">My Tour Bookings</h2>
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
+    <div className="p-6 min-h-screen bg-gradient-to-tr from-white via-green-50 to-green-100">
+      <h2 className="text-3xl font-bold text-green-700 mb-6 text-center">
+        🌿 My Tour Bookings
+      </h2>
+
+      <Card className="shadow-xl border border-green-100">
+        <CardContent className="p-0 overflow-x-auto">
+          <Table className="min-w-full text-sm">
+            <TableHeader className="bg-green-600 text-white">
               <TableRow>
-                <TableHead className="w-24">Booking ID</TableHead>
-                <TableHead>Tourist</TableHead>
-                <TableHead>Tour</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="text-white px-4 py-3 w-28">Booking ID</TableHead>
+                <TableHead className="text-white px-4 py-3">Tourist Email</TableHead>
+                <TableHead className="text-white px-4 py-3">Tour</TableHead>
+                <TableHead className="text-white px-4 py-3">Date</TableHead>
+                <TableHead className="text-white px-4 py-3">Status</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {bookings.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell>{booking.id}</TableCell>
-                  <TableCell>{booking.tourist}</TableCell>
-                  <TableCell>{booking.tour}</TableCell>
-                  <TableCell>{booking.date}</TableCell>
-                  <TableCell>
+              {allUserBookings.map((booking) => (
+                <TableRow
+                  key={booking._id}
+                  className="hover:bg-green-50 transition-colors duration-200"
+                >
+                  <TableCell className="px-4 py-3 font-mono text-gray-700">{booking._id.slice(0, 8)}...</TableCell>
+                  <TableCell className="px-4 py-3 text-gray-800">{booking.email}</TableCell>
+                  <TableCell className="px-4 py-3 text-green-800 font-medium">{booking.tour.name}</TableCell>
+                  <TableCell className="px-4 py-3 text-gray-600">
+                    {new Date(booking.createdAt).toLocaleDateString(undefined, {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </TableCell>
+                  <TableCell className="px-4 py-3">
                     <span
-                      className={`px-2 py-1 rounded text-xs font-semibold ${
-                        booking.status === 'Paid'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm inline-block
+                        ${
+                          booking.status === 'confirmed'
+                            ? 'bg-green-100 text-green-700'
+                            : booking.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-700'
+                        }
+                      `}
                     >
                       {booking.status}
                     </span>
                   </TableCell>
                 </TableRow>
               ))}
+
+              {allUserBookings.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-6 text-gray-500">
+                    No bookings found.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

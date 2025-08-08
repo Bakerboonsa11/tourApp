@@ -11,6 +11,7 @@ interface IUser extends Document {
   createdAt: Date;
   location?: string;
   phoneNumber?: string;
+  available:boolean
   socialMedia?: {
     facebook?: string;
     twitter?: string;
@@ -62,6 +63,11 @@ const userSchema = new Schema<IUser>({
     type: Date,
     default: Date.now,
   },
+  available: {
+    type: Boolean, // Capital B — this is the JavaScript Boolean constructor
+    default: true
+  }
+  
 });
 
 // 🔐 Pre-save middleware to hash password

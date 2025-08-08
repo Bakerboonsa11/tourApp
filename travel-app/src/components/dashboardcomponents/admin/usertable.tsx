@@ -3,10 +3,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '@/components/ui/select';
 import { Edit, Trash2 } from 'lucide-react';
 
 type User = {
@@ -70,7 +83,7 @@ export default function UserTable() {
         <table className="min-w-full bg-white border rounded-lg shadow-sm">
           <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
             <tr>
-              <th className="py-3 px-6 text-left">Name</th>
+              <th className="py-3 px-6 text-left">Profile</th>
               <th className="py-3 px-6 text-left">Email</th>
               <th className="py-3 px-6 text-left">Role</th>
               <th className="py-3 px-6 text-left">Joined</th>
@@ -80,9 +93,16 @@ export default function UserTable() {
           <tbody className="text-gray-700 text-sm divide-y divide-gray-200">
             {users.map((user) => (
               <tr key={user._id} className="hover:bg-gray-50 transition">
-                <td className="py-3 px-6">{user.name}</td>
+                <td className="py-3 px-6 flex items-center gap-3">
+                  <img
+                    src={`/userimages/${user.image}` || '/pro.png'}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full object-cover border"
+                  />
+                  <span>{user.name}</span>
+                </td>
                 <td className="py-3 px-6">{user.email}</td>
-                <td className="py-3 px-6">{user.role}</td>
+                <td className="py-3 px-6 capitalize">{user.role}</td>
                 <td className="py-3 px-6">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
@@ -126,7 +146,7 @@ export default function UserTable() {
           </DialogHeader>
           <div className="space-y-4">
             <Label>Email</Label>
-            <Input value={editModal?.email ?? ""} readOnly />
+            <Input value={editModal?.email ?? ''} readOnly />
 
             <Label>New Role</Label>
             <Select value={newRole} onValueChange={setNewRole}>
@@ -141,7 +161,9 @@ export default function UserTable() {
             </Select>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditModal(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setEditModal(null)}>
+              Cancel
+            </Button>
             <Button onClick={handleUpdateRole}>Update</Button>
           </DialogFooter>
         </DialogContent>
@@ -153,12 +175,17 @@ export default function UserTable() {
           <DialogHeader>
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete user <strong>{deleteModal?.name}</strong>?
+              Are you sure you want to delete user{' '}
+              <strong>{deleteModal?.name}</strong>?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteModal(null)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDeleteUser}>Delete</Button>
+            <Button variant="outline" onClick={() => setDeleteModal(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteUser}>
+              Delete
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -36,6 +36,7 @@ type User = {
 
 type Tour = {
   _id: string;
+
   name: string;
   slug: string;
   description: string;
@@ -63,6 +64,11 @@ import {
   Compass,
   CalendarCheck,
 } from 'lucide-react';
+import {
+  
+  Legend,
+
+} from 'recharts';
 
 
 // Define nav items here and pass to Sidebar
@@ -260,44 +266,43 @@ export default function AdminDashboard() {
 
 
   {/* CHART */}
-              <div className="p-6 bg-gradient-to-tr from-emerald-50 via-white to-yellow-50 rounded-2xl shadow-md border border-gray-200">
-                  <h4 className="text-lg font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                    🥧 Tour Types
-                  </h4>
-                  <div className="h-72 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                      <Pie
-                          data={chartData}
-                          dataKey="value"
-                          nameKey="name"
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={100}
-                          label={({ name, percent }) =>
-                            percent !== undefined ? `${name} (${(percent * 100).toFixed(0)}%)` : name
-                          }
-                        >
-                          {chartData.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={COLORS[index % COLORS.length]}
-                            />
-                          ))}
-                        </Pie>
+  <div className="p-6 bg-gradient-to-tr from-emerald-50 via-white to-yellow-50 rounded-2xl shadow-md border border-gray-200">
+  <h4 className="text-lg font-bold text-emerald-800 mb-4 flex items-center gap-2">
+    🥧 Tour Types
+  </h4>
+  <div className="h-72 w-full">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={chartData}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={100}
+          labelLine={false}
+          // label is removed here
+        >
+          {chartData.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{
+            borderRadius: '8px',
+            backgroundColor: '#fff',
+            border: '1px solid #e5e7eb',
+            fontSize: '0.875rem',
+          }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+</div>
 
-                        <Tooltip
-                          contentStyle={{
-                            borderRadius: '8px',
-                            backgroundColor: '#fff',
-                            border: '1px solid #e5e7eb',
-                            fontSize: '0.875rem',
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
 
       
 
@@ -356,8 +361,8 @@ export default function AdminDashboard() {
     </div>
     <div>
       <h4 className="text-sm font-semibold text-gray-700">Total Guides</h4>
-      <p className="text-xs text-gray-500 mt-1">125 published</p>
-    </div>
+      <p className="text-xs text-gray-500 mt-1">{users.filter((t) => t.role === "guide").length}</p>
+      </div>
   </div>
 
   {/* Box 2 */}
@@ -367,7 +372,7 @@ export default function AdminDashboard() {
     </div>
     <div>
       <h4 className="text-sm font-semibold text-gray-700">Active Regions</h4>
-      <p className="text-xs text-gray-500 mt-1">10 regions covered</p>
+      <p className="text-xs text-gray-500 mt-1">{tours.length} regions covered</p>
     </div>
   </div>
 
@@ -377,8 +382,16 @@ export default function AdminDashboard() {
       🌟
     </div>
     <div>
-      <h4 className="text-sm font-semibold text-gray-700">Top Rated</h4>
-      <p className="text-xs text-gray-500 mt-1">4.8 avg rating</p>
+      <h4 className="text-sm font-semibold text-gray-700">Top Liked</h4>
+      <p className="text-xs text-gray-500 mt-1">
+  {
+    (() => {
+      const maxLikes = Math.max(...tours.map(tour => tour.likes?.length || 0));
+      const mostLikedTour = tours.find(tour => (tour.likes?.length || 0) === maxLikes);
+      return`${ mostLikedTour?.likes?.length} ${mostLikedTour?.name}`|| 0;
+    })()
+  } 
+</p>
     </div>
   </div>
 </div>

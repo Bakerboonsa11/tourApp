@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import {
   MapPin,
   Calendar,
@@ -11,7 +12,65 @@ import {
   ClipboardList,
   MessageSquare,
 } from 'lucide-react';
+import { useEffect } from 'react';
+import axios from 'axios';
 
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin'|'guide';
+  password?: string;
+  createdAt: string;
+}
+type Tour = {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  region: string;
+  typeOfTour: string[];
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: string;
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[];
+  coverImage: string;
+  location: string;
+  startDates: string[];
+  endDate: string;
+  likes: string[];
+  comments: Comment[];
+  createdAt: string;
+  guides: string[];
+  status:string
+};
+export interface Comment {
+  message: string;
+  userId: string;
+  userImage: string;
+  name:string;
+  createdAt: string; // ISO date string
+}
+export interface IBooking {
+  _id: string;
+  tour: {
+    _id:string
+    name:string
+  };// Simplified for display
+  user: string;
+  email: string;
+  price: number;
+  paid: boolean;
+  status: 'confirmed' | 'pending' | 'cancelled';
+  transaction: unknown;
+  createdAt: string;
+  updatedAt: string;
+
+}
 const upcomingTours = [
   { id: 1, name: 'Mount Kilimanjaro Trek', date: 'Aug 10, 2025', location: 'Tanzania' },
   { id: 2, name: 'Nile River Cruise', date: 'Sep 05, 2025', location: 'Egypt' },
@@ -32,6 +91,109 @@ const notifications = [
 
 export default function GuideDashboardOverview() {
   const [notif, setNotif] = useState(notifications);
+
+
+   const { data: session } = useSession();
+    const [user, setUser] = useState<User | null>(null);
+    const [guidedToursLength,setGuidedTourLength]=useState<number>(0)
+    const [bookingThisMonth,setBokingThisMonth]=useState<number>(0)
+    const [pendingTours, setPendingTours] = useState< Tour[]>([]);
+    const [fineshedTour,setFineshedTours]=useState< Tour[]>([]);
+  
+  
+    useEffect(() => {
+      const email = session?.user?.email;
+      if (!email) return; // ensures it's a string
+    
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+          const userData: User = response.data.data;
+          setUser(userData);
+  
+          // find tours
+          const tourResponse =await axios.get(`/api/tours`);
+          console.log(tourResponse.data)
+  
+      //  filter for number of tours
+      const filteredtourGuided = tourResponse.data.instanceFiltered.filter(
+        (tour: Tour) => tour.guides.some((guide: string) => guide === userData?._id)
+      );
+                console.log('guideds are  are ',filteredtourGuided)
+          setGuidedTourLength(filteredtourGuided.length)
+          const bookingResponse=await axios.get('/api/bookings')
+
+        
+          // filter for tours completed this month
+          const tourIds = filteredtourGuided.map((tour: Tour) => tour._id);
+
+          const now = new Date();
+          const currentMonth = now.getMonth(); // 0-indexed: Jan = 0
+          const currentYear = now.getFullYear();
+          
+          const relatedBookingsThisMonth = bookingResponse.data.instanceFiltered.filter(
+            (booking: IBooking) => {
+              const bookingDate = new Date(booking.createdAt);
+              const sameTour = tourIds.includes(booking.tour._id);
+              const sameMonth =
+                bookingDate.getMonth() === currentMonth &&
+                bookingDate.getFullYear() === currentYear;
+              return sameTour && sameMonth;
+            }
+          );
+          
+          
+  
+      
+          setBokingThisMonth(relatedBookingsThisMonth.length)
+          console.log('bookings are',bookingResponse)
+  
+        //  find pending and fineshd tours of guide 
+        console.log('tours of guide is ',filteredtourGuided)
+          const finishedTours = filteredtourGuided.filter(
+            (tour: Tour) => tour.status === 'finished'
+          );
+  
+          const pendingTours = filteredtourGuided.filter(
+            (tour: Tour) => tour.status === 'pending'
+          );
+          
+          // Get IDs of finished tours
+          // const finishedTourIds = finishedTours.map((tour: Tour) => tour._id);
+          // const pendTourId=pendingTours.map((tour: Tour) => tour._id);
+          // Filter bookings for the current user and match finished tour IDs
+          // const filteredTourCompleted = bookingResponse.data.instanceFiltered.filter(
+          //   (book: IBooking) =>
+          //     book.user === userData?._id && finishedTourIds.includes(book.tour._id)
+          // );
+          // const toursPended = bookingResponse.data.instanceFiltered.filter(
+          //   (book: IBooking) =>
+          //     book.user === userData?._id && pendTourId.includes(book.tour._id)
+          // );
+          // const pendedingtour=tourResponse.data.instanceFiltered.filter(
+          //   (tour: Tour) => tour._id === toursPended[0]?.tour._id
+          // );
+         setFineshedTours(finishedTours)
+         setPendingTours(pendingTours)
+       
+          // const name=pendedingtour[0]?.name || "No Any "
+          // setNextTour(name)
+          // setbookfineshed(filteredTourCompleted.length)
+          // setPendingTours(toursPended)
+          // console.log('tour pending is  is ',toursPended)
+          // finishedTours.map((tour)=>console.log(tour)}
+          
+       
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+    
+      fetchUserData();
+    }, [session]);
+
+
+
 
   const markAsRead = (id: number) => {
     setNotif((prev) =>
@@ -54,14 +216,14 @@ export default function GuideDashboardOverview() {
         <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4 border-l-8 border-blue-500 hover:shadow-lg transition-shadow">
           <ClipboardList className="w-10 h-10 text-blue-600" />
           <div>
-            <p className="text-2xl font-semibold text-blue-700">15</p>
+            <p className="text-2xl font-semibold text-blue-700">{guidedToursLength}</p>
             <p className="text-blue-600 font-medium">Tours Assigned</p>
           </div>
         </div>
         <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4 border-l-8 border-teal-500 hover:shadow-lg transition-shadow">
           <Calendar className="w-10 h-10 text-teal-600" />
           <div>
-            <p className="text-2xl font-semibold text-teal-700">42</p>
+            <p className="text-2xl font-semibold text-teal-700">{bookingThisMonth}</p>
             <p className="text-teal-600 font-medium">Bookings This Month</p>
           </div>
         </div>
@@ -80,18 +242,18 @@ export default function GuideDashboardOverview() {
           <h2 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
             <MapPin className="w-6 h-6" /> Upcoming Tours
           </h2>
-          {upcomingTours.length === 0 ? (
+          {pendingTours.length === 0 ? (
             <p className="text-gray-500">No upcoming tours assigned.</p>
           ) : (
             <ul className="space-y-4">
-              {upcomingTours.map(({ id, name, date, location }) => (
+              {pendingTours.map((tour:Tour) => (
                 <li
-                  key={id}
+                  key={tour._id}
                   className="p-4 bg-blue-50 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 >
-                  <p className="font-semibold text-blue-800">{name}</p>
-                  <p className="text-sm text-blue-600">{date}</p>
-                  <p className="text-sm text-blue-600">{location}</p>
+                  <p className="font-semibold text-blue-800">{tour?.name}</p>
+                  <p className="text-sm text-blue-600">{tour.createdAt}</p>
+                  <p className="text-sm text-blue-600">{tour.location}</p>
                 </li>
               ))}
             </ul>
@@ -103,18 +265,18 @@ export default function GuideDashboardOverview() {
           <h2 className="text-2xl font-bold text-teal-700 mb-4 flex items-center gap-2">
             <Users className="w-6 h-6" /> Recent Bookings
           </h2>
-          {recentBookings.length === 0 ? (
+          {fineshedTour.length === 0 ? (
             <p className="text-gray-500">No recent bookings.</p>
           ) : (
             <ul className="space-y-4">
-              {recentBookings.map(({ id, customer, tour, date }) => (
+              {fineshedTour.map((tour:Tour) => (
                 <li
-                  key={id}
+                  key={tour._id}
                   className="p-4 bg-teal-50 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                 >
-                  <p className="font-semibold text-teal-800">{customer}</p>
-                  <p className="text-sm text-teal-600">{tour}</p>
-                  <p className="text-sm text-teal-600">{date}</p>
+                  <p className="font-semibold text-teal-800">{tour.duration}</p>
+                  <p className="text-sm text-teal-600">{tour.name}</p>
+                  <p className="text-sm text-teal-600">{tour.createdAt}</p>
                 </li>
               ))}
             </ul>

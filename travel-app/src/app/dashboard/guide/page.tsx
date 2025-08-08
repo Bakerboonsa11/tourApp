@@ -47,7 +47,7 @@ const guideStats = [
 
 export default function AdminDashboard() {
   const searchParams = useSearchParams();
-  const section = searchParams.get('section') || 'admin';
+  const section = searchParams.get('section');
 
   const renderContent = () => {
     switch (section) {

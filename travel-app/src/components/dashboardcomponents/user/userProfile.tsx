@@ -35,6 +35,7 @@ import {
     _id: string;
     name: string;
     email: string;
+    image:string
     role: 'user' | 'admin' | 'guide';
     password?: string;
     createdAt: string;
@@ -80,7 +81,7 @@ import {
         <Card className="p-6">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <Avatar className="w-24 h-24">
-              <AvatarImage src="/pro.avif" alt="User profile" />
+              <AvatarImage src={`/userimages/${user?.image}` || '/pro.png'} alt="User profile" />
               <AvatarFallback>BB</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-1 text-center md:text-left">

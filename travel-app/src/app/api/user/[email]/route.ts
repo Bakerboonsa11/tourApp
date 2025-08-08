@@ -1,6 +1,8 @@
 import { NextRequest,NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
 import UserModel from '@/model/user';
+import nodemailer from 'nodemailer';
+
 
 
 export async function DELETE(
@@ -19,6 +21,30 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+     const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+            },
+          });
+            await transporter.sendMail({
+              from: `"Oromia Tours" <${process.env.EMAIL_USER}>`,
+              to:deletedUser.email,
+              subject: 'we are notifiying u that  🎉',
+              html: `
+                <h1> dear our customer ${deletedUser.name} you are not our user after thanck you for your time   </h1>
+                
+                <ul>
+                  <li><strong>user:</strong> dear  ${deletedUser.name}</li>
+                  <li><strong>at:</strong> ${Date.now().toLocaleString()}</li>
+              
+                </ul>
+                <p> hope see you again  </p>
+              `,
+            });
+
     return NextResponse.json({ status: "success", deletedUser: deletedUser }, { status: 200 });
   }
   catch (err: unknown) {
@@ -85,6 +111,29 @@ export async function GET(
     if (!doc) {
       return NextResponse.json({ message: 'No document found' }, { status: 404 });
     }
+     const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+            },
+          });
+
+    await transporter.sendMail({
+      from: `"Oromia Tours" <${process.env.EMAIL_USER}>`,
+      to:doc.email,
+      subject: 'we are notifiying u that  🎉',
+      html: `
+        <h1> dear our memmber  ${doc.name}! user data is changed sign in to website and see it </h1>
+        
+        <ul>
+          <li><strong>user:</strong> user ure role is   ${doc.role}</li>
+          <li><strong>at:</strong> ${Date.now().toLocaleString()}</li>
+      
+        </ul>
+        <p>try and ur email is  ${doc.email} </p>
+      `,
+    });
 
     return NextResponse.json({ status: 'success', data: doc }, { status: 200 });
   } catch (err: unknown) {

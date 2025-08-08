@@ -212,7 +212,23 @@ export default function TourDetailPage() {
       
     }, []);
 
+   const findImage= async ()=>{
 
+    try {
+      console.log("Fetching tour with ID:", id);
+      const res = await axios.get(`/api/tours/${id}`);
+      const fetchedTour: ITour = res.data.data;
+      setCurrentTour(fetchedTour);
+      setAllComments(fetchedTour.comments || []);
+      
+      console.log("current tour is vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ",fetchedTour)
+      // setFilteredTours(fetchedTours);
+    } catch (err) {
+      console.error('Error fetching tours:', err);
+    } finally {
+      setLoading(false);
+    }
+   }
 
     return (
       <div className="max-w-7xl mx-auto p-6 space-y-16">
@@ -274,12 +290,12 @@ export default function TourDetailPage() {
           className="flex items-start gap-3 text-left bg-emerald-50 hover:bg-emerald-100 transition rounded-md px-4 py-3 shadow-sm"
         >
           <Image
-            src={'/pro.avif'}
+            src={`/userimages/${comment.userImage}` || '/pro.png'}
             alt="User"
             width={40}
             height={40}
-            className="rounded-full object-cover"
-          />
+            className="w-10 h-10 rounded-full object-cover border"
+            />
           <div className="flex flex-col">
             <p className="text-sm text-gray-800 font-semibold mb-1">{comment.message}</p>
             <p className="text-xs text-gray-500 italic">{comment.name || 'Anonymous'}</p>

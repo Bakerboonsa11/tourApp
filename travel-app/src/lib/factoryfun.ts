@@ -4,6 +4,8 @@ import mongoose, { Model, Document } from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 import AppFeatures from '../lib/appFeatures';
 
+import { update } from '@react-spring/web';
+
 // CREATE ONE
 export const createOne = <T extends Document>(Model: Model<T>) =>
   async (req: NextRequest) => {
@@ -68,6 +70,7 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
         }
       );
 
+   console.log('instance i s',updatedInstance)
       if (!updatedInstance) {
         return NextResponse.json({ status: "fail", message: "No data found with this credential to update" }, { status: 404 });
       }
@@ -75,7 +78,7 @@ export const updateOne = <T extends Document>(Model: Model<T>) =>
       return NextResponse.json({ status: "success", updatedTo: updatedInstance });
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-      console.error("Update error:", errorMessage);
+      console.error("Update error: issssssssssssssssssssssss", errorMessage);
       return NextResponse.json({ status: "fail", message: errorMessage }, { status: 500 });
     }
   };

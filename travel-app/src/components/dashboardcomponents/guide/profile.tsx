@@ -1,194 +1,168 @@
 'use client';
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Edit2, User, Mail, Phone, Globe, Award, ClipboardList } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { User, Mail, Phone, Globe, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import Link from 'next/link';
 
+interface SocialMedia {
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedin?: string;
+}
+
+interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin' | 'guide';
+  password?: string;
+  createdAt: string;
+  location?: string;
+  phoneNumber?: string;
+  image?: string;
+  socialMedia?: SocialMedia;
+}
 
 export default function GuideProfile() {
-  // Dummy initial guide data
-  const [guideData, setGuideData] = useState({
-    name: 'Alexandra Smith',
-    email: 'alex.smith@example.com',
-    phone: '+1 987 654 3210',
-    avatar:
-      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=200&q=80',
-    languages: 'English, Spanish, French',
-    experience: 7, // years
-    certifications: 'Wilderness First Aid, Mountain Guide Cert.',
+  const [user, setUser] = useState<IUser | null>(null);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const email = session?.user?.email;
+    if (!email) return;
+
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+        setUser(response.data.data);
+        console.log('image is ',response.data.data.image)
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
+
+  if (!user) {
+    return <div className="text-white p-10">Loading profile...</div>;
+  }
+
+  // Format createdAt nicely
+  const createdAtFormatted = new Date(user.createdAt).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
-  const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState(guideData);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'experience' ? Number(value) : value,
-    }));
-  };
-
-  const handleSave = () => {
-    setGuideData(formData);
-    setEditMode(false);
-    alert('Profile updated!');
-  };
-
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md max-h-screen overflow-y-auto">
-      <div className="flex flex-col items-center space-y-6 mb-10">
-        <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-indigo-600">
-          <img
-            src={guideData.avatar}
-            alt="Guide Avatar"
-            className="object-cover w-full h-full"
-          />
-          {editMode && (
-            <button
-              className="absolute bottom-1 right-1 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full p-1 shadow"
-              title="Change Avatar"
-              onClick={() => alert('Avatar change not implemented')}
+    <div className="min-h-screen bg-gradient-to-br from-[#0f4032] via-[#14532d] to-[#1e3a22] p-10 text-white">
+      <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/20 animate-fadeIn">
+        <div className="flex flex-col items-center space-y-6 mb-10">
+          {/* Avatar with edit link */}
+          <div className="relative w-36 h-36 rounded-full overflow-hidden bg-gradient-to-tr from-green-600 via-emerald-500 to-lime-400 p-[3px] shadow-xl">
+            <div className="rounded-full overflow-hidden w-full h-full">
+              <img
+                src={`/userimages/${user.image}` || '/pro.png'}
+                alt={`${user.name} Avatar`}
+                className="object-cover w-full h-full"
+              />
+            </div>
+            <Link
+              href="/edituser"
+              className="absolute bottom-1 right-1 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 shadow-md"
             >
-              <Edit2 className="w-5 h-5" />
-            </button>
+              <User className="w-5 h-5" />
+            </Link>
+          </div>
+
+          {/* Name */}
+          <h1 className="text-4xl font-bold tracking-wide text-white drop-shadow-md">{user.name}</h1>
+
+          {/* Edit Profile Link */}
+          <Link
+            href="/edituser"
+            className="text-sm text-lime-300 hover:underline transition duration-300"
+          >
+            Edit Profile
+          </Link>
+        </div>
+
+        {/* User info display */}
+        <div className="space-y-8">
+          {[
+            { label: 'Name', icon: <User />, value: user.name },
+            { label: 'Email', icon: <Mail />, value: user.email },
+            { label: 'Phone', icon: <Phone />, value: user.phoneNumber || 'N/A' },
+            { label: 'Location', icon: <Globe />, value: user.location || 'N/A' },
+            { label: 'Member Since', icon: <User />, value: createdAtFormatted },
+          ].map(({ label, icon, value }) => (
+            <div key={label} className="relative">
+              <label className="absolute left-4 -top-3 bg-[#1e3a22] text-xs px-1 text-lime-200">
+                {label}
+              </label>
+              <div className="flex items-center bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white">
+                {icon}
+                <span className="ml-3">{value}</span>
+              </div>
+            </div>
+          ))}
+
+          {/* Social media links */}
+          {user.socialMedia && (
+            <div>
+              <label className="block mb-1 text-sm text-lime-200 flex items-center gap-2">
+                Social Media
+              </label>
+              <div className="flex space-x-6 text-white">
+                {user.socialMedia.facebook && (
+                  <a
+                    href={user.socialMedia.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-lime-400 flex items-center gap-1"
+                  >
+                    <Facebook className="w-5 h-5" /> Facebook
+                  </a>
+                )}
+                {user.socialMedia.twitter && (
+                  <a
+                    href={user.socialMedia.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-lime-400 flex items-center gap-1"
+                  >
+                    <Twitter className="w-5 h-5" /> Twitter
+                  </a>
+                )}
+                {user.socialMedia.instagram && (
+                  <a
+                    href={user.socialMedia.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-lime-400 flex items-center gap-1"
+                  >
+                    <Instagram className="w-5 h-5" /> Instagram
+                  </a>
+                )}
+                {user.socialMedia.linkedin && (
+                  <a
+                    href={user.socialMedia.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-lime-400 flex items-center gap-1"
+                  >
+                    <Linkedin className="w-5 h-5" /> LinkedIn
+                  </a>
+                )}
+              </div>
+            </div>
           )}
         </div>
-        <h1 className="text-3xl font-extrabold text-indigo-700">{guideData.name}</h1>
-        <button
-          className="text-indigo-600 hover:underline text-sm"
-          onClick={() => setEditMode(!editMode)}
-        >
-          {editMode ? 'Cancel Edit' : 'Edit Profile'}
-        </button>
       </div>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSave();
-        }}
-        className="space-y-6"
-      >
-        {/* Name */}
-        <div>
-          <label className="flex items-center gap-2 text-indigo-700 font-semibold mb-1" htmlFor="name">
-            <User className="w-5 h-5" /> Name
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            disabled={!editMode}
-            value={formData.name}
-            onChange={handleChange}
-            className={`w-full border rounded-md px-4 py-2 text-gray-800 ${
-              editMode ? 'border-indigo-600 focus:ring-indigo-600 focus:ring-1' : 'bg-gray-100 cursor-not-allowed'
-            }`}
-          />
-        </div>
-
-        {/* Email */}
-        <div>
-          <label className="flex items-center gap-2 text-indigo-700 font-semibold mb-1" htmlFor="email">
-            <Mail className="w-5 h-5" /> Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            disabled={!editMode}
-            value={formData.email}
-            onChange={handleChange}
-            className={`w-full border rounded-md px-4 py-2 text-gray-800 ${
-              editMode ? 'border-indigo-600 focus:ring-indigo-600 focus:ring-1' : 'bg-gray-100 cursor-not-allowed'
-            }`}
-          />
-        </div>
-
-        {/* Phone */}
-        <div>
-          <label className="flex items-center gap-2 text-indigo-700 font-semibold mb-1" htmlFor="phone">
-            <Phone className="w-5 h-5" /> Phone
-          </label>
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            disabled={!editMode}
-            value={formData.phone}
-            onChange={handleChange}
-            className={`w-full border rounded-md px-4 py-2 text-gray-800 ${
-              editMode ? 'border-indigo-600 focus:ring-indigo-600 focus:ring-1' : 'bg-gray-100 cursor-not-allowed'
-            }`}
-          />
-        </div>
-
-        {/* Languages */}
-        <div>
-          <label className="flex items-center gap-2 text-indigo-700 font-semibold mb-1" htmlFor="languages">
-            <Globe className="w-5 h-5" /> Languages Spoken
-          </label>
-          <input
-            id="languages"
-            name="languages"
-            type="text"
-            disabled={!editMode}
-            value={formData.languages}
-            onChange={handleChange}
-            placeholder="e.g. English, Spanish, French"
-            className={`w-full border rounded-md px-4 py-2 text-gray-800 ${
-              editMode ? 'border-indigo-600 focus:ring-indigo-600 focus:ring-1' : 'bg-gray-100 cursor-not-allowed'
-            }`}
-          />
-        </div>
-
-        {/* Experience */}
-        <div>
-          <label className="flex items-center gap-2 text-indigo-700 font-semibold mb-1" htmlFor="experience">
-            <ClipboardList className="w-5 h-5" /> Experience (years)
-          </label>
-          <input
-            id="experience"
-            name="experience"
-            type="number"
-            min={0}
-            disabled={!editMode}
-            value={formData.experience}
-            onChange={handleChange}
-            className={`w-full border rounded-md px-4 py-2 text-gray-800 ${
-              editMode ? 'border-indigo-600 focus:ring-indigo-600 focus:ring-1' : 'bg-gray-100 cursor-not-allowed'
-            }`}
-          />
-        </div>
-
-        {/* Certifications */}
-        <div>
-          <label className="flex items-center gap-2 text-indigo-700 font-semibold mb-1" htmlFor="certifications">
-            <Award className="w-5 h-5" /> Certifications
-          </label>
-          <textarea
-            id="certifications"
-            name="certifications"
-            disabled={!editMode}
-            value={formData.certifications}
-            onChange={handleChange}
-            rows={3}
-            placeholder="List certifications separated by commas"
-            className={`w-full border rounded-md px-4 py-2 text-gray-800 resize-y ${
-              editMode ? 'border-indigo-600 focus:ring-indigo-600 focus:ring-1' : 'bg-gray-100 cursor-not-allowed'
-            }`}
-          />
-        </div>
-
-        {editMode && (
-          <div className="flex justify-center">
-            <Button type="submit" className="bg-indigo-700 hover:bg-indigo-800 text-white px-8 py-3 rounded-xl">
-              Save Changes
-            </Button>
-          </div>
-        )}
-      </form>
     </div>
   );
 }

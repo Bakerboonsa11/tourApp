@@ -5,6 +5,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import nodemailer from 'nodemailer';
 
 interface Guide {
   id: string;
@@ -12,6 +13,7 @@ interface Guide {
   email: string;
   photo: string;
   status: 'active' | 'inactive';
+  image:string
 }
 
 interface Tour {
@@ -27,29 +29,10 @@ type User = {
   role: string;
   image: string;
   createdAt: string;
+
 };
 
-const handleAssignTour = async (email: string, tourId: string, guideId: string, isAssigned: boolean) => {
-  try {
-    const tour = await axios.get(`/api/tours/${tourId}`);
-    if (!tour.data) {
-      alert(`Assigned guide ${guideId} to tour ${tourId}`);
-    }
-    let guides = tour.data.guides || [];
 
-    if (isAssigned) {
-      guides = guides.filter((g: string) => g !== guideId);
-    } else {
-      guides[0] = guideId; // Assign the guide to the tour
-    }
-
-    await axios.patch(`/api/tours/${tourId}`, { guides });
-    alert(`${isAssigned ? 'Unassigned' : 'Assigned'} guide ${guideId} to tour ${tourId}`);
-  } catch (error) {
-    console.error('Error assigning/unassigning tour:', error);
-    alert('Failed to update tour. Please try again.');
-  }
-};
 
 export default function GuideManagement() {
   const [guides, setGuides] = useState<Guide[]>([]);
@@ -57,6 +40,48 @@ export default function GuideManagement() {
   const [expandedGuideId, setExpandedGuideId] = useState<string | null>(null);
   const [tours, setTours] = useState<Tour[]>([]);
   const [loadingTours, setLoadingTours] = useState(false);
+
+
+  const handleAssignTour = async (email: string, tourId: string, guideId: string, isAssigned: boolean) => {
+    try {
+      const tour = await axios.get(`/api/tours/${tourId}`);
+      if (!tour.data) {
+        alert(`Assigned guide ${guideId} to tour ${tourId}`);
+      }
+  
+      let guides = tour.data.guides || [];
+  
+      if (isAssigned) {
+        guides = guides.filter((g: string) => g !== guideId);
+      } else {
+        guides[0] = guideId;
+      }
+  
+      const updateResponse = await axios.patch(`/api/tours/${tourId}`, { guides });
+      console.log('updated is ', updateResponse);
+  
+      if (updateResponse.data.updatedTo) {
+        alert('assigned');
+        const tourName = updateResponse.data.updatedTo.name;
+        const des = updateResponse.data.updatedTo.description;
+  
+        await axios.post('/api/sendemailassign', {
+          email,
+          tourName,
+          des
+        });
+      }
+  
+      // ✅ Re-fetch tours to update assignment UI
+      const updatedTours = await axios.get('/api/tours');
+      setTours(updatedTours.data.instanceFiltered || []);
+  
+      alert(`${isAssigned ? 'Unassigned' : 'Assigned'} guide ${guideId} to tour ${tourId}`);
+    } catch (error) {
+      console.error('Error assigning/unassigning tour:', error);
+      alert('Failed to update tour. Please try again.');
+    }
+  };
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -117,8 +142,7 @@ export default function GuideManagement() {
           >
             <div className="flex items-center gap-4">
               <Image
-                src={guide.photo || '/profile.png'}
-                alt={guide.name}
+                src={`/userimages/${guide?.image}` || '/pro.png'} alt={guide.name}
                 width={60}
                 height={60}
                 className="rounded-full object-cover border-2 border-cyan-300 shadow-sm"

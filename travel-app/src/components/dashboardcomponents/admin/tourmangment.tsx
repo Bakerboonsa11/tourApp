@@ -10,6 +10,7 @@ import axios from 'axios';
 import Link from 'next/link';
 export interface Tour {
   _id: string;
+  status:string
   name: string;
   slug: string;
   description: string;
@@ -43,33 +44,7 @@ export interface Tour {
 }
 
 
-const tours = [
-  {
-    id: 'T001',
-    name: 'Discover Ethiopia',
-    region: 'East Africa',
-    type: ['Cultural', 'History'],
-    price: 399,
-    status: 'active',
-  },
-  
-  {
-    id: 'T002',
-    name: 'Blue Nile Adventure',
-    region: 'North Africa',
-    type: ['Adventure', 'Hiking'],
-    price: 299,
-    status: 'inactive',
-  },
-  {
-    id: 'T003',
-    name: 'Omo Valley Culture',
-    region: 'South Africa',
-    type: ['Wildlife', 'Cultural'],
-    price: 499,
-    status: 'active',
-  },
-];
+
 
 const statusColors = {
   active: 'bg-green-100 text-green-800',
@@ -144,16 +119,15 @@ export default function ToursManagement() {
                 <span className="font-semibold">Total Tours:</span> {tours.length}
               </li>
               <li>
-                <span className="font-semibold">Active Tours:</span>{' '}
-                {tours.filter((t) => 'active' === 'active').length}
+                <span className="font-semibold">Pending Tours:</span>{' '}
+                {tours.filter((t) => t.status === 'pending').length}
               </li>
               <li>
                 <span className="font-semibold">Inactive Tours:</span>{' '}
-                {tours.filter((t) => 'inactive' === 'inactive').length}
+                {tours.filter((t) => t.status === 'finished').length}
               </li>
               <li>
-                <span className="font-semibold">Average Price:</span> $
-                {Math.round(tours.reduce((acc, t) => acc + t.price, 0) / tours.length)}
+                <span className="font-semibold">active tour</span>       {tours.filter((t) => t.status === 'active').length}
               </li>
             </ul>
           </CardContent>

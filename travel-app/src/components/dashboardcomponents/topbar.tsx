@@ -1,6 +1,8 @@
 'use client';
 
 import { Bell } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+
 
 type TopbarProps = {
   role: string;
@@ -8,6 +10,8 @@ type TopbarProps = {
 };
 
 export function Topbar({ role, imageUrl }: TopbarProps) {
+  const { data: session } = useSession();
+
   return (
     <header className="h-16 bg-gradient-to-r from-emerald-600 to-green-500 px-6 flex items-center justify-between shadow-md border-b border-emerald-700">
       <h1 className="text-white text-xl font-bold tracking-wide">
@@ -22,11 +26,11 @@ export function Topbar({ role, imageUrl }: TopbarProps) {
 
         <div className="w-10 h-10 rounded-full border-2 border-white shadow-lg overflow-hidden">
           <img
-            src={imageUrl}
+            src={`/userimages/${session?.user.image}` || '/pro.png'}
             alt={`${role} Profile`}
             className="w-full h-full object-cover"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = '/pro.avif'; // Fallback image
+              (e.currentTarget as HTMLImageElement).src = '/pro.png'; // Fallback image
             }}
           />
         </div>
