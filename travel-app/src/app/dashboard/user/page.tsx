@@ -10,6 +10,7 @@ import ReviewsSection from '@/components/dashboardcomponents/user/review';
 import WishlistSection from '@/components/dashboardcomponents/user/wishlist';
 import Settings from '../../../components/dashboardcomponents/user/setting';
 import { Home, Users, Map } from 'lucide-react';
+import { Suspense } from 'react';
 
 // === NAVIGATION ITEMS ===
 const navItems = [
@@ -21,7 +22,7 @@ const navItems = [
   { section: 'settings', label: 'Settings', Icon: Users },
 ];
 
-export default function AdminDashboard() {
+ function AdminDashboardHome() {
   const searchParams = useSearchParams();
   const section = searchParams.get('section') || 'user';
 
@@ -61,5 +62,14 @@ export default function AdminDashboard() {
       <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>
       </div>
     </div>
+  );
+}
+
+
+export default function UserDashBoard() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AdminDashboardHome />
+    </Suspense>
   );
 }

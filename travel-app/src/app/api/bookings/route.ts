@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import {connectDB }from './../../../lib/db';
 import BookingModel from '@/model/bookings';
-import { createOne, getAll,createMany } from '../../../lib/factoryfun';
+import { getAll,createMany } from '../../../lib/factoryfun';
 
 export const GET = async (req: NextRequest) => {
   await connectDB();

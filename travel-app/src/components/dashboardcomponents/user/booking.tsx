@@ -56,40 +56,53 @@ export default function BookingsSection() {
   }, [email]);
 
   return (
-    <div className="p-4 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Search Bookings</CardTitle>
+    <div className="min-h-screen bg-green-50 p-10 space-y-12 font-sans">
+      {/* Search Card */}
+      <Card className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg border border-green-100">
+        <CardHeader className="px-8 py-6 border-b border-green-200">
+          <CardTitle className="text-3xl font-semibold text-green-800 tracking-wide">
+            Search Bookings
+          </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 px-8 py-8">
           <Input
+            className="w-full p-4 rounded-xl border border-green-200 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
             placeholder="Search by tour name"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <Input
             type="date"
+            className="w-full p-4 rounded-xl border border-green-200 placeholder-green-400 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-400 transition"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
         </CardContent>
       </Card>
-
+  
+      {/* Loading */}
       {loading ? (
-        <p className="text-center text-muted-foreground">Loading bookings...</p>
+        <p className="text-center text-green-600 text-lg font-medium animate-pulse">
+          Loading bookings...
+        </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredBookings.length === 0 ? (
-            <p className="text-center col-span-full text-muted-foreground">No bookings found.</p>
+            <p className="text-center col-span-full text-green-400 text-xl italic">
+              No bookings found.
+            </p>
           ) : (
             filteredBookings.map((booking) => (
-              <Card key={booking._id} className="border shadow-sm hover:shadow-md transition">
-                <CardHeader>
-                  <CardTitle>
+              <Card
+                key={booking._id}
+                className="bg-white rounded-2xl shadow-md border border-green-100 hover:shadow-lg transition-shadow duration-300"
+              >
+                <CardHeader className="bg-green-50 px-6 py-4 rounded-t-2xl border-b border-green-100">
+                  <CardTitle className="text-xl font-semibold text-green-700">
                     {typeof booking.tour === 'string' ? booking.tour : booking.tour.name}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm space-y-2">
+                <CardContent className="px-6 py-5 text-green-800 space-y-4 text-base">
                   <p>
                     <span className="font-medium">Price:</span> ${booking.price}
                   </p>
@@ -100,13 +113,13 @@ export default function BookingsSection() {
                   <p>
                     <span className="font-medium">Status:</span>{' '}
                     <span
-                      className={
+                      className={`inline-block px-4 py-1 rounded-full font-semibold ${
                         booking.status === 'confirmed'
-                          ? 'text-green-600 font-semibold'
+                          ? 'bg-green-200 text-green-700'
                           : booking.status === 'pending'
-                          ? 'text-yellow-600 font-semibold'
-                          : 'text-red-600 font-semibold'
-                      }
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-red-100 text-red-700'
+                      }`}
                     >
                       {booking.status}
                     </span>
@@ -119,4 +132,6 @@ export default function BookingsSection() {
       )}
     </div>
   );
+  
+  
 }

@@ -1,11 +1,31 @@
-import { NextRequest } from 'next/server';
 import {connectDB }from '../../../../lib/db';
 import TourModel from '@/model/tours';
 import { getOne,createOne,updateOne,deleteOne } from '../../../../lib/factoryfun';
 
-export const GET = async (req: NextRequest, context: { params: { id: string } }) => {
+import { NextRequest, NextResponse } from 'next/server';
+
+export const GET = async (req: NextRequest) => {
   await connectDB();
-  return getOne(TourModel, req, context); // ✅ no function call chaining
+
+  const url = new URL(req.url);
+  const id = url.pathname.split('/').pop();
+
+  if (!id) {
+    return new Response(JSON.stringify({ error: 'Missing id parameter' }), { status: 400 });
+  }
+
+  const context = { params: { id } };
+
+  // Call getOne and expect it returns the response directly
+  const result = await getOne(TourModel, req, context);
+
+  // If getOne doesn't return a Response, wrap it here:
+  if (result instanceof Response) {
+    return result;
+  }
+
+  // Else convert to JSON response:
+  return NextResponse.json(result);
 };
 
 

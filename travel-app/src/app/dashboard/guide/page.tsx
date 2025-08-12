@@ -1,6 +1,5 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import { Sidebar } from '../../../components/dashboardcomponents/Sidebar';
 import { Topbar } from '../../../components/dashboardcomponents/topbar';
 import GuideLocations from '../../../components/dashboardcomponents/guide/location';
@@ -10,6 +9,9 @@ import { Home, Users, MapPin, Calendar, ClipboardList } from 'lucide-react';
 import GuideDashboardOverview from '../../../components/dashboardcomponents/guide/overview';
 import GuideProfile from '../../../components/dashboardcomponents/guide/profile';
 import GuideMyTours from '../../../components/dashboardcomponents/guide/mytours';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+
 
 // import { Home, Users, Map } from 'lucide-react';
 
@@ -45,9 +47,10 @@ const guideStats = [
   { name: 'Mar', guides: 14 },
 ];
 
-export default function AdminDashboard() {
+ function AdminDashboardHome() {
   const searchParams = useSearchParams();
-  const section = searchParams.get('section');
+  const section = searchParams.get('section') || 'guide';
+  console.log('section is vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv',section)
 
   const renderContent = () => {
     switch (section) {
@@ -100,4 +103,13 @@ export default function AdminDashboard() {
     </div>
   );
   
+}
+
+
+export default function GuideDashboard() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AdminDashboardHome />
+    </Suspense>
+  );
 }

@@ -8,8 +8,28 @@ import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
+
+import * as React from "react"
+import { Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+export function ModeToggle() {
+
+ 
+}
+
+
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const { setTheme } = useTheme()
+
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -27,28 +47,29 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto max-w-6xl flex justify-between items-center p-4">
         {/* Logo */}
-        <div className="flex items-center space-x-3">
-          <Image
-            src="/static/log.png"
-            alt="logo"
-            width={48}
-            height={48}
-            className="rounded-full object-cover"
-          />
-          <Link
-            href="/"
-            className="text-2xl font-bold text-green-700 hover:opacity-90 transition"
-          >
-            Visit Oromia
-          </Link>
-        </div>
+        <div className="flex items-center space-x-4">
+  <Image
+    src="/static/log.png"
+    alt="logo"
+    width={50} // Increased size
+    height={50}
+    className="rounded-full object-cover border-2 border-green-500 shadow-md"
+  />
+  <Link
+    href="/"
+    className="text-3xl font-bold text-green-700 hover:opacity-90 transition"
+  >
+ Ethio-Visit
+  </Link>
+</div>
+
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           <Link href="/tours/All" className="text-gray-700 hover:text-green-600 font-medium">
             Tours
           </Link>
-          <Link href="/bookings" className="text-gray-700 hover:text-green-600 font-medium">
+          <Link href="/about" className="text-gray-700 hover:text-green-600 font-medium">
             About Us
           </Link>
 
@@ -86,7 +107,45 @@ export default function Navbar() {
             >
               Login
             </Link>
+            
           )}
+
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button
+      variant="ghost"
+      size="icon"
+      className="relative rounded-full p-2
+                 bg-gradient-to-r from-amber-400 to-pink-500 
+                 dark:from-indigo-500 dark:to-purple-600
+                 text-white shadow-lg shadow-amber-500/30 dark:shadow-indigo-500/30
+                 hover:shadow-xl hover:scale-105
+                 transition-all duration-300 ease-out"
+    >
+      <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+      <span className="sr-only">Toggle theme</span>
+    </Button>
+  </DropdownMenuTrigger>
+  
+  <DropdownMenuContent
+    align="end"
+    className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1"
+  >
+    <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+      Light
+    </DropdownMenuItem>
+    <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+      Dark
+    </DropdownMenuItem>
+    <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+      System
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+
+  
         </nav>
 
         {/* Mobile Navigation */}
@@ -104,7 +163,7 @@ export default function Navbar() {
               <Link href="/tours/All" className="text-lg font-medium text-gray-800">
                 Tours
               </Link>
-              <Link href="/bookings" className="text-lg font-medium text-gray-800">
+              <Link href="/about" className="text-lg font-medium text-gray-800">
                 About Us
               </Link>
 

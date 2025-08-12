@@ -158,31 +158,12 @@ export default function GuideDashboardOverview() {
             (tour: Tour) => tour.status === 'pending'
           );
           
-          // Get IDs of finished tours
-          // const finishedTourIds = finishedTours.map((tour: Tour) => tour._id);
-          // const pendTourId=pendingTours.map((tour: Tour) => tour._id);
-          // Filter bookings for the current user and match finished tour IDs
-          // const filteredTourCompleted = bookingResponse.data.instanceFiltered.filter(
-          //   (book: IBooking) =>
-          //     book.user === userData?._id && finishedTourIds.includes(book.tour._id)
-          // );
-          // const toursPended = bookingResponse.data.instanceFiltered.filter(
-          //   (book: IBooking) =>
-          //     book.user === userData?._id && pendTourId.includes(book.tour._id)
-          // );
-          // const pendedingtour=tourResponse.data.instanceFiltered.filter(
-          //   (tour: Tour) => tour._id === toursPended[0]?.tour._id
+         
           // );
          setFineshedTours(finishedTours)
          setPendingTours(pendingTours)
        
-          // const name=pendedingtour[0]?.name || "No Any "
-          // setNextTour(name)
-          // setbookfineshed(filteredTourCompleted.length)
-          // setPendingTours(toursPended)
-          // console.log('tour pending is  is ',toursPended)
-          // finishedTours.map((tour)=>console.log(tour)}
-          
+        
        
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -197,143 +178,165 @@ export default function GuideDashboardOverview() {
 
   const markAsRead = (id: number) => {
     setNotif((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      prev?.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
   };
 
-  return (
-    <div className="flex flex-col min-h-screen max-h-screen p-6 bg-gray-50">
-      {/* Header */}
-      <header className="mb-10">
-        <h1 className="text-4xl font-extrabold text-gray-800 mb-1">Welcome Back, Guide!</h1>
-        <p className="text-gray-600 text-lg">
-          Here’s your activity summary and upcoming tours.
-        </p>
-      </header>
+return (
+  <div className="flex flex-col min-h-screen p-8 bg-gradient-to-br from-emerald-200 via-white to-cyan-100 animate-gradient">
+    {/* Header */}
+    <header className="mb-12">
+      <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 drop-shadow-lg">
+        Welcome Back,{" "}
+        <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 bg-clip-text text-transparent animate-gradient">
+          Guide
+        </span>
+        !
+      </h1>
+      <p className="text-gray-600 text-lg mt-3">
+        Here’s your latest activity and upcoming tours.
+      </p>
+    </header>
 
-      {/* Summary Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-        <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4 border-l-8 border-blue-500 hover:shadow-lg transition-shadow">
-          <ClipboardList className="w-10 h-10 text-blue-600" />
+    {/* Summary Cards */}
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      {[
+        {
+          title: 'Tours Assigned',
+          value: guidedToursLength || 0,
+          icon: ClipboardList,
+          color: 'from-blue-500 to-indigo-600',
+        },
+        {
+          title: 'Bookings This Month',
+          value: bookingThisMonth || 0,
+          icon: Calendar,
+          color: 'from-teal-500 to-emerald-600',
+        },
+        {
+          title: 'Average Rating',
+          value: '4.8 / 5',
+          icon: Star,
+          color: 'from-yellow-400 to-orange-500',
+        },
+      ].map(({ title, value, icon: Icon, color }) => (
+        <div
+          key={title}
+          className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-lg p-6 flex items-center gap-6 border border-gray-100 hover:shadow-2xl hover:-translate-y-1 hover:scale-105 transition-all duration-300"
+        >
+          <span
+            className={`flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}
+          >
+            <Icon className="w-7 h-7" />
+          </span>
           <div>
-            <p className="text-2xl font-semibold text-blue-700">{guidedToursLength}</p>
-            <p className="text-blue-600 font-medium">Tours Assigned</p>
+            <p className="text-4xl font-bold text-gray-900">{value}</p>
+            <p className="text-gray-500">{title}</p>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4 border-l-8 border-teal-500 hover:shadow-lg transition-shadow">
-          <Calendar className="w-10 h-10 text-teal-600" />
-          <div>
-            <p className="text-2xl font-semibold text-teal-700">{bookingThisMonth}</p>
-            <p className="text-teal-600 font-medium">Bookings This Month</p>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-md p-6 flex items-center gap-4 border-l-8 border-yellow-400 hover:shadow-lg transition-shadow">
-          <Star className="w-10 h-10 text-yellow-500" />
-          <div>
-            <p className="text-2xl font-semibold text-yellow-600">4.8 / 5</p>
-            <p className="text-yellow-500 font-medium">Average Rating</p>
-          </div>
-        </div>
+      ))}
+    </section>
+
+    {/* Main Content */}
+    <div className="flex flex-col lg:flex-row gap-8 flex-1 max-h-[calc(100vh-320px)] overflow-hidden">
+      {/* Upcoming Tours */}
+      <section className="glass-card flex-1">
+        <h2 className="section-title text-emerald-600">
+          <MapPin className="w-6 h-6 text-emerald-500" /> Upcoming Tours
+        </h2>
+        {pendingTours?.length === 0 ? (
+          <p className="empty-text">No upcoming tours assigned.</p>
+        ) : (
+          <ul className="space-y-4">
+            {pendingTours?.map((tour: Tour) => (
+              <li
+                key={String(tour._id)}
+                className="item-card from-emerald-50 to-teal-50"
+              >
+                <p className="font-semibold text-gray-800">{tour?.name}</p>
+                <p className="text-sm text-gray-500">{String(tour.createdAt)}</p>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
-      <div className="flex flex-col lg:flex-row gap-8 flex-1 max-h-[calc(100vh-320px)] overflow-hidden">
-        {/* Upcoming Tours */}
-        <section className="bg-white rounded-xl shadow-md p-6 flex-1 overflow-y-auto border border-blue-200">
-          <h2 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-            <MapPin className="w-6 h-6" /> Upcoming Tours
-          </h2>
-          {pendingTours.length === 0 ? (
-            <p className="text-gray-500">No upcoming tours assigned.</p>
-          ) : (
-            <ul className="space-y-4">
-              {pendingTours.map((tour:Tour) => (
-                <li
-                  key={tour._id}
-                  className="p-4 bg-blue-50 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <p className="font-semibold text-blue-800">{tour?.name}</p>
-                  <p className="text-sm text-blue-600">{tour.createdAt}</p>
-                  <p className="text-sm text-blue-600">{tour.location}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+      {/* Recent Bookings */}
+      <section className="glass-card flex-1">
+        <h2 className="section-title text-teal-600">
+          <Users className="w-6 h-6 text-teal-500" /> Recent Bookings
+        </h2>
+        {fineshedTour.length === 0 ? (
+          <p className="empty-text">No recent bookings.</p>
+        ) : (
+          <ul className="space-y-4">
+            {fineshedTour.map((tour: Tour) => (
+              <li
+                key={String(tour._id)}
+                className="item-card from-teal-50 to-emerald-50"
+              >
+                <p className="font-semibold text-gray-800">{tour.duration}</p>
+                <p className="text-sm text-gray-500">{tour.name}</p>
+                <p className="text-sm text-gray-500">{String(tour.createdAt)}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
-        {/* Recent Bookings */}
-        <section className="bg-white rounded-xl shadow-md p-6 flex-1 overflow-y-auto border border-teal-200">
-          <h2 className="text-2xl font-bold text-teal-700 mb-4 flex items-center gap-2">
-            <Users className="w-6 h-6" /> Recent Bookings
-          </h2>
-          {fineshedTour.length === 0 ? (
-            <p className="text-gray-500">No recent bookings.</p>
-          ) : (
-            <ul className="space-y-4">
-              {fineshedTour.map((tour:Tour) => (
-                <li
-                  key={tour._id}
-                  className="p-4 bg-teal-50 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                >
-                  <p className="font-semibold text-teal-800">{tour.duration}</p>
-                  <p className="text-sm text-teal-600">{tour.name}</p>
-                  <p className="text-sm text-teal-600">{tour.createdAt}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        {/* Notifications */}
-        <section className="bg-white rounded-xl shadow-md p-6 flex-1 overflow-y-auto border border-yellow-300">
-          <h2 className="text-2xl font-bold text-yellow-700 mb-4 flex items-center gap-2">
-            <Bell className="w-6 h-6" /> Notifications
-          </h2>
-          {notif.length === 0 ? (
-            <p className="text-gray-500">No notifications.</p>
-          ) : (
-            <ul className="space-y-3">
-              {notif.map(({ id, text, read }) => (
-                <li
-                  key={id}
-                  className={`p-3 rounded-lg cursor-pointer flex justify-between items-center transition-colors ${
-                    read ? 'bg-yellow-50 text-yellow-900' : 'bg-yellow-100 text-yellow-800 font-semibold'
-                  } hover:bg-yellow-200`}
-                  onClick={() => markAsRead(id)}
-                >
-                  <span>{text}</span>
-                  {read ? (
-                    <CheckCircle className="w-5 h-5 text-yellow-600" />
-                  ) : (
-                    <MessageSquare className="w-5 h-5 text-yellow-800" />
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </div>
-
-      {/* Quick Actions */}
-      <footer className="mt-8 flex flex-wrap gap-4 justify-center">
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition"
-          onClick={() => alert('Create new tour (not implemented)')}
-        >
-          Create New Tour
-        </button>
-        <button
-          className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition"
-          onClick={() => alert('View bookings (not implemented)')}
-        >
-          View Bookings
-        </button>
-        <button
-          className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition"
-          onClick={() => alert('Check messages (not implemented)')}
-        >
-          Check Messages
-        </button>
-      </footer>
+      {/* Notifications */}
+      <section className="glass-card flex-1">
+        <h2 className="section-title text-amber-600">
+          <Bell className="w-6 h-6 text-amber-500" /> Notifications
+        </h2>
+        {notif.length === 0 ? (
+          <p className="empty-text">No notifications.</p>
+        ) : (
+          <ul className="space-y-4">
+            {notif.map(({ id, text, read }) => (
+              <li
+                key={id}
+                onClick={() => markAsRead(id)}
+                className={`p-4 rounded-2xl flex justify-between items-center cursor-pointer transition-all ${
+                  read
+                    ? 'bg-amber-50 text-gray-700'
+                    : 'bg-amber-100/90 text-gray-900 font-medium'
+                } hover:shadow-lg hover:scale-105`}
+              >
+                <span>{text}</span>
+                {read ? (
+                  <CheckCircle className="w-5 h-5 text-amber-500" />
+                ) : (
+                  <MessageSquare className="w-5 h-5 text-amber-600" />
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
-  );
+
+    {/* Quick Actions */}
+    <footer className="mt-10 flex flex-wrap gap-5 justify-center">
+      {[
+        { label: 'Create New Tour', colors: 'from-blue-500 to-indigo-500' },
+        { label: 'View Bookings', colors: 'from-emerald-500 to-teal-500' },
+        { label: 'Check Messages', colors: 'from-amber-400 to-yellow-500' },
+      ].map(({ label, colors }) => (
+        <button
+          key={label}
+          className={`bg-gradient-to-r ${colors} text-white font-semibold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all`}
+          onClick={() => alert(`${label} (not implemented)`)}
+        >
+          {label}
+        </button>
+      ))}
+    </footer>
+  </div>
+);
+
+/* Extra Tailwind classes */
+
+
+  
 }

@@ -22,13 +22,47 @@ interface Transaction {
   payment_status: string;
   payment_date: Date;
 }
+export interface Tour {
+  _id: string;
+  status:string
+  name: string;
+  slug: string;
+  description: string;
+  region: string;
+  typeOfTour: string[]; // e.g., ['adventure', 'forest', 'mountain']
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: 'easy' | 'medium' | 'difficult';
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[]; // image paths or URLs
+  coverImage: string;
+  location: {
+    type?: string;
+    coordinates?: number[];
+    description?: string;
+    address?: string;
+  };
+  startDates: string[]; // ISO date strings
+  endDate: string; // ISO date string
+  likes: string[]; // user IDs who liked
+  comments: {
+    user: string;
+    text: string;
+    createdAt: string;
+  }[];
+  createdAt: string; // ISO date string
+  guides: string[]; // guide user IDs
+  __v: number;
+}
 
 
 
 
 export interface IBooking {
   _id: Types.ObjectId;
-  tour: Types.ObjectId | string;
+  tour: Tour
   user: Types.ObjectId | string;
   email: string;
   price: number;
@@ -340,7 +374,7 @@ export default function BookingsSection() {
                         {b._id.toString().slice(-6)}
                       </td>
                       <td className="p-3 text-sm text-gray-800">{b.email}</td>
-                      <td className="p-3 text-sm text-gray-600">{b.tour?.toString().slice(-6)}</td>
+                      <td className="p-3 text-sm text-gray-600">{b.tour?._id?.toString().slice(-6)}</td>
                       <td className="p-3 text-sm text-gray-600">
                         {new Date(b.createdAt).toLocaleDateString()}
                       </td>
@@ -349,7 +383,7 @@ export default function BookingsSection() {
                           {b.status}
                         </Badge>
                       </td>
-                      <td className="p-3 font-semibold text-green-700">${b.price}</td>
+                      <td className="p-3 font-semibold text-green-700">{b.price} 💵</td>
                       <td className="p-3 space-x-2">
                       <Button
   size="sm"

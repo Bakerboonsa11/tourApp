@@ -3,34 +3,37 @@
 import { Bell } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
-
 type TopbarProps = {
   role: string;
   imageUrl: string;
 };
 
-export function Topbar({ role, imageUrl }: TopbarProps) {
+export function Topbar({ role }: TopbarProps) {
   const { data: session } = useSession();
 
   return (
-    <header className="h-16 bg-gradient-to-r from-emerald-600 to-green-500 px-6 flex items-center justify-between shadow-md border-b border-emerald-700">
-      <h1 className="text-white text-xl font-bold tracking-wide">
-        Welcome, <span className="capitalize">{role}</span>
+    <header className="h-16 bg-white px-6 flex items-center justify-between rounded-xl shadow-lg border border-gray-100">
+      {/* Left: Welcome */}
+      <h1 className="text-gray-900 text-lg font-medium">
+        Welcome, <span className="capitalize text-gray-500">{role}</span>
       </h1>
 
-      <div className="flex items-center gap-4">
-        <button className="relative text-white hover:text-yellow-300 transition-colors">
-          <Bell className="w-6 h-6" />
-          <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-yellow-300 animate-ping" />
+      {/* Right: Actions */}
+      <div className="flex items-center gap-5">
+        {/* Notification Bell */}
+        <button className="relative text-gray-500 hover:text-gray-800 transition-colors">
+          <Bell className="w-5 h-5" strokeWidth={1.5} />
+          <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
         </button>
 
-        <div className="w-10 h-10 rounded-full border-2 border-white shadow-lg overflow-hidden">
+        {/* Profile Image */}
+        <div className="w-10 h-10 rounded-full border border-gray-200 shadow-md overflow-hidden">
           <img
-            src={`/userimages/${session?.user.image}` || '/pro.png'}
+            src={session?.user?.image ? `/userimages/${session.user.image}` : '/pro.png'}
             alt={`${role} Profile`}
             className="w-full h-full object-cover"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = '/pro.png'; // Fallback image
+              (e.currentTarget as HTMLImageElement).src = '/pro.png';
             }}
           />
         </div>

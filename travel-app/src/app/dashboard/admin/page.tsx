@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Sidebar } from '../../../components/dashboardcomponents/Sidebar';
 import { Topbar } from '../../../components/dashboardcomponents/topbar';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import GuideManagement from '@/components/dashboardcomponents/admin/guidemanagme
 import BookingsSection from '@/components/dashboardcomponents/admin/bookings';
 import ToursManagement from '@/components/dashboardcomponents/admin/tourmangment';
 import { Home, Users, Map } from 'lucide-react';
-import { useEffect,useState } from 'react';
+import { useEffect,useState,Suspense } from 'react';
 import { useRouter } from 'next/navigation'; // ✅ CORRECT for App Router
 
 import axios from 'axios';
@@ -85,7 +86,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
 
  
 
-export default function AdminDashboard() {
+ function AdminDashboardHome() {
   const router = useRouter();
   const handleNavigate = (section: string) => {
     router.push(`/dashboard/admin/?section=${section}`);
@@ -97,6 +98,8 @@ export default function AdminDashboard() {
   const [userStats, setUserStats] = useState<object[]>([]);
   const [tourTypes, setTourTypes] = useState<{ [key: string]: number }>({});
   const [guideStats, setGuideStats] = useState<{ name: string; guides: number }[]>([]);
+  const {data:session}=useSession()
+  
 
   const [loading, setLoading] = useState(true);
   
@@ -196,7 +199,7 @@ export default function AdminDashboard() {
       case 'admin':
         return (
           <section className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4 sm:p-6 max-w-7xl mx-auto">
-            <h2 className="text-2xl font-bold text-emerald-800 mb-4">Welcome, Admin!</h2>
+            <h2 className="text-2xl font-bold text-emerald-800 mb-4">Welcome, {session?.user?.name}!</h2>
             <p className="text-gray-600 mb-6 text-sm">
               Manage all aspects of your tour platform. Use the sidebar to navigate.
             </p>
@@ -434,15 +437,28 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-tr from-stone-100 via-white to-emerald-50">
-      {/* Sidebar on top for mobile, side for desktop */}
-      <div className="w-full md:w-64 flex-shrink-0">
-  <Sidebar navItems={navItems} />
-</div>
-
-      <div className="flex-1 flex flex-col">
-      <Topbar role="Admin" imageUrl="/images/profile.jpg" />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>
-      </div>
+    {/* Sidebar on top for mobile, side for desktop */}
+    <div className="w-full md:w-64 flex-shrink-0">
+      <Sidebar navItems={navItems} />
     </div>
+  
+    {/* Fix this container */}
+    <div className="flex-1 flex flex-col overflow-hidden">  {/* changed overflow-x-hidden to overflow-hidden */}
+      <Topbar role="Admin" imageUrl="/images/profile.jpg" />
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+        {renderContent()}
+      </main>
+    </div>
+  </div>
+  
+  
+  );
+}
+
+export default function AdimDashbord() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AdminDashboardHome />
+    </Suspense>
   );
 }

@@ -149,10 +149,12 @@ export default function ToursPage() {
   };
   
   const parts = pathname.split('/');
-  const initialType = parts.length > 2 ? parts[2] : 'All';
-  console.log("Initial Type from URL:", initialType);
-// const initialType = searchParams.get('slag') || 'All';
-console.log("Initial Type from URL:", initialType);
+  console.log("partsssssssss Type from URL hhdddddddddddddddddddd:", parts);
+  
+  const rawType = parts.length > 2 ? parts[2] : 'All';
+  const initialType = decodeURIComponent(rawType);
+  console.log("Initial Type from URL hhdddddddddddddddddddd:", initialType);
+  
 const [selectedType, setSelectedType] = useState(initialType);
   const [allTours, setAllTours] = useState<ITour[]>([]);
   const [filteredTours, setFilteredTours] = useState<ITour[]>([]);
@@ -191,18 +193,23 @@ const [selectedType, setSelectedType] = useState(initialType);
   useEffect(() => {
     let filtered = [...allTours];
     if (selectedType !== 'All') {
-      filtered = filtered.filter(tour => tour.typeOfTour.includes(selectedType.toLowerCase()));
+      filtered = filtered.filter(tour => tour.typeOfTour.includes(selectedType));
     }
     if (searchQuery.trim()) {
-      filtered = filtered.filter(tour => tour.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      filtered = filtered.filter(tour => tour.typeOfTour.includes(searchQuery));
     }
     setFilteredTours(filtered);
   }, [selectedType, searchQuery, allTours]);
 
   const tourTypes = Array.from(
-    new Set(allTours.flatMap(tour => tour.typeOfTour.map(type => type.toLowerCase())))
+    new Set(allTours.flatMap(tour => tour.typeOfTour.map(type => type)))
   );
+  // const tourTypes = [
+  //   ...new Set(allTours.flatMap(tour => tour.typeOfTour))
+  // ];
 
+
+  
 
   
   const handleLike = async (tourId: string, currentLikes: string[]) => {
@@ -307,7 +314,9 @@ const [selectedType, setSelectedType] = useState(initialType);
 
       {/* Hero Section */}
       <section className="text-center space-y-4 bg-green-200 p-10 rounded-xl shadow-md">
-        <h1 className="text-4xl font-bold text-black">Explore Oromia 🌍</h1>
+      <h1 className="text-4xl font-bold text-black">
+  Explore Ethiiopia <span className="text-4xl">🇪🇹</span>
+</h1>
         <p className="text-lg text-gray-800 max-w-2xl mx-auto">
           Discover breathtaking destinations, unique cultural spots, and relaxing escapes — all curated by locals.
         </p>
@@ -317,19 +326,26 @@ const [selectedType, setSelectedType] = useState(initialType);
       </section>
 
       {/* Why Choose Us */}
-      <section className="grid md:grid-cols-4 gap-6 text-center">
-        {[ 
-          { title: 'Local Experts', desc: 'Guided by locals who know every hidden gem.' },
-          { title: 'Affordable Packages', desc: 'Experience amazing tours without breaking your budget.' },
-          { title: 'Safe & Comfortable', desc: 'Well-planned tours with safety and comfort as a priority.' },
-          { title: 'Flexible Bookings', desc: 'Easily change or cancel your bookings hassle-free.' },
-        ].map(({ title, desc }) => (
-          <div key={title} className="bg-muted p-6 rounded-xl space-y-3 shadow">
-            <h3 className="font-semibold text-xl">{title}</h3>
-            <p>{desc}</p>
-          </div>
-        ))}
-      </section>
+      <section className="grid md:grid-cols-4 gap-8 text-center mt-12 px-4">
+  {[
+    { title: 'Local Experts', desc: 'Guided by locals who know every hidden gem.' },
+    { title: 'Affordable Packages', desc: 'Experience amazing tours without breaking your budget.' },
+    { title: 'Safe & Comfortable', desc: 'Well-planned tours with safety and comfort as a priority.' },
+    { title: 'Flexible Bookings', desc: 'Easily change or cancel your bookings hassle-free.' },
+  ].map(({ title, desc }) => (
+    <div
+      key={title}
+      className="group bg-gradient-to-br from-green-400 to-green-600 text-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-300"
+    >
+      <div className="bg-white text-green-600 w-14 h-14 mx-auto flex items-center justify-center rounded-full shadow-md group-hover:rotate-12 transform transition duration-300">
+        <span className="text-2xl font-bold">{title.charAt(0)}</span>
+      </div>
+      <h3 className="mt-6 font-bold text-2xl">{title}</h3>
+      <p className="mt-3 text-white/90">{desc}</p>
+    </div>
+  ))}
+</section>
+
 
       {/* Seasonal Deals */}
       <section className="text-center p-8 bg-yellow-100 rounded-xl shadow space-y-3">
@@ -337,26 +353,97 @@ const [selectedType, setSelectedType] = useState(initialType);
         <p className="text-lg">Check out our hand-picked seasonal tour packages and save up to 30% on selected tours.</p>
       </section>
 
-      {/* Filters */}
-      <section className="flex flex-col md:flex-row justify-between items-center gap-4">
-        <input
-          type="text"
-          placeholder="Search tours by name..."
-          className="border px-4 py-2 rounded w-full md:w-1/2"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <select
-          className="border px-4 py-2 rounded w-full md:w-1/4"
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-        >
-          <option value="All">All Types</option>
-          {tourTypes.map((type) => (
-            <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
-          ))}
-        </select>
-      </section>
+   {/* Filters */}
+<section className="flex flex-col md:flex-row justify-between items-center gap-6 max-w-4xl mx-auto px-6 py-8 bg-white rounded-3xl shadow-xl ring-1 ring-green-200">
+
+{/* Search Input Container */}
+<div className="relative w-full md:w-1/2">
+  <input
+    id="search"
+    type="text"
+    placeholder="Search tours by name..."
+    className="
+      peer
+      w-full
+      rounded-3xl
+      border-2 border-transparent
+      bg-gradient-to-r from-green-50 to-green-100
+      px-6 py-3
+      font-semibold text-green-900
+      placeholder-transparent
+      focus:outline-none
+      focus:ring-4 focus:ring-green-300
+      focus:border-green-500
+      transition duration-300
+      shadow-md
+      hover:shadow-lg
+    "
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+  <label
+    htmlFor="search"
+    className="
+      absolute left-6 top-1/2 -translate-y-1/2
+      text-green-400
+      font-semibold
+      cursor-text
+      pointer-events-none
+      transition-all duration-300
+      peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-green-400 peer-placeholder-shown:text-base
+      peer-focus:top-2 peer-focus:text-green-600 peer-focus:text-sm
+    "
+  >
+    Search tours by name...
+  </label>
+</div>
+
+{/* Select Dropdown Container */}
+<div className="relative w-full md:w-1/3">
+  <select
+    className="
+      w-full
+      rounded-3xl
+      border-2 border-transparent
+      bg-gradient-to-r from-green-50 to-green-100
+      px-6 py-3
+      font-semibold text-green-900
+      cursor-pointer
+      appearance-none
+      focus:outline-none
+      focus:ring-4 focus:ring-green-300
+      focus:border-green-500
+      shadow-md
+      hover:shadow-lg
+      transition duration-300
+    "
+    value={selectedType}
+    onChange={(e) => setSelectedType(e.target.value)}
+  >
+    <option value="All">All Types</option>
+    {tourTypes.map((type) => (
+      <option key={type} value={type}>
+        {type.charAt(0).toUpperCase() + type.slice(1)}
+      </option>
+    ))}
+  </select>
+
+  {/* Custom arrow */}
+  <div className="pointer-events-none absolute top-1/2 right-6 -translate-y-1/2 text-green-500 select-none">
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+</div>
+</section>
+
 
       {/* Tour Cards */}
       <section className="grid md:grid-cols-3 gap-6">
@@ -515,63 +602,12 @@ const [selectedType, setSelectedType] = useState(initialType);
 </animated.section>
 
 {/* Testimonials Section */}
-<animated.section
-  style={fadeIn}
-  className="bg-amber-50 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
->
-  <div className="flex items-center gap-3 mb-6">
-    <Quote className="text-amber-700 w-6 h-6" />
-    <h2 className="text-3xl font-extrabold text-amber-900">Customer Testimonials 💬</h2>
-  </div>
 
-  <div className="flex flex-col divide-y divide-amber-300">
-    {testimonials.map(({ id, name, avatar, text }) => (
-      <div key={id} className="py-4 flex items-start gap-4">
-        <img
-          src={'/pro.avif'}
-          alt={`${name} avatar`}
-          className="w-12 h-12 rounded-full object-cover border-2 border-amber-600 flex-shrink-0"
-        />
-        <div>
-          <h4 className="font-semibold text-amber-900">{name}</h4>
-          <p className="text-amber-700 italic mt-1">{text}</p>
-        </div>
-      </div>
-    ))}
-  </div>
-</animated.section>
 
 {/* About Section */}
-<animated.section
-  style={fadeIn}
-  className="bg-green-100 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
->
-  <div className="flex items-center gap-3 mb-6">
-    <Info className="text-green-800 w-6 h-6" />
-    <h2 className="text-3xl font-extrabold text-green-900">About Oromia Tours</h2>
-  </div>
-  <p className="text-green-800 text-lg leading-relaxed">
-    Oromia Tours was founded by passionate locals to showcase the beauty of Oromia to the world.
-    Our mission is to provide authentic and unforgettable travel experiences while supporting local communities.
-  </p>
-</animated.section>
 
-{/* Contact Section */}
-<animated.section
-  style={fadeIn}
-  className="bg-amber-100 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300 text-center"
->
-  <div className="flex items-center justify-center gap-3 mb-6">
-    <PhoneCall className="text-amber-700 w-6 h-6" />
-    <h2 className="text-3xl font-extrabold text-amber-900">Contact Us 📞</h2>
-  </div>
-  <p className="text-amber-800 text-lg max-w-xl mx-auto">
-    For any queries, call us at <strong>+251-949-303-845</strong> or email at{' '}
-    <a href="mailto:info@oromiatours.com" className="text-amber-700 underline hover:text-amber-900 transition">
-      bakerboonsa@gmail.com
-    </a>
-  </p>
-</animated.section>
+
+
 
 </div>
 

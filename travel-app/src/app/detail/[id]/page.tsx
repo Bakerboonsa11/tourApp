@@ -100,25 +100,29 @@ export default function TourDetailPage() {
       const handleSubmitComment = async () => {
         try {
           const user = await axios.get(`/api/user/${session?.user?.email}`);
-          const userId=session?.user?.id
+          console.log('user is looooooooooooooooooo[ ', user);
+          const userId = session?.user?.id;
           const newComment: Comment = {
             message: comment,
             userId: userId || session?.user?.id || '',
-            userImage: session?.user.image || '',
+            userImage: user.data.data.image || '',
             name: session?.user.name || user.data.first_name,
             createdAt: new Date().toISOString(),
           };
-          
-      
+        
           const updatedComments = [...(currentour?.comments ?? []), newComment];
-      
+        
+          // Sort comments descending by createdAt (newest first)
+          updatedComments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
           const res = await axios.patch(`/api/tours/${id}`, {
             comments: updatedComments,
           });
-         
-          setAllComments(updatedComments)
+        
+          setAllComments(updatedComments);
           console.log("Comment successfully updated:", res.data);
-        } catch (err) {
+        } 
+         catch (err) {
           console.error('Error submitting comment:', err);
         } finally {
           setLoading(false);
@@ -249,7 +253,7 @@ export default function TourDetailPage() {
     />
     <div className="absolute top-4 left-4">
       <Badge className="bg-red-600 text-white px-4 py-2 rounded-full shadow-lg">
-        Oromia 🌄
+        Ethiopia 🌄
       </Badge>
     </div>
   </div>
