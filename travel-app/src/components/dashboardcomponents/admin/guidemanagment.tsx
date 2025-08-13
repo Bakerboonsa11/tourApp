@@ -140,29 +140,33 @@ export default function GuideManagement() {
             key={guide.id}
             className="bg-white/60 backdrop-blur-xl border border-gray-200 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <Image
-                src={guide.photo?`/userimages/${guide?.photo}`:'/pro.png'} alt={guide.name}
-                width={60}
-                height={60}
-                className="rounded-full object-cover border-2 border-cyan-300 shadow-sm"
-              />
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {guide.name}
-                </h3>
-                <p className="text-sm text-gray-500">{guide.email}</p>
-                <span
-                  className={`text-xs font-medium px-2 py-1 rounded-full mt-1 inline-block ${
-                    guide.status === 'active'
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-red-100 text-red-600'
-                  }`}
-                >
-                  {guide.status}
-                </span>
-              </div>
-            </div>
+          <div className="flex items-center gap-4">
+  <div className="w-[60px] h-[60px] rounded-full overflow-hidden border-2 border-cyan-300 shadow-sm">
+    <Image
+      src={guide.photo ? `/userimages/${guide?.photo}` : '/pro.png'}
+      alt={guide.name}
+      width={60}
+      height={60}
+      className="object-cover"
+    />
+  </div>
+  <div>
+    <h3 className="text-lg font-semibold text-gray-800">
+      {guide.name}
+    </h3>
+    <p className="text-sm text-gray-500">{guide.email}</p>
+    <span
+      className={`text-xs font-medium px-2 py-1 rounded-full mt-1 inline-block ${
+        guide.status === 'active'
+          ? 'bg-green-100 text-green-700'
+          : 'bg-red-100 text-red-600'
+      }`}
+    >
+      {guide.status}
+    </span>
+  </div>
+</div>
+
 
             <div className="mt-5">
               <Button
