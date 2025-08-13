@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       last_name,
       phone_number,
       tx_ref,
-      return_url: `${BASE_URL}/success`, // FIXED
+      return_url: `${BASE_URL}/payment-success`, // FIXED
       metadata: { tourId },
       customization: {
         title: "Oromia Tours",
