@@ -17,6 +17,7 @@ interface User {
   role: 'user' | 'admin'|'guide';
   password?: string;
   createdAt: string;
+  image:string
 }
 type Tour = {
   _id: string;
@@ -169,7 +170,7 @@ export default function UserDashboardOverview() {
       <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-md rounded-2xl">
         <CardHeader className="flex flex-row items-center gap-4">
           <Avatar className="h-16 w-16 ring-4 ring-emerald-100">
-            <AvatarImage src="/avatar.png" alt="User" />
+            <AvatarImage src={`/userimages/${user?.image}`} alt="User" />
             <AvatarFallback className="bg-emerald-500 text-white text-lg font-bold">
               {user?.name?.[0]?.toUpperCase() || "U"}
             </AvatarFallback>

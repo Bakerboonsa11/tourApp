@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect } from 'react';
-
+import axios from 'axios';
 
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useState,useEffect } from 'react';
 
 import {
   DropdownMenu,
@@ -25,11 +25,40 @@ export function ModeToggle() {
  
 }
 
-
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin'|'guide';
+  password?: string;
+  createdAt: string;
+  image:string
+}
 export default function Navbar() {
   const { data: session, status } = useSession();
   const { setTheme } = useTheme()
+  const [user, setUser] = useState<User | null>(null);
+  
 
+    useEffect(() => {
+      const email = session?.user?.email;
+      if (!email) return; // ensures it's a string
+    
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+          const userData: User = response.data.data;
+          setUser(userData);
+  
+          
+       
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+    
+      fetchUserData();
+    }, [session]);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -39,8 +68,8 @@ export default function Navbar() {
 
   if (status === 'loading') return null;
 
-  const profileImage = session?.user?.image
-    ? `/userimages/${session.user.image}`
+  const profileImage =`/userimages/${user?.image}`
+    ? `/userimages/${session?.user.image}`
     : '/pro.png';
 
   return (
