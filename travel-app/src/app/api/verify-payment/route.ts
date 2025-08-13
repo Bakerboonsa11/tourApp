@@ -24,8 +24,8 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json({ message: 'No transaction reference provided' }, { status: 400 });
   }
 
-  const [, id] = tx_ref.split('-'); // Extract tourId
-  console.log("Extracted Tour ID:", id);
+  const [, tourId] = tx_ref.split('-');
+  console.log("Extracted Tour ID:", tourId);
 
   const chapaRes = await fetch(`https://api.chapa.co/v1/transaction/verify/${tx_ref}`, {
     headers: {
@@ -50,12 +50,12 @@ export const GET = async (req: NextRequest) => {
   console.log("Payment Info:", paymentInfo);
   const userEmail = token.email;
  console.log("User Email from payment info:", userEmail);
- console.log("Tour ID from payment info:", id);
-  if (!id || !userEmail) {
+ console.log("Tour ID from payment info:", tourId);
+  if (!tourId || !userEmail) {
     return NextResponse.json({ message: 'Tour ID or email missing' }, { status: 400 });
   }
 
-  const tour = await TourModel.findById(id);
+  const tour = await TourModel.findById(tourId);
   if (!tour) {
     return NextResponse.json({ message: 'Tour not found' }, { status: 404 });
   }
@@ -66,7 +66,7 @@ export const GET = async (req: NextRequest) => {
     : paymentInfo.status === 'failed'
     ? 'failed'
     : 'pending';
-    const existing = await BookingModel.findOne({ tour: id, email: userEmail });
+    const existing = await BookingModel.findOne({ tour: tourId, email: userEmail });
     if (existing) {
       return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
     }
@@ -77,7 +77,7 @@ if (!userDoc) {
 }
     
   const booking = await BookingModel.create({
-    tour: id,
+    tour: tourId,
     user: userDoc._id, // Use the user ID from the token
     startDate: tour.start_date,
     duration: tour.duration,

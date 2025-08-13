@@ -13,7 +13,8 @@ export async function POST(request: Request) {
   }
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://tour-app-smoky.vercel.app';
-  const tx_ref = `tx_${Date.now()}`; // Always unique
+  
+  const tx_ref = `tx-${tourId}-${Date.now()}`;
 
   const chapaRes = await fetch('https://api.chapa.co/v1/transaction/initialize', {
     method: 'POST',
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       last_name,
       phone_number,
       tx_ref,
-      return_url: `${BASE_URL}/payment-success?tx_ref=${tx_ref}`, // FIXED
+      return_url: `${BASE_URL}/payment-success?tx_ref=${tx_ref}`, 
       metadata: { tourId },
       customization: {
         title: "Oromia Tours",
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
       }
     }),
   });
+  
 
   const chapaData = await chapaRes.json();
 
