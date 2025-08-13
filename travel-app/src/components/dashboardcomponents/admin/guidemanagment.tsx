@@ -142,7 +142,7 @@ export default function GuideManagement() {
           >
             <div className="flex items-center gap-4">
               <Image
-                src={`/userimages/${guide?.image}` || '/pro.png'} alt={guide.name}
+                src={guide.photo?`/userimages/${guide?.photo}`:'/pro.png'} alt={guide.name}
                 width={60}
                 height={60}
                 className="rounded-full object-cover border-2 border-cyan-300 shadow-sm"
