@@ -1,19 +1,19 @@
-// app/api/initiate-payment/route.ts
 import { NextResponse } from 'next/server';
 import BookingModel from '@/model/bookings';
 import { connectDB } from '@/lib/db';
+
 export async function POST(request: Request) {
- const body = await request.json();
- const { amount, email, first_name, last_name, phone_number, tx_ref, return_url, tourId,userEmail } = body;
- console.log("Request body:", body);
-  console.log("Tour ID and User ID from request body:", tourId);
- 
+  const body = await request.json();
+  const { amount, first_name, last_name, phone_number, tourId, userEmail } = body;
+
   await connectDB();
   const existing = await BookingModel.findOne({ tour: tourId, email: userEmail });
-if (existing) {
-  return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
-}
-   
+  if (existing) {
+    return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
+  }
+
+  const BASE_URL = process.env.NEXTAUTH_URL || 'https://tour-app-smoky.vercel.app';
+  const tx_ref = `tx_${Date.now()}`; // Always unique
 
   const chapaRes = await fetch('https://api.chapa.co/v1/transaction/initialize', {
     method: 'POST',
@@ -24,26 +24,20 @@ if (existing) {
     body: JSON.stringify({
       amount,
       currency: 'ETB',
-      userEmail,
+      email: userEmail,
       first_name,
+      last_name,
       phone_number,
       tx_ref,
-      return_url,
-      metadata: {
-        tourId,
-        // optional: userId if needed
-      },
+      return_url: `${BASE_URL}/success`, // FIXED
+      metadata: { tourId },
       customization: {
         title: "Oromia Tours",
         description: "Secure booking through Chapa",
-        // logo: "https://yourdomain.com/logo.png",
-        logo: `http://${process.env.NEXTAUTH_URL}/visitoro2.png`, // Use your actual logo URL
-
+        logo: `${BASE_URL}/visitoro2.png`,
       }
     }),
   });
-  
-  
 
   const chapaData = await chapaRes.json();
 
