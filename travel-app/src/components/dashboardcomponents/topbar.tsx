@@ -64,7 +64,7 @@ export function Topbar({ role }: TopbarProps) {
         {/* Profile Image */}
         <div className="w-10 h-10 rounded-full border border-gray-200 shadow-md overflow-hidden">
           <img
-            src={user?.image ? `/userimages/${session?.user.image}` : '/pro.png'}
+            src={user?.image ? `/userimages/${user.image}` : '/pro.png'}
             alt={`${role} Profile`}
             className="w-full h-full object-cover"
             onError={(e) => {
