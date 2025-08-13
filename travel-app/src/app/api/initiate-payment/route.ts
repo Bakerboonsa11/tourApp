@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
   }
 
-  const BASE_URL = process.env.NEXTAUTH_URL || 'https://tour-app-smoky.vercel.app';
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://tour-app-smoky.vercel.app';
   const tx_ref = `tx_${Date.now()}`; // Always unique
 
   const chapaRes = await fetch('https://api.chapa.co/v1/transaction/initialize', {
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       last_name,
       phone_number,
       tx_ref,
-      return_url: `${BASE_URL}/payment-success`, // FIXED
+      return_url: `${BASE_URL}/payment-success?tx_ref=${tx_ref}`, // FIXED
       metadata: { tourId },
       customization: {
         title: "Oromia Tours",

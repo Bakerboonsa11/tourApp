@@ -157,7 +157,7 @@ export default function TourDetailPage() {
       try {
         setPaymentLoading(true);
     
-        const tx_ref = `tx-${id}-${Date.now()}`;
+        // const tx_ref = `tx-${id}-${Date.now()}`;
         console.log("current tour is: ", currentour);
     
         const res = await fetch('/api/initiate-payment', {
@@ -169,8 +169,8 @@ export default function TourDetailPage() {
             userEmail: session.user.email,
             first_name: session.user.name || 'John',
             phone_number: '0912345678',
-            tx_ref,
-            return_url: `http://${process.env.NEXTAUTH_URL}p/payment-success?tx_ref=${tx_ref}`,
+          
+            // return_url: `http://${process.env.NEXTAUTH_URL}/payment-success?tx_ref=${tx_ref}`,
           }),
         });
     
