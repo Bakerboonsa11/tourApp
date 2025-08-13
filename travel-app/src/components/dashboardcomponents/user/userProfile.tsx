@@ -82,7 +82,7 @@ import {
         <div className="flex flex-col md:flex-row items-center gap-6">
           <Avatar className="w-24 h-24 ring-4 ring-emerald-100 shadow-md">
             <AvatarImage
-              src={`/userimages/${user?.image}` || "/pro.png"}
+              src={user?.image?`/userimages/${user?.image}`:"/pro.png"}
               alt="User profile"
             />
             <AvatarFallback className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold">
