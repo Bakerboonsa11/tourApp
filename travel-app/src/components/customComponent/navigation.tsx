@@ -68,9 +68,9 @@ export default function Navbar() {
 
   if (status === 'loading') return null;
 
-  const profileImage =`/userimages/${user?.image}`
-    ? `/userimages/${session?.user.image}`
-    : '/pro.png';
+  const profileImage =user?.image ? `/userimages/${user?.image}`
+    :!user?.image?`/userimages/${session?.user.image}`:
+     '/pro.png';
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
