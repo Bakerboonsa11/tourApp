@@ -170,7 +170,7 @@ export default function TourDetailPage() {
             first_name: session.user.name || 'John',
             phone_number: '0912345678',
             tx_ref,
-            return_url: `http://localhost:3000/payment-success?tx_ref=${tx_ref}`,
+            return_url: `http://tour-app-smoky.vercel.app/payment-success?tx_ref=${tx_ref}`,
           }),
         });
     
