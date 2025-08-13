@@ -37,7 +37,7 @@ if (existing) {
         title: "Oromia Tours",
         description: "Secure booking through Chapa",
         // logo: "https://yourdomain.com/logo.png",
-        logo: "http://tour-app-smoky.vercel.app/visitoro2.png", // Use your actual logo URL
+        logo: `http://${process.env.NEXTAUTH_URL}/visitoro2.png`, // Use your actual logo URL
 
       }
     }),
