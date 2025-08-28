@@ -38,7 +38,6 @@ export default function GuideProfile() {
       try {
         const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
         setUser(response.data.data);
-        console.log('image is ',response.data.data.image)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -48,10 +47,9 @@ export default function GuideProfile() {
   }, [session]);
 
   if (!user) {
-    return <div className="text-white p-10">Loading profile...</div>;
+    return <div className="text-white p-10 text-center text-xl">Loading profile...</div>;
   }
 
-  // Format createdAt nicely
   const createdAtFormatted = new Date(user.createdAt).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'long',
@@ -59,109 +57,109 @@ export default function GuideProfile() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f4032] via-[#14532d] to-[#1e3a22] p-10 text-white">
-      <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/20 animate-fadeIn">
-        <div className="flex flex-col items-center space-y-6 mb-10">
-          {/* Avatar with edit link */}
-          <div className="relative w-36 h-36 rounded-full overflow-hidden bg-gradient-to-tr from-green-600 via-emerald-500 to-lime-400 p-[3px] shadow-xl">
-            <div className="rounded-full overflow-hidden w-full h-full">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f4032] via-[#14532d] to-[#1e3a22] p-10 flex justify-center items-start">
+      <div className="max-w-4xl w-full bg-white/5 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/10 p-10 flex flex-col items-center space-y-12 animate-fadeIn">
+        
+        {/* Avatar & Name */}
+        <div className="relative group">
+          <div className="relative w-40 h-40 rounded-full p-1 bg-gradient-to-tr from-green-500 via-lime-400 to-emerald-400 shadow-lg">
+            <div className="rounded-full overflow-hidden w-full h-full border-4 border-white/20 group-hover:scale-105 transition-transform duration-300">
               <img
-                src={`/userimages/${user.image}` || '/pro.png'}
+                src={user.image ? `/userimages/${user.image}` : '/pro.png'}
                 alt={`${user.name} Avatar`}
                 className="object-cover w-full h-full"
               />
             </div>
-            <Link
-              href="/edituser"
-              className="absolute bottom-1 right-1 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 shadow-md"
-            >
-              <User className="w-5 h-5" />
-            </Link>
           </div>
-
-          {/* Name */}
-          <h1 className="text-4xl font-bold tracking-wide text-white drop-shadow-md">{user.name}</h1>
-
-          {/* Edit Profile Link */}
           <Link
             href="/edituser"
-            className="text-sm text-lime-300 hover:underline transition duration-300"
+            className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 shadow-md transition"
+          >
+            <User className="w-6 h-6" />
+          </Link>
+        </div>
+
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">{user.name}</h1>
+          <Link
+            href="/edituser"
+            className="text-lime-300 hover:text-lime-400 transition text-sm font-medium"
           >
             Edit Profile
           </Link>
         </div>
 
-        {/* User info display */}
-        <div className="space-y-8">
+        {/* Info Cards */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
-            { label: 'Name', icon: <User />, value: user.name },
-            { label: 'Email', icon: <Mail />, value: user.email },
-            { label: 'Phone', icon: <Phone />, value: user.phoneNumber || 'N/A' },
-            { label: 'Location', icon: <Globe />, value: user.location || 'N/A' },
-            { label: 'Member Since', icon: <User />, value: createdAtFormatted },
+            { label: 'Name', icon: <User className="text-lime-300 w-5 h-5" />, value: user.name },
+            { label: 'Email', icon: <Mail className="text-lime-300 w-5 h-5" />, value: user.email },
+            { label: 'Phone', icon: <Phone className="text-lime-300 w-5 h-5" />, value: user.phoneNumber || 'N/A' },
+            { label: 'Location', icon: <Globe className="text-lime-300 w-5 h-5" />, value: user.location || 'N/A' },
+            { label: 'Member Since', icon: <User className="text-lime-300 w-5 h-5" />, value: createdAtFormatted },
           ].map(({ label, icon, value }) => (
-            <div key={label} className="relative">
-              <label className="absolute left-4 -top-3 bg-[#1e3a22] text-xs px-1 text-lime-200">
-                {label}
-              </label>
-              <div className="flex items-center bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white">
-                {icon}
-                <span className="ml-3">{value}</span>
+            <div
+              key={label}
+              className="flex items-center gap-4 bg-white/10 backdrop-blur-md border border-white/10 rounded-xl px-5 py-4 shadow-lg hover:shadow-2xl transition duration-300"
+            >
+              {icon}
+              <div className="flex flex-col">
+                <span className="text-lime-200 text-xs">{label}</span>
+                <span className="text-white font-medium">{value}</span>
               </div>
             </div>
           ))}
-
-          {/* Social media links */}
-          {user.socialMedia && (
-            <div>
-              <label className="block mb-1 text-sm text-lime-200 flex items-center gap-2">
-                Social Media
-              </label>
-              <div className="flex space-x-6 text-white">
-                {user.socialMedia.facebook && (
-                  <a
-                    href={user.socialMedia.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-lime-400 flex items-center gap-1"
-                  >
-                    <Facebook className="w-5 h-5" /> Facebook
-                  </a>
-                )}
-                {user.socialMedia.twitter && (
-                  <a
-                    href={user.socialMedia.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-lime-400 flex items-center gap-1"
-                  >
-                    <Twitter className="w-5 h-5" /> Twitter
-                  </a>
-                )}
-                {user.socialMedia.instagram && (
-                  <a
-                    href={user.socialMedia.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-lime-400 flex items-center gap-1"
-                  >
-                    <Instagram className="w-5 h-5" /> Instagram
-                  </a>
-                )}
-                {user.socialMedia.linkedin && (
-                  <a
-                    href={user.socialMedia.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-lime-400 flex items-center gap-1"
-                  >
-                    <Linkedin className="w-5 h-5" /> LinkedIn
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
         </div>
+
+        {/* Social Media */}
+        {user.socialMedia && (
+          <div className="w-full flex flex-col items-center space-y-3">
+            <span className="text-lime-200 font-semibold">Connect on Social Media</span>
+            <div className="flex gap-6 flex-wrap justify-center">
+              {user.socialMedia.facebook && (
+                <a
+                  href={user.socialMedia.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
+                >
+                  <Facebook className="w-5 h-5" /> Facebook
+                </a>
+              )}
+              {user.socialMedia.twitter && (
+                <a
+                  href={user.socialMedia.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
+                >
+                  <Twitter className="w-5 h-5" /> Twitter
+                </a>
+              )}
+              {user.socialMedia.instagram && (
+                <a
+                  href={user.socialMedia.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
+                >
+                  <Instagram className="w-5 h-5" /> Instagram
+                </a>
+              )}
+              {user.socialMedia.linkedin && (
+                <a
+                  href={user.socialMedia.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
+                >
+                  <Linkedin className="w-5 h-5" /> LinkedIn
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

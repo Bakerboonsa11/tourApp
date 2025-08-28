@@ -119,6 +119,7 @@ export default function Formedit() {
 
   const handleSaveEdit = async () => {
     const formData = new FormData();
+    setLoading(true);
 
     formData.append('name', editFields.name);
     formData.append('email', editFields.email);
@@ -172,47 +173,47 @@ export default function Formedit() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 mt-12 bg-white/80 backdrop-blur-md shadow-2xl rounded-3xl border border-gray-100">
-      <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 mb-8 text-center">
+    <div className="max-w-4xl mx-auto p-10 mt-16 bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl border border-gray-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-shadow duration-500">
+      <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-400 mb-10 text-center tracking-tight">
         Update User Profile
       </h2>
   
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Inputs */}
         <input
           type="text"
           placeholder="Name"
           value={editFields.name}
           onChange={(e) => handleFieldChange('name', e.target.value)}
-          className="input-style"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 shadow-sm focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition duration-300 placeholder:text-gray-400"
         />
         <input
           type="email"
           placeholder="Email"
           value={editFields.email}
           onChange={(e) => handleFieldChange('email', e.target.value)}
-          className="input-style"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 shadow-sm focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition duration-300 placeholder:text-gray-400"
         />
         <input
           type="password"
           placeholder="Password"
           value={editFields.password}
           onChange={(e) => handleFieldChange('password', e.target.value)}
-          className="input-style"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 shadow-sm focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition duration-300 placeholder:text-gray-400"
         />
         <input
           type="text"
           placeholder="Location"
           value={editFields.location}
           onChange={(e) => handleFieldChange('location', e.target.value)}
-          className="input-style"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 shadow-sm focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition duration-300 placeholder:text-gray-400"
         />
         <input
           type="text"
           placeholder="Phone Number"
           value={editFields.phoneNumber}
           onChange={(e) => handleFieldChange('phoneNumber', e.target.value)}
-          className="input-style"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 shadow-sm focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition duration-300 placeholder:text-gray-400"
         />
   
         {/* Image Upload */}
@@ -220,13 +221,13 @@ export default function Formedit() {
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="file-input-style"
+          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-blue-500 file:to-cyan-500 file:text-white hover:file:brightness-110 transition duration-300"
         />
         {editFields.image && (
           <img
             src={editFields.image}
             alt="Profile Preview"
-            className="h-32 w-32 rounded-full object-cover shadow-lg border-4 border-white mx-auto md:mx-0"
+            className="h-32 w-32 rounded-full object-cover shadow-xl border-4 border-white ring-4 ring-cyan-200 mx-auto md:mx-0 transition-transform duration-300 hover:scale-105"
           />
         )}
   
@@ -240,51 +241,31 @@ export default function Formedit() {
             onChange={(e) =>
               handleSocialChange(platform as keyof typeof editFields.socialMedia, e.target.value)
             }
-            className="input-style"
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 shadow-sm focus:ring-2 focus:ring-sky-400 focus:border-sky-400 outline-none transition duration-300 placeholder:text-gray-400"
           />
         ))}
       </div>
   
       {/* Buttons */}
-      <div className="flex justify-end gap-4 mt-10">
+      <div className="flex justify-end gap-4 mt-12">
         <button
           type="button"
           onClick={handleCancelEdit}
-          className="btn-style bg-gray-100 text-gray-700 hover:bg-gray-200"
+          className="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition duration-300 shadow-sm"
         >
           Cancel
         </button>
         <button
           type="button"
           onClick={handleSaveEdit}
-          className="btn-style bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:brightness-110"
+          className="px-6 py-3 rounded-xl font-semibold shadow-md bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:brightness-110 hover:scale-105 transition-all duration-300"
         >
-          Save Changes
+         {loading? 'Saving...' : 'Save Changes'}
         </button>
       </div>
     </div>
   );
   
+  
 }
 
-
-// InputBlock Component
-// function InputBlock({ label, type = 'text', value, onChange, placeholder = '' }: InputBlockProps) {
-//   return (
-//     <div>
-//       <Label label={label} />
-//       <input
-//         type={type}
-//         placeholder={placeholder || label}
-//         value={value}
-//         onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
-//         className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400"
-//       />
-//     </div>
-//   );
-// }
-
-// // Label Component
-// function Label({ label }: LabelProps) {
-//   return <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>;
-// }

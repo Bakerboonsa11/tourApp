@@ -14,6 +14,7 @@ import {
   CarouselPrevious
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export interface ITour {
   _id: string;
@@ -181,6 +182,12 @@ export default function CardCarouselCH() {
                       <p className="text-gray-600 dark:text-gray-300 text-sm mt-2 flex-1 line-clamp-3 leading-relaxed">
                         {card.description}
                       </p>
+                         <Link
+                                                             href={`/detail/${card._id}`}
+                                                             className="mt-3 inline-block text-center bg-gradient-to-r from-green-600 via-emerald-500 to-teal-400 text-white font-semibold text-sm px-4 py-2 rounded-lg shadow hover:shadow-lg hover:scale-105 transition"
+                                                           >
+                                                             View Details
+                                                           </Link>
   
                       <div className="flex justify-between items-center text-sm font-semibold mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <span className="flex items-center gap-1 text-red-600 dark:text-red-400">

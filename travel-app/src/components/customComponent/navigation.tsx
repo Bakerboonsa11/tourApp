@@ -4,94 +4,79 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
+import { Menu, Moon, Sun } from 'lucide-react';
 import Image from 'next/image';
 import axios from 'axios';
-
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import { useState,useEffect } from 'react';
+import { useTheme } from "next-themes";
+import { useState, useEffect } from 'react';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-export function ModeToggle() {
-
- 
-}
+} from "@/components/ui/dropdown-menu";
 
 interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'user' | 'admin'|'guide';
+  role: 'user' | 'admin' | 'guide';
   password?: string;
   createdAt: string;
-  image:string
+  image: string;
 }
+
 export default function Navbar() {
   const { data: session, status } = useSession();
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
-  
-
-    useEffect(() => {
-      const email = session?.user?.email;
-      if (!email) return; // ensures it's a string
-    
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
-          const userData: User = response.data.data;
-          setUser(userData);
-  
-          
-       
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
-    
-      fetchUserData();
-    }, [session]);
 
   useEffect(() => {
-    if (status === 'authenticated') {
-      console.log('Session loaded:', session);
-    }
-  }, [status, session]);
+    const email = session?.user?.email;
+    if (!email) return;
+
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
+        const userData: User = response.data.data;
+        setUser(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
 
   if (status === 'loading') return null;
 
-  const profileImage =user?.image ? `/userimages/${user?.image}`
-    :!user?.image?`/userimages/${session?.user.image}`:
-     '/pro.png';
+  const profileImage = user?.image
+    ? `/userimages/${user?.image}`
+    : !user?.image
+    ? `/userimages/${session?.user.image}`
+    : '/pro.png';
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
+    <header className="sticky top-0 z-50 bg-white shadow-md">
       <div className="container mx-auto max-w-6xl flex justify-between items-center p-4">
+        
         {/* Logo */}
-        <div className="flex items-center space-x-4">
-  <Image
-    src="/static/log.png"
-    alt="logo"
-    width={50} // Increased size
-    height={50}
-    className="rounded-full object-cover border-2 border-green-500 shadow-md"
-  />
-  <Link
-    href="/"
-    className="text-3xl font-bold text-green-700 hover:opacity-90 transition"
-  >
- Ethio-Visit
-  </Link>
-</div>
-
+        <div className="flex items-center space-x-3">
+          <Image
+            src="/static/log.png"
+            alt="logo"
+            width={55}
+            height={55}
+            className="rounded-full object-cover border-2 border-green-600 shadow-lg"
+          />
+          <Link
+            href="/"
+            className="text-2xl md:text-3xl font-extrabold text-green-700 tracking-wide hover:opacity-90 transition"
+          >
+            Ethio-Visit
+          </Link>
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
@@ -113,7 +98,7 @@ export default function Navbar() {
 
           {session?.user ? (
             <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300">
+              <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 shadow-sm">
                 <Image
                   src={profileImage}
                   alt="profile"
@@ -136,74 +121,102 @@ export default function Navbar() {
             >
               Login
             </Link>
-            
           )}
 
-
-<DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    <Button
-      variant="ghost"
-      size="icon"
-      className="relative rounded-full p-2
-                 bg-gradient-to-r from-amber-400 to-pink-500 
-                 dark:from-indigo-500 dark:to-purple-600
-                 text-white shadow-lg shadow-amber-500/30 dark:shadow-indigo-500/30
-                 hover:shadow-xl hover:scale-105
-                 transition-all duration-300 ease-out"
-    >
-      <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  </DropdownMenuTrigger>
-  
-  <DropdownMenuContent
-    align="end"
-    className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1"
-  >
-    <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-      Light
-    </DropdownMenuItem>
-    <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-      Dark
-    </DropdownMenuItem>
-    <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-      System
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>
-
-  
+          {/* Desktop Theme Toggle */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative rounded-full p-2
+                           bg-gradient-to-r from-amber-400 to-pink-500 
+                           dark:from-indigo-500 dark:to-purple-600
+                           text-white shadow-lg shadow-amber-500/30 dark:shadow-indigo-500/30
+                           hover:shadow-xl hover:scale-105
+                           transition-all duration-300 ease-out"
+              >
+                <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1">
+              <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         {/* Mobile Navigation */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="w-6 h-6" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden w-12 h-12 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 transition-all"
+            >
+              <Menu className="w-7 h-7" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-64 p-6">
+          <SheetContent side="right" className="w-72 p-6 bg-white dark:bg-gray-900">
             <div className="flex flex-col space-y-5">
-              <Link href="/" className="text-lg font-medium text-gray-800">
+              <Link href="/" className="text-lg font-medium text-gray-800 dark:text-gray-200">
                 Home
               </Link>
-              <Link href="/tours/All" className="text-lg font-medium text-gray-800">
+              <Link href="/tours/All" className="text-lg font-medium text-gray-800 dark:text-gray-200">
                 Tours
               </Link>
-              <Link href="/about" className="text-lg font-medium text-gray-800">
+              <Link href="/about" className="text-lg font-medium text-gray-800 dark:text-gray-200">
                 About Us
               </Link>
 
               {session?.user && (
                 <Link
                   href={`/dashboard/${session.user.role}`}
-                  className="text-lg font-medium text-gray-800"
+                  className="text-lg font-medium text-gray-800 dark:text-gray-200"
                 >
                   Dashboard
                 </Link>
               )}
+
+              {/* Theme Toggle in Mobile */}
+              <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full flex justify-center rounded-full
+                                 bg-gradient-to-r from-amber-400 to-pink-500 
+                                 dark:from-indigo-500 dark:to-purple-600
+                                 text-white shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Sun className="h-5 w-5 dark:hidden" />
+                      <Moon className="h-5 w-5 hidden dark:block" />
+                      <span className="ml-2">Toggle Theme</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1">
+                    <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+                      Light
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+                      Dark
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
+                      System
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
 
               {session?.user ? (
                 <>
@@ -217,7 +230,7 @@ export default function Navbar() {
                         className="object-cover w-full h-full"
                       />
                     </div>
-                    <span className="text-sm text-gray-700">{session.user.name}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{session.user.name}</span>
                   </div>
                   <Button
                     onClick={() => signOut({ callbackUrl: '/' })}

@@ -196,7 +196,7 @@ const [selectedType, setSelectedType] = useState(initialType);
       filtered = filtered.filter(tour => tour.typeOfTour.includes(selectedType));
     }
     if (searchQuery.trim()) {
-      filtered = filtered.filter(tour => tour.typeOfTour.includes(searchQuery));
+      filtered = filtered.filter(tour => tour.name.includes(searchQuery));
     }
     setFilteredTours(filtered);
   }, [selectedType, searchQuery, allTours]);
@@ -315,7 +315,7 @@ const [selectedType, setSelectedType] = useState(initialType);
       {/* Hero Section */}
       <section className="text-center space-y-4 bg-green-200 p-10 rounded-xl shadow-md">
       <h1 className="text-4xl font-bold text-black">
-  Explore Ethiiopia <span className="text-4xl">🇪🇹</span>
+  Explore Ethiopia <span className="text-4xl">🇪🇹</span>
 </h1>
         <p className="text-lg text-gray-800 max-w-2xl mx-auto">
           Discover breathtaking destinations, unique cultural spots, and relaxing escapes — all curated by locals.

@@ -2,166 +2,137 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { Calendar, MapPin, Edit2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import { Calendar, MapPin, Edit2, Users } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import axios from 'axios';
 import Link from 'next/link';
-
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'user' | 'admin' | 'guide';
-  password?: string;
-  createdAt: string;
-}
 
 type Tour = {
   _id: string;
   name: string;
-  slug: string;
-  description: string;
-  region: string;
-  typeOfTour: string[];
-  price: number;
-  duration: number;
-  maxGroupSize: number;
-  difficulty: string;
-  ratingsAverage: number;
-  ratingsQuantity: number;
-  images: string[];
   coverImage: string;
-  location: string;
+  location: location;
   startDates: string[];
-  endDate: string;
-  likes: string[];
-  comments: Comment[];
-  createdAt: string;
-  guides: string[];
+  duration: number;
   status: string;
 };
 
-export interface Comment {
-  message: string;
-  userId: string;
-  userImage: string;
-  name: string;
-  createdAt: string; // ISO date string
+type location = {
+  address?: string;
 }
 
 export default function GuideMyTours() {
   const { data: session } = useSession();
-  const [user, setUser] = useState<User | null>(null);
   const [toursOfGuide, setToursOfGuide] = useState<Tour[]>([]);
 
   useEffect(() => {
-    const email = session?.user?.email;
-    if (!email) return;
-
-    const fetchUserData = async () => {
+    const fetchData = async () => {
+      if (!session?.user?.email) return;
       try {
-        const response = await axios.get(`/api/user/${encodeURIComponent(email)}`);
-        const userData: User = response.data.data;
-        setUser(userData);
+        const userRes = await axios.get(`/api/user/${encodeURIComponent(session.user.email)}`);
+        const userId = userRes.data.data._id;
 
-        const tourResponse = await axios.get(`/api/tours`);
-        console.log(tourResponse.data);
-
-        const filteredtourGuided = tourResponse.data.instanceFiltered.filter(
-          (tour: Tour) => tour.guides.some((guide: string) => guide === userData._id)
+        const tourRes = await axios.get('/api/tours');
+        const filteredTours = tourRes.data.instanceFiltered.filter((tour: Tour & { guides: string[] }) =>
+          tour.guides.includes(userId)
         );
-        console.log('guideds are  are ', filteredtourGuided);
-        setToursOfGuide(filteredtourGuided);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+        setToursOfGuide(filteredTours);
+      } catch (err) {
+        console.error(err);
       }
     };
 
-    fetchUserData();
+    fetchData();
   }, [session]);
 
-  // Helper function to get status style classes
   const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case 'finished':
-        return 'bg-red-600 text-white';
+        return 'bg-red-500 text-white';
       case 'pending':
-        return 'bg-green-600 text-white';
+        return 'bg-yellow-400 text-gray-800';
       case 'active':
-        return 'bg-green-300 text-green-900';
+        return 'bg-green-500 text-white';
       default:
-        return 'bg-gray-400 text-white';
+        return 'bg-gray-300 text-gray-800';
     }
   };
 
   return (
-    <div className="h-screen bg-gradient-to-tr from-white via-green-50 to-green-100 flex flex-col">
-      {/* Sticky Header */}
-      <div className="p-6 bg-white shadow-md sticky top-0 z-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-green-700 text-center">🌿 My Guided Tours</h2>
-      </div>
+    <div className="min-h-screen bg-gray-50 font-sans">
+      {/* Hero Section */}
+      <header className="bg-gradient-to-r from-green-700 to-green-500 text-white py-10 shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h1 className="text-3xl md:text-4xl font-extrabold">🌿 My Guided Tours</h1>
+          <p className="text-lg md:text-xl opacity-90">{toursOfGuide.length} Active Tours</p>
+        </div>
+      </header>
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      {/* Dashboard Grid */}
+      <main className="max-w-7xl mx-auto px-6 py-10 grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {toursOfGuide.length === 0 ? (
-          <p className="text-center text-gray-600 text-lg">You currently have no assigned tours.</p>
+          <div className="col-span-full text-center py-20 text-gray-500 text-lg font-medium">
+            You currently have no assigned tours.
+          </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pb-10">
-            {toursOfGuide.map((tour) => (
-              <div
-                key={tour._id}
-                className="bg-white rounded-xl shadow hover:shadow-lg transition p-4 flex flex-col"
-              >
-                <div className="relative w-full h-36 rounded-lg overflow-hidden mb-3">
-                  <Image
-                    src={`/toursphoto/${tour.coverImage}` || '/redfox.jpg'}
-                    alt={tour.name}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  <span
-                    className={`absolute top-2 left-2 text-xs font-medium px-3 py-1 rounded-full shadow ${getStatusClass(
-                      tour.status
-                    )}`}
-                  >
-                    {tour.status}
+          toursOfGuide.map((tour) => (
+            <div
+              key={tour._id}
+              className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden flex flex-col"
+            >
+              {/* Image */}
+              <div className="relative h-48 w-full">
+                <Image
+                  src={tour.coverImage ? `/toursphoto/${tour.coverImage}` : '/redfox.jpg'}
+                  alt={tour.name}
+                  fill
+                  className="object-cover transition-transform duration-500 hover:scale-110"
+                />
+                <span
+                  className={`absolute top-3 right-3 px-3 py-1 text-xs font-semibold rounded-full shadow ${getStatusClass(
+                    tour.status
+                  )}`}
+                >
+                  {tour.status.toUpperCase()}
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-5 flex flex-col flex-1">
+                <h2 className="text-xl font-bold text-gray-800 mb-2">{tour.name}</h2>
+
+                <div className="flex items-center gap-2 text-gray-600 mb-2">
+                  <MapPin className="w-5 h-5 text-green-500" />
+                  <span>{tour.location?.address|| 'Unknown Location'}</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-gray-600 mb-2">
+                  <Calendar className="w-5 h-5 text-green-500" />
+                  <span>
+                    {new Date(tour.startDates[0]).toLocaleDateString(undefined, {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-semibold text-green-800 mb-1">{tour.name}</h3>
-
-                <div className="text-sm text-gray-600 flex items-center gap-1 mb-1">
-                  <MapPin className="w-4 h-4 text-green-600" />
-                  {/* {tour.location} */}
+                <div className="flex items-center gap-2 text-gray-600 mb-4">
+                  <Users className="w-5 h-5 text-green-500" />
+                  <span>Duration: {tour.duration} days</span>
                 </div>
 
-                <div className="text-sm text-gray-600 flex items-center gap-1 mb-1">
-                  <Calendar className="w-4 h-4 text-green-600" />
-                  {new Date(tour.startDates[0]).toLocaleDateString(undefined, {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </div>
-
-                <p className="text-sm text-gray-500 mb-4">Duration: {tour.duration} days</p>
-
-                <Link href={`/detail/${tour._id}`}>
-                  <Button
-                    variant="default"
-                    className="mt-auto bg-green-600 hover:bg-green-700 text-white rounded-md text-sm py-2 px-4 flex items-center justify-center gap-2"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                    View
-                  </Button>
+                {/* Action Button */}
+                <Link href={`/detail/${tour._id}`} className="mt-auto">
+                  <button className="w-full py-3 bg-gradient-to-r from-green-600 to-lime-500 text-white font-semibold rounded-2xl shadow-lg hover:brightness-110 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                    <Edit2 className="w-5 h-5" /> View Tour
+                  </button>
                 </Link>
               </div>
-            ))}
-          </div>
+            </div>
+          ))
         )}
-      </div>
+      </main>
     </div>
   );
 }
