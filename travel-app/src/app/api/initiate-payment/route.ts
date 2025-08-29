@@ -33,9 +33,9 @@ export async function POST(request: Request) {
       return_url: `${BASE_URL}/payment-success?tx_ref=${tx_ref}`, 
       metadata: { tourId },
       customization: {
-        title: "Oromia Tours",
+        title: "Explore Ethiopia with",
         description: "Secure booking through Chapa",
-        logo: `${BASE_URL}/visitoro2.png`,
+        logo: `${BASE_URL}/ethio4.webp`,
       }
     }),
   });
