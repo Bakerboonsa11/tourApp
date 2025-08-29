@@ -33,9 +33,9 @@ export async function POST(request: Request) {
       return_url: `${BASE_URL}/payment-success?tx_ref=${tx_ref}`, 
       metadata: { tourId },
       customization: {
-        title: "Explore Ethiopia with",
+        title: "Explore Ethiopia",
         description: "Secure booking through Chapa",
-        logo: `${BASE_URL}/ethio4.webp`,
+        logo: `${BASE_URL}/ethio2.png`,
       }
     }),
   });
