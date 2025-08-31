@@ -7,7 +7,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 export default function FloatingAdLink() {
-  const [position, setPosition] = useState({ top: "50%", left: "50%" });
+  const [position, setPosition] = useState({ top: "0%", left: "0%" });
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {

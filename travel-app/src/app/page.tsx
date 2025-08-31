@@ -39,7 +39,7 @@ export default function Home() {
 <p className="text-center text-base md:text-lg mt-4 text-gray-700 dark:text-gray-600">
   Explore the beauty of Ethiopia 🇪🇹🇪🇹🇪🇹🇪🇹
 </p>
-
+<MovingButton />
 
       {/* DYNAMIC IMAGE FLEXBOX */}
       <div className="flex flex-col md:flex-row items-center justify-between mt-20 p-6 md:p-12 gap-10 bg-gradient-to-br from-green-400 via-emerald-500 to-lime-500 max-w-7xl mx-auto rounded-3xl shadow-xl backdrop-blur-xl mx-4">
@@ -104,7 +104,7 @@ export default function Home() {
         <button className="bg-gradient-to-r from-green-500 via-emerald-600 to-green-700 text-white font-medium rounded-full px-7 py-2.5 text-sm md:text-base shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
           Book Now
         </button>
-        <MovingButton />
+     
       </Link>
     </div>
   </div>
