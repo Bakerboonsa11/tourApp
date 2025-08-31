@@ -7,9 +7,12 @@ import Carousel from "@/components/customComponent/corselAddis";
 import CardCarouselCH from "@/components/customComponent/courselChipest";
 import CardCarouselCurrent from "@/components/customComponent/courselCurrentLocation";
 import GreenWaveFAQContact from './../components/customComponent/mostasked'
-
+import MovingButton from "@/components/customComponent/movingbutton";
+import Chatbot from "@/components/customComponent/Chatbot";
 import Link from "next/link";
 import Image from "next/image";
+
+
 export default function Home() {
 
 
@@ -31,6 +34,7 @@ export default function Home() {
       <h1 className="text-4xl md:text-6xl font-bold text-center mt-10 text-gray-900 dark:text-black">
   Where to?
 </h1>
+<Chatbot />
 
 <p className="text-center text-base md:text-lg mt-4 text-gray-700 dark:text-gray-600">
   Explore the beauty of Ethiopia 🇪🇹🇪🇹🇪🇹🇪🇹
@@ -100,6 +104,7 @@ export default function Home() {
         <button className="bg-gradient-to-r from-green-500 via-emerald-600 to-green-700 text-white font-medium rounded-full px-7 py-2.5 text-sm md:text-base shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
           Book Now
         </button>
+        <MovingButton />
       </Link>
     </div>
   </div>
