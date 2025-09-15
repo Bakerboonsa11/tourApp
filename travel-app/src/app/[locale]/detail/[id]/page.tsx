@@ -152,6 +152,7 @@ export default function TourDetailPage() {
             userEmail: session.user.email,
             first_name: session.user.name || 'John',
             phone_number: '0912345678',
+            locale: params?.locale,
           
             // return_url: `http://${process.env.NEXTAUTH_URL}/payment-success?tx_ref=${tx_ref}`,
           }),

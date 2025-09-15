@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
-import { start } from 'repl';
 
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
@@ -108,7 +107,7 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
   
-      <a href="/my-bookings" className="mt-10 inline-block bg-emerald-700 text-white px-6 py-3 rounded-lg hover:bg-emerald-800 transition">
+      <a href="/" className="mt-10 inline-block bg-emerald-700 text-white px-6 py-3 rounded-lg hover:bg-emerald-800 transition">
         View My Bookings
       </a>
     </div>

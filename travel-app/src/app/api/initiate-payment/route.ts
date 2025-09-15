@@ -4,7 +4,7 @@ import { connectDB } from '@/lib/db';
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { amount, first_name, last_name, phone_number, tourId, userEmail } = body;
+  const { amount, first_name, last_name, phone_number, tourId, userEmail, locale } = body;
 
   await connectDB();
   const existing = await BookingModel.findOne({ tour: tourId, email: userEmail });
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       last_name,
       phone_number,
       tx_ref,
-      return_url: `${BASE_URL}/payment-success?tx_ref=${tx_ref}`, 
+      return_url: `${BASE_URL}/${locale}/payment-success?tx_ref=${tx_ref}`,
       metadata: { tourId },
       customization: {
         title: "Explore Ethiopia",
