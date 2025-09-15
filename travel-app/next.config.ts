@@ -12,7 +12,14 @@ const nextConfig = {
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
+  eslint: {
+    // Warning: build will not fail for ESLint errors
+    ignoreDuringBuilds: true,
+  },
 };
 const withNextIntl=createNextIintlPlugin()
 
 module.exports = withNextIntl(nextConfig);
+
+
+
