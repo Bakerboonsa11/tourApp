@@ -4,6 +4,7 @@ import { Bell } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useEffect,useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 type TopbarProps = {
   role: string;
@@ -22,7 +23,7 @@ interface User {
 export function Topbar({ role }: TopbarProps) {
   const { data: session } = useSession();
     const [user, setUser] = useState<User | null>(null);
-  
+  const t = useTranslations('home');
 
     useEffect(() => {
       const email = session?.user?.email;
@@ -50,7 +51,7 @@ export function Topbar({ role }: TopbarProps) {
     <header className="h-16 bg-white px-6 flex items-center justify-between rounded-xl shadow-lg border border-gray-100">
       {/* Left: Welcome */}
       <h1 className="text-gray-900 text-lg font-medium">
-        Welcome, <span className="capitalize text-gray-500">{role}</span>
+        {t('welcome')}, <span className="capitalize text-gray-500">{role}</span>
       </h1>
 
       {/* Right: Actions */}

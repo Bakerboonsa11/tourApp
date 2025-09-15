@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
-
+import { useTranslations } from 'next-intl';
 export interface Tour {
   _id: string;
   name: string;
@@ -62,7 +62,7 @@ export default function ReviewsSection() {
   const [user, setUser] = useState<User | null>(null);
   const [reviewedTours, setReviewedTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
-
+ const t = useTranslations('user');
   const filteredReviews = reviewedTours.filter((tour) =>
     tour.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -111,42 +111,42 @@ export default function ReviewsSection() {
       <Card className="bg-gradient-to-tr from-emerald-100 via-white to-emerald-50 border-l-4 border-emerald-400 shadow-lg rounded-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-emerald-800">
-            Add a Review
+            {t('review.addReviewTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-end">
-          <Input placeholder="Tour name..." className="sm:w-1/3" />
-          <Input placeholder="Your comment..." className="sm:flex-1" />
+          <Input placeholder={t('review.tourNamePlaceholder')} className="sm:w-1/3" />
+          <Input placeholder={t('review.commentPlaceholder')} className="sm:flex-1" />
           <Input
             type="number"
             min={1}
             max={5}
-            placeholder="Rating (1–5)"
+            placeholder={t('review.ratingPlaceholder')}
             className="w-24"
           />
           <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
-            Submit
+            {t('review.submitButton')}
           </Button>
         </CardContent>
       </Card>
-
+  
       {/* Search Input */}
       <div className="flex items-center gap-3">
         <Input
           type="text"
-          placeholder="Search by tour name..."
+          placeholder={t('review.searchPlaceholder')}
           className="w-full sm:max-w-sm rounded-lg border-gray-300"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
+  
       {/* Review Cards */}
       <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 custom-scrollbar">
         {loading ? (
-          <p className="text-center text-gray-500">Loading your reviews...</p>
+          <p className="text-center text-gray-500">{t('review.loadingReviews')}</p>
         ) : filteredReviews.length === 0 ? (
-          <p className="text-center text-gray-500">No reviews found.</p>
+          <p className="text-center text-gray-500">{t('review.noReviews')}</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredReviews.map((tour, tourIdx) =>
@@ -167,7 +167,7 @@ export default function ReviewsSection() {
                         {comment.createdAt &&
                         !isNaN(Date.parse(comment.createdAt))
                           ? format(new Date(comment.createdAt), 'PPP')
-                          : 'Unknown date'}
+                          : t('unknownDate')}
                       </p>
                     </CardHeader>
                     <CardContent>
@@ -181,7 +181,7 @@ export default function ReviewsSection() {
                           />
                         ))}
                       </div>
-
+  
                       {/* Stylized User Comment */}
                       <div className="mb-3 border-l-4 border-emerald-400 bg-emerald-50/40 p-3 rounded-md text-gray-800 italic relative">
                         <svg
@@ -194,13 +194,13 @@ export default function ReviewsSection() {
                         </svg>
                         <span className="pl-6 block">{comment.message}</span>
                       </div>
-
+  
                       {/* Additional Tour Info */}
                       <div className="text-sm text-gray-600 space-y-1">
-                        <p><strong>Region:</strong> {tour.region}</p>
-                        <p><strong>Price:</strong> ${tour.price}</p>
-                        <p><strong>Difficulty:</strong> {tour.difficulty}</p>
-                        <p><strong>Duration:</strong> {tour.duration} days</p>
+                        <p><strong>{t('review.region')}:</strong> {tour.region}</p>
+                        <p><strong>{t('review.price')}:</strong> ${tour.price}</p>
+                        <p><strong>{t('review.difficulty')}:</strong> {tour.difficulty}</p>
+                        <p><strong>{t('review.duration')}:</strong> {tour.duration} {t('review.days')}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -211,4 +211,5 @@ export default function ReviewsSection() {
       </div>
     </div>
   );
+  
 }

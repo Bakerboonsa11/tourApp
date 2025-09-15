@@ -7,6 +7,7 @@ import { useEffect,useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export interface IBooking {
   _id: string;
@@ -98,6 +99,7 @@ export default function Wishlist() {
  const {data:session}=useSession()
  const [user ,setUser]=useState<User |null >(null)
  const [reviews,setreviews]=useState<Tour[] |null>([])
+ const t = useTranslations('user');
 
    useEffect(() => {
       const email = session?.user?.email;
@@ -156,9 +158,9 @@ export default function Wishlist() {
     return (
       <div className="p-8 bg-gradient-to-br from-blue-100 via-white to-sky-200 min-h-screen font-sans">
         <h2 className="text-5xl font-black text-slate-800 text-center mb-14 tracking-tight drop-shadow-lg">
-          ✨ Wishlist Wonders
+          {t('wish.wishlistTitle')}
         </h2>
-  
+    
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {reviews?.map((item) => (
             <div
@@ -178,13 +180,13 @@ export default function Wishlist() {
                 </div>
                 <div className="absolute bottom-4 left-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 shadow">
                   <Clock className="w-4 h-4" />
-                  {item.duration} Days
+                  {item.duration} {t('wish.days')}
                 </div>
                 <div className="absolute bottom-4 right-4 bg-white/80 text-sky-800 font-bold px-4 py-1 rounded-full shadow text-sm">
                   ${item.price}
                 </div>
               </div>
-  
+    
               {/* Info Section */}
               <div className="flex flex-col justify-between flex-1 p-6">
                 <div>
@@ -194,19 +196,19 @@ export default function Wishlist() {
                     {item.region}
                   </div>
                 </div>
-  
+    
                 {/* Buttons */}
                 <div className="flex gap-3 pt-6">
                   <Link href={`/detail/${item._id}`} className="flex-1">
                     <Button className="w-full bg-gradient-to-r from-sky-500 to-sky-700 text-white rounded-xl shadow hover:brightness-110">
-                      Book Now
+                      {t('wish.bookNow')}
                     </Button>
                   </Link>
                   <Button
                     variant="ghost"
                     className="text-red-500 hover:bg-red-50 border border-red-200 rounded-xl"
-                    onClick={()=>{
-                      handleDelete(item._id)
+                    onClick={() => {
+                      handleDelete(item._id);
                     }}
                   >
                     <Trash2 className="w-5 h-5" />
@@ -218,5 +220,6 @@ export default function Wishlist() {
         </div>
       </div>
     );
+    
   
 }

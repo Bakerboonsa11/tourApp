@@ -2,17 +2,17 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Sidebar } from '../../../components/dashboardcomponents/Sidebar';
-import { Topbar } from '../../../components/dashboardcomponents/topbar';
+import { Sidebar } from '../../../../components/dashboardcomponents/Sidebar';
+import { Topbar } from '../../../../components/dashboardcomponents/topbar';
 import { Button } from '@/components/ui/button';
-import UserTable from '../../../components/dashboardcomponents/admin/usertable';
+import UserTable from '../../../../components/dashboardcomponents/admin/usertable';
 import GuideManagement from '@/components/dashboardcomponents/admin/guidemanagment';
 import BookingsSection from '@/components/dashboardcomponents/admin/bookings';
 import ToursManagement from '@/components/dashboardcomponents/admin/tourmangment';
 import { Home, Users, Map } from 'lucide-react';
 import { useEffect,useState,Suspense } from 'react';
 import { useRouter } from 'next/navigation'; // ✅ CORRECT for App Router
-
+import { useLocale } from 'next-intl';
 import axios from 'axios';
 import {
   BarChart,
@@ -25,7 +25,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-
+import { useTranslations } from 'next-intl';
 type User = {
   _id: string;
   name: string;
@@ -73,13 +73,7 @@ import {
 
 
 // Define nav items here and pass to Sidebar
-const navItems = [
-  { section: 'admin', label: 'Dashboard', Icon: Home },
-  { section: 'user', label: 'Users', Icon: Users },
-  { section: 'guide', label: 'Guides', Icon: Compass },
-  { section: 'bookings', label: 'Bookings', Icon: CalendarCheck },
-  { section: 'tours', label: 'Tours', Icon: Globe2 },
-];
+
 
 const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
 
@@ -88,8 +82,9 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
 
  function AdminDashboardHome() {
   const router = useRouter();
+  const locale = useLocale();
   const handleNavigate = (section: string) => {
-    router.push(`/dashboard/admin/?section=${section}`);
+    router.push(`/${locale}/dashboard/admin/?section=${section}`);
   };
   
   const [users, setUsers] = useState<User[]>([]);
@@ -99,6 +94,15 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
   const [tourTypes, setTourTypes] = useState<{ [key: string]: number }>({});
   const [guideStats, setGuideStats] = useState<{ name: string; guides: number }[]>([]);
   const {data:session}=useSession()
+  const t = useTranslations('admin');
+  const navItems = [
+    { section: 'admin', label: t('nav.dashboard'), Icon: Home },
+    { section: 'user', label: t('nav.users'), Icon: Users },
+    { section: 'guide', label: t('nav.guides'), Icon: Compass },
+    { section: 'bookings', label: t('nav.bookings'), Icon: CalendarCheck },
+    { section: 'tours', label: t('nav.tours'), Icon: Globe2 },
+  ];
+
   
 
   const [loading, setLoading] = useState(true);
@@ -199,30 +203,30 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
       case 'admin':
         return (
           <section className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4 sm:p-6 max-w-7xl mx-auto">
-            <h2 className="text-2xl font-bold text-emerald-800 mb-4">Welcome, {session?.user?.name}!</h2>
+            <h2 className="text-2xl font-bold text-emerald-800 mb-4">{t('welcome')}, {session?.user?.name}!</h2>
             <p className="text-gray-600 mb-6 text-sm">
-              Manage all aspects of your tour platform. Use the sidebar to navigate.
+             {t('manageText')}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
               <div className="p-4 bg-emerald-50 rounded-xl shadow border border-emerald-100">
-                <h3 className="text-sm font-semibold text-emerald-700">Total Users</h3>
+                <h3 className="text-sm font-semibold text-emerald-700">{t('totalUsers')}</h3>
                 <p className="text-2xl font-bold text-emerald-900">{users.length}</p>
               </div>
               <div className="p-4 bg-yellow-50 rounded-xl shadow border border-yellow-100">
-                <h3 className="text-sm font-semibold text-yellow-700">Total Tours</h3>
+                <h3 className="text-sm font-semibold text-yellow-700">{t('totalTours')}</h3>
                 <p className="text-2xl font-bold text-yellow-900">{tours.length}</p>
               </div>
               <div className="p-4 bg-sky-50 rounded-xl shadow border border-sky-100">
-                <h3 className="text-sm font-semibold text-sky-700">Active Guides</h3>
+                <h3 className="text-sm font-semibold text-sky-700">{t('activeGuides')}</h3>
                 <p className="text-2xl font-bold text-sky-900">{activeGuide}</p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-3 mb-6">
-              <Button  onClick={()=>handleNavigate("user")} className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm">Manage Users</Button>
-              <Button onClick={()=>handleNavigate("tours")}  className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm">Manage Tours</Button>
-              <Button onClick={()=>handleNavigate("guide")}  className="bg-sky-500 hover:bg-sky-600 text-white text-sm">Manage Guides</Button>
+              <Button  onClick={()=>handleNavigate("user")} className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm">{t('manageUsers')}</Button>
+              <Button onClick={()=>handleNavigate("tours")}  className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm">{t('manageTours')}</Button>
+              <Button onClick={()=>handleNavigate("guide")}  className="bg-sky-500 hover:bg-sky-600 text-white text-sm">{t('manageGuides')}</Button>
             </div>
   {/* USER GRAPH  */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -231,7 +235,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
   
   <h4 className="text-base font-semibold text-gray-800 mb-4 relative z-10 flex items-center gap-2">
     <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white text-xs">💚</span>
-    User Growth
+  { t('userGrowth')}
   </h4>
 
   <div className="h-60 w-full relative z-10">
@@ -271,7 +275,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
   {/* CHART */}
   <div className="p-6 bg-gradient-to-tr from-emerald-50 via-white to-yellow-50 rounded-2xl shadow-md border border-gray-200">
   <h4 className="text-lg font-bold text-emerald-800 mb-4 flex items-center gap-2">
-    🥧 Tour Types
+    🥧 {t('tourTypes')}
   </h4>
   <div className="h-72 w-full">
     <ResponsiveContainer width="100%" height="100%">
@@ -316,7 +320,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
                 {/* Header */}
                 <h4 className="text-base font-semibold text-gray-800 mb-4 relative z-10 flex items-center gap-2">
                   <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-sky-500 text-white text-xs">🧭</span>
-                  Guide Activity
+                 { t('guideActivity')}
                 </h4>
 
                 {/* Chart */}
@@ -363,7 +367,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
       📘
     </div>
     <div>
-      <h4 className="text-sm font-semibold text-gray-700">Total Guides</h4>
+      <h4 className="text-sm font-semibold text-gray-700">{t('totalGuides')}</h4>
       <p className="text-xs text-gray-500 mt-1">{users.filter((t) => t.role === "guide").length}</p>
       </div>
   </div>
@@ -374,7 +378,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
       🧭
     </div>
     <div>
-      <h4 className="text-sm font-semibold text-gray-700">Active Regions</h4>
+      <h4 className="text-sm font-semibold text-gray-700">{t('activeRegions')}</h4>
       <p className="text-xs text-gray-500 mt-1">{tours.length} regions covered</p>
     </div>
   </div>
@@ -385,7 +389,7 @@ const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
       🌟
     </div>
     <div>
-      <h4 className="text-sm font-semibold text-gray-700">Top Liked</h4>
+      <h4 className="text-sm font-semibold text-gray-700">{t('topLiked')}</h4>
       <p className="text-xs text-gray-500 mt-1">
   {
     (() => {

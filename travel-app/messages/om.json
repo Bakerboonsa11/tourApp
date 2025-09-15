@@ -1,0 +1,673 @@
+{
+   "about": {
+    "heroTitle": "Itoophiyaa haaraa ta’een baradhaa",
+    "aboutTitle": "Waa’ee Ethio-Tours",
+    "aboutText": "Ethio-Tours michuu isin amanamtuu dha kan biyya Itoophiyaa bareedina, aadaa adda addaa fi seenaa durii agarsiisu. Oromiyaa bal’ina fi magariisaa irraa hanga mana kiristaanaa dhagaa Lalibellaa, imala yaadatama ta’an kan fedhii keessaniif qophaa’e ni tajaajila.",
+    "features": {
+      "destinationsTitle": "🌍 Bakka gara garaa",
+      "destinationsText": "Naannolee Itoophiyaa keessa imalaa fi aadaa, nyaata fi lafa gara garaa baradhaa.",
+      "travelTitle": "🚌 Imala mijataa",
+      "travelText": "Gaarii ammayyaa, konkolaachisoota muuxannoo qaban fi iddoo boqonnaa filatamoo fayyadamaa.",
+      "guidesTitle": "🤝 Gorsitoota naannoo",
+      "guidesText": "Gorsitoota seenaa, seenaa dhugaa fi iddoo icciitii isinitti himan waliin imalaa."
+    },
+    "missionTitle": "Kaayyoon keenya",
+    "missionText": "Imaltoota gara lubbuu Itoophiyaa geessisuuf ni hojjenna. Tuurizimii itti fufiinsa qabu kan hawaasa naannoo fayyaduu fi qabeenya uumamaa fi aadaa Itoophiyaa eegu deeggarra.",
+    "missionList": {
+      "eco": "✅ Filannoo imala naannoo eegu",
+      "local": "✅ Hojii hojjattoota fi daldaltoota naannoo deeggaruu",
+      "cultural": "✅ Waliigaltee aadaa fi kabajaa"
+    },
+    "ctaTitle": "Imala Itoophiyaa keessan har’a jalqabaa",
+    "ctaText": "Imala keessan Ethio-Tours waliin qabadhaa fi yaadannoo yeroo dheeraa tajaajila.",
+    "ctaButton": "Imaltoota Ilaalaa",
+    "footerText": "© {year} Ethio-Tours. Mirgi hundi eeggamaadha.",
+    "footerLinks": {
+      "facebook": "Faayisbukii",
+      "instagram": "Instaagraamii",
+      "twitter": "Twiitaraa"
+    }
+  },
+  "admin": {
+    "welcome": "Baga nagaan dhufte",
+    "manageText": "Sirna imala kee hunda to'achuu dandeessa. Gara kutaa biraatti ce'uuf gargaarsa sidebar fayyadami.",
+    "totalUsers": "Baay’ina Fayyadamtoota",
+    "totalTours": "Baay’ina Imaloota",
+    "activeGuides": "Qajeeltoota Hojii Irratti",
+    "manageUsers": "Fayyadamtoota To’achu",
+    "manageTours": "Imaloota To’achu",
+    "manageGuides": "Qajeeltoota To’achu",
+    "userGrowth": "Guddaa Fayyadamtoota",
+    "tourTypes": "Gosa Imalootaa",
+    "guideActivity": "Hojii Qajeeltootaa",
+    "totalGuides": "Qajeeltoota Waliigalaa",
+    "activeRegions": "Naannolee Hojii Irratti",
+    "topLiked": "Kan Baay’ee Jaalatame",
+    "regionsCovered": "naannolee of keessaa qaba",
+    "nav": {
+      "dashboard": "Daashboordii",
+      "users": "Fayyadamtoota",
+      "guides": "Giddugaleeyyii",
+      "bookings": "Bokings",
+      "tours": "Imala"
+    },
+    "bookings": {
+      "title": "Bulchiinsa Bookings",
+      "subtitle": "Imeelii yookiin guyyaa irraan barbaadi, fi bokings guyyaa irraan sirreessi.",
+      "searchEmail": "Imeelii irraan barbaadi...",
+      "searchDate": "Guyyaa irraan barbaadi",
+      "sortPlaceholder": "Guyyaa irraan sirreessi",
+      "sort": {
+        "newest": "Haaraa",
+        "oldest": "Duraanii"
+      },
+      "loading": "Bookings fe’amaa jiru...",
+      "table": {
+        "id": "ID Booking",
+        "customer": "Maamila",
+        "tourId": "ID Daawwannaa",
+        "date": "Guyyaa",
+        "status": "Haala",
+        "amount": "Gatii",
+        "actions": "Dalagaa"
+      },
+      "view": "Mul’isi",
+      "noResults": "Bokings hin argamne."
+    },
+      "guideManagement": {
+      "title": "Too'annoo Gidduu",
+      "description": "Gidduulee galmaa’an daawwadhaa fi daandii imala keessanitti ramadaa.",
+      "assignToTour": "Imalaaf Ramadi",
+      "hideTours": "Imaltoota Haqi",
+      "loadingTours": "Imaltootni fe'amaa jiru...",
+      "noToursFound": "Imaltootni hin argamne.",
+      "assign": "Ramadi",
+      "unassign": "Irra aanee haqi",
+      "loadingGuides": "Gidduuleen fe'amaa jiru..."
+    },
+    "toursManagement": {
+      "title": "To'annoo Imaltootaa",
+      "searchPlaceholder": "Maqaa imalaa irraan barbaadi...",
+      "statistics": {
+        "title": "Odeeffannoo Imaltootaa",
+        "total": "Imaltoota Waliigalaa:",
+        "pending": "Imaltoota Eegaa jiran:",
+        "inactive": "Imaltoota Hin Dalagaa:",
+        "active": "Imaltoota Dalagaa:"
+      },
+      "allTours": {
+        "title": "Imaltoota Hundaa",
+        "noTours": "Imaltootni hin argamne."
+      },
+      "addNewTour": {
+        "title": "Imala Haaraa Dabaluu"
+      },
+      "actions": {
+        "title": "Hojii Imalaa To'achuu",
+        "edit": "Gulaali",
+        "delete": "Haqi",
+        "archive": "Kuusi"
+      },
+      "footer": {
+        "title": "Maaliif beektaa?",
+        "text": "Itoophiyaan UNESCO dhaan bakka 11 eenyummaa addunyaa dhaabbataa qabdu of keessaa qabdi. Afrikaa keessatti iddoo aadaa guddaa keessaa ishee taasisa. Dashboard kana fayyadami, muuxannoo bareedaa to'achuu fi addunyaa waliin qooduu!"
+      }
+    },
+    "form":{
+      "title": "Daawwannaa Haaraa Uumi",
+      "labels": {
+        "name": "Maqaa",
+        "slug": "Slug",
+        "description": "Ibsa",
+        "region": "Naannoo",
+        "typeOfTour": "Gosa Daawwanna",
+        "price": "Gatii ($)",
+        "duration": "Turtii (guyyaa)",
+        "longitude": "Longitiyuudii",
+        "latitude": "Latiitiyuudii",
+        "locationDescription": "Ibsa Bakkaa",
+        "address": "Teessoo",
+        "maxGroupSize": "Hammamtaa Garee Ol’aanaa",
+        "difficulty": "Dhaabbataa",
+        "coverImage": "Suuraa Ijoo",
+        "photos": "Suuraalee (Baay’ee)",
+        "startDate": "Guyyaa Jalqabaa",
+        "endDate": "Guyyaa Xumuraa"
+      },
+      "placeholders": {
+        "description": "Ibsa daawwanna",
+        "typeOfTour": "fakkeenyaaf: imala, bosona, gaara"
+      },
+      "options": {
+        "selectDifficulty": "Dhaabbataa Filadhu",
+        "easy": "Salphaa",
+        "medium": "Giddugaleessa",
+        "difficult": "Cimmaa"
+      },
+      "buttons": {
+        "cancel": "Haqi",
+        "saveChanges": "Jijjiirama Olkaa'i"
+      }
+    },
+    "userTable": {
+      "headers": {
+        "profile": "Piroofaayilii",
+        "email": "Imeelii",
+        "role": "Gahee",
+        "joined": "Yeroo Galmaa'e",
+        "actions": "Hojiiwwan"
+      },
+      "buttons": {
+        "edit": "Sirreessi",
+        "delete": "Haqi",
+        "cancel": "Dhiisi",
+        "update": "Haaromsi"
+      },
+      "editModal": {
+        "title": "Gahee Fayyadamaa Sirreessi",
+        "description": "Gahee kana haaromsii",
+        "email": "Imeelii",
+        "newRole": "Gahee Haaraa",
+        "selectRole": "Gahee filadhu",
+        "roles": {
+          "admin": "Bulchaa",
+          "user": "Fayyadamaa",
+          "guide": "Gulaalaa"
+        }
+      },
+      "deleteModal": {
+        "title": "Haqii Mirkaneessi",
+        "description": "Fayyadamaa kana haqxaa?"
+      }
+    }
+    
+  },
+  "sidebar": {
+    "header": "Imala",
+    "help": "Gargaarsa barbaaddu? Deeggarsa qunnami",
+    "version": "Vershinii 2.3.1",
+    "quote": "“Imalli nama sodaachisu qofa eega.”"
+  },
+  
+  "user":{
+    "nav": {
+      "dashboard": "Daashboordii",
+      "profile": "Piroofaayilii",
+      "bookings": "Bokings",
+      "reviews": "Gadi fageenya",
+      "wishlist": "Fedhii Tarree",
+      "settings": "Sajoo"
+    },
+    "errors": {
+      "invalidSection": "Kutaan dogoggoraan filatame."
+    },
+    "topbar": {
+      "role": "Fayyadamaa"
+    },
+    "dashboard": {
+      "welcome": "Baga deebite,",
+      "subtitle": "Kunoo wantoonni har’a account kee irratti ta’anii jiru.",
+      "memberSince": "Akka miseensa taate:",
+      "lastLogin": "Seensa dhumaa:",
+      "stats": {
+        "upcomingTrips": "Imaltoota Dhufan",
+        "nextTour": "Kan itti aanu",
+        "reviewsWritten": "Yaada Barreeffaman",
+        "averageRating": "Sadarkaa giddugaleessaa:",
+        "completedTours": "Daawwannaa Xumuraman",
+        "visitedCountries": "Biyyoota Daawwataman:"
+      },
+      "recentBookings": "Galmeewwan Dhiyoo",
+      "confirmed": "Eeyyamame",
+      "membershipStatus": "Sadarkaa Miseensummaa:",
+      "plan": "Miseensa Warqii",
+      "upgradePlan": "Karoora Olka’i",
+      "editProfile": "Fayyadama Gulaali"
+    },
+    "profile": {
+      "editProfile": "Fayyadama Gulaali",
+      "contactInfo": {
+        "title": "Odeeffannoo Quunnamtii",
+        "description": "Faayiloota quunnamtii kee dhuunfaa",
+        "email": "I-meel",
+        "phone": "Bilbila",
+        "location": "Bakka",
+        "joined": "Hirmaatee"
+      },
+      "socialLinks": {
+        "title": "Hiriyaa Marsariitii",
+        "description": "Akaawuntii walitti hidhaman"
+      },
+      "security": {
+        "title": "Nageenya",
+        "password": "Jecha darbii",
+        "change": "Beddali",
+        "2fa": "2FA",
+        "devices": "Meeshaalee",
+        "sessions": "Sagantaa",
+        "logout": "Ba’i"
+      },
+      "notifications": {
+        "title": "Beeksisa",
+        "emailAlerts": "Beeksisa I-meel",
+        "smsAlerts": "Beeksisa SMS"
+      },
+      "activity": {
+        "title": "Hojii Dhiyoo",
+        "lastLogin": "Seensa dhumaa",
+        "lastActivity": "Hojii dhumaa"
+      },
+      "billing": {
+        "title": "Baajata",
+        "plan": "Karoora",
+        "nextBilling": "Baajata itti aanu"
+      }
+    },
+    "book":{
+      "searchTitle": "Galmeewwan Barbaadi",
+      "searchPlaceholder": "Maamiltoota daawwannaa maqaan barbaadi",
+      "loading": "Galmeewwan ni fe'amaa jira...",
+      "noBookings": "Galmeewwan hin argamne.",
+      "price": "Gatii",
+      "created": "Uumame",
+      "status": "Haala"
+    },
+    "review":{
+      "addReviewTitle": "Yaada Keessi",
+      "tourNamePlaceholder": "Maqaa daawwannaa...",
+      "commentPlaceholder": "Yaada kee...",
+      "ratingPlaceholder": "Sadarkaa (1–5)",
+      "submitButton": "Ergaa",
+      "searchPlaceholder": "Maqaa daawwannaa irratti barbaadi...",
+      "loadingReviews": "Yaadawwan kee ni fe'amaa...",
+      "noReviews": "Yaadawwan hin argamne.",
+      "unknownDate": "Guyyaa hin beekamne",
+      "region": "Naannoo",
+      "price": "Gatii",
+      "difficulty": "Ulfaataa",
+      "duration": "Turtii",
+      "days": "guyyoota"
+    },
+    "wish":{
+      "wishlistTitle": "✨ Galmee Fedhii",
+      "days": "Guyyoota",
+      "bookNow": "Arkaa Amma"
+    },
+    "sett":{
+      "settingsTitle": "Seetings",
+      "profileTab": "Pirofaayilii",
+      "securityTab": "Nageenya",
+      "notificationsTab": "Beeksisaalee",
+      "nameLabel": "Maqaa",
+      "emailLabel": "I-meelii",
+      "saveChanges": "Fayyadami Jijjiirraa",
+      "newPassword": "Jecha Ittisaa Haaraa",
+      "confirmPassword": "Jecha Ittisaa Mirkanneessi",
+      "updatePassword": "Jecha Ittisaa Haaromsii",
+      "emailNotifications": "Beeksisaalee I-meelii",
+      "notificationDescription": "Eyyama bakka bu'aa, haaromsa account, fi kadhannaa ni argatta."
+    }
+    
+    
+    
+    
+  }
+,  
+  "guideDetail": {
+    "joined": "Dabalame",
+    "toursGuided": "Turiin Hojjetame",
+    "noFinishedTours": "Ammaaf turaan xumuraman hin jiran.",
+    "toursBooked": "Turiin Ijaaramani",
+    "price": "Gatii",
+    "status": "Haala",
+    "bookedOn": "Guyyaa Ijaarame",
+    "noBookings": "Turiin gorsaan kun hin argamne."
+  },
+    "guideDashboard": {
+    "nav": {
+      "dashboard": "Daashboordii",
+      "profile": "Piroofaayilii Koo",
+      "myTours": "Daawwannaa Koo",
+      "bookings": "Qabiyyee",
+      "locations": "Iddoo",
+      "settings": "Hojii Sirreessaa"
+    },
+    "topbar": {
+      "role": "Gidduu deemsisaa"
+    },
+    "errors": {
+      "invalidSection": "Kutaan sirrii miti."
+    },
+    "overview":{
+      "welcomeBack": "Baga Deebiitan",
+      "guide": "Gidduu",
+      "latestActivity": "Hojii ammaa fi imaltoota dhufu.",
+      "toursAssigned": "Imaltoota Kenname",
+      "bookingsThisMonth": "Bookingi Waggaa Kana",
+      "averageRating": "Sadarkaa Giddugaleessa",
+      "upcomingTours": "Imaltoota Dhufu",
+      "noUpcomingTours": "Imaltoota dhufu hin jiru.",
+      "recentBookings": "Bookingi Dhiyoo",
+      "noRecentBookings": "Bookingi dhiyoo hin jiru.",
+      "notifications": "Beeksisaalee",
+      "noNotifications": "Beeksisa hin jiru.",
+      "createNewTour": "Imaltoota Haaraa Uumi",
+      "viewBookings": "Bookingi Ilaali",
+      "checkMessages": "Ergaa Ilaali"
+    },
+    "pro":{
+      "Edit Profile": "Profaayilii gulaali",
+      "Name": "Maqaa",
+      "Email": "Imeelii",
+      "Phone": "Bilbila",
+      "Location": "Bakka",
+      "Member Since": "Yeroo Galmaa’anii As",
+      "Connect on Social Media": "Miidiyaa Hawaasummaa irratti wal qunnamaa",
+      "Facebook": "Faayisbukii",
+      "Twitter": "Twiitarii",
+      "Instagram": "Instagraamii",
+      "LinkedIn": "Liinkidinii"
+    },
+    "tour":{
+      "MyGuidedTours": "Imala Koo Giddu-galeessaa",
+      "ActiveTours": "Imaltoota Socho’aa",
+      "Youcurrentlyhavenoassignedtours": "Amma imaltoota siif ramadaman hin qabdu.",
+      "UnknownLocation": "Bakka Hin Beekamne",
+      "Duration": "Turtii",
+      "days": "Guyyaa",
+      "ViewTour": "Imala Ilaali"
+    }
+    ,"book":{
+      "myTourBookings": "🌿 Bakka Deemsa Koo",
+      "bookingId": "ID Booking",
+      "touristEmail": "Imeelii Turiistii",
+      "tour": "Imala",
+      "date": "Guyyaa",
+      "status": "Haala",
+      "noBookings": "Booking hin argamne."
+    },
+    "loc":{
+      "myTourLocations": "Bakka Imala Koo",
+      "tour": "imala",
+      "tours": "imalloowwan"
+    },
+    "sett":{
+      "guideSettings": "Sajoo Gidduu",
+      "manageTourAvailability": "Qophii fi odeeffannoo profile kee too’achiisi.",
+      "bio": "Seenaa gabaabaa",
+      "availableForTours": "Imalootaaf qophii dha"
+    }
+    
+    
+  },
+  "detail": {
+    "badge": "Itoophiyaa 🌄",
+    "heroText": "Qabiyyee jireenya kee jijjiiru Itoophiyaa keessa argadhu.",
+    "startingFrom": "💵 Jalqaba irraa",
+    "reviews": "ilaalchi",
+    "duration": "⏳ Yeroo",
+    "groupSize": "👥 Baay'ina Garee",
+    "difficulty": "⚡ Cimina",
+    "location": "📍 Bakka",
+    "userComments": "Yaada Fayyadamtoota 💬",
+    "noComments": "Yaada hin jiru ammaaf.",
+    "leaveComment": "Yaada Kenni ✨",
+    "leaveYourThoughts": "💬 Yaada Kee Qoodadhu",
+    "cancel": "Haqi",
+    "post": "Ergi ✨",
+    "aboutTour": "🌍 Waa'ee Daawwannaa Kana",
+    "whyChoose": "✨ Maalif Daawwannaa Kana Filatta?",
+    "why1": "Giddugala naannoo beeku ogeessota naannoo waliin.",
+    "why2": "Horii adda ta’an fakkaatu kan akka Yeeyyii Itoophiyaa argi.",
+    "why3": "Najaaf fi boqonnaa walitti fiduu danda’a.",
+    "why4": "Aadaa hawaasa naannoo waliin qooda qaba.",
+    "tourHighlights": "🌟 Mallattoo Daawwannaa",
+    "highlightDuration": "Yeroo Daawwannaa",
+    "highlightDifficulty": "Sadarkaa Cimina",
+    "highlightGroup": "Baay’ina Garee",
+    "highlightSlots": "Carraa Argamuu",
+    "heroDescription": "Biyya Itoophiyaa keessaa imala jireenya keessan jijjiiru kan argattu.",
+    "upcoming":"Guyyaa Itti Aanuu",
+    "gallery": "Galmeewwan Daawwannaa",
+    "included": {
+    "title": "Kan Itti Dabalame",
+    "accommodation": "Mana qusannaa fi qaraxa seensa paarkii",
+    "meals": "Qurxummii ganamaa, nyaata bu’uuraa fi bishaan guyyaa guyyaa",
+    "guides": "Giddugala imalaa keessaan gorsitoota naannoo ogummaa qaban",
+    "transportation": "Imala keessatti geejiba hunda",
+    "ready": "Qopheessitanii Jiru Xiinxaluuf",
+    "book": "Har’a dawwanna  keessan qabadhaa fi bareedina uumamaa Itoophiyaa duraan hin argineen muuxadhaa.",
+    "bookNow": "Amma Qabadhu",
+ 
+    "exactLocation": "Iddoo sirrii"
+  }
+  },
+  "addis": {
+    "birr": "BIRR",
+    "header": "Dhiyeenya Addis Ababaatti Muuxannoo Barbaadi",
+    "subhead": "Filannoo si bira jiru kan hin dhumne",
+    "viewDetails":"Odeeffannoo Ilaali"
+  },
+  "cheap": {
+    "detail": "  Odeeffannoo Ilaali",
+    "head": "Filannoo bajataaf mijataa siif qofa",
+    "header": "Tajaajiloota Gatii Xiqqaa"
+  },
+  "home": {
+    "40choose": "Filadhu ol ka'aa",
+    "welcome":"Baga nagaan dhuftan",
+    "40unforgetable": "muuxannoo hin dagatamne — kitaaba yeroo ammaa.",
+    "adventure": "daandii",
+    "book": "Amma Book",
+    "discover": "  Dhiibbaa Kee Itti Aanuu Argadhu",
+    "explore": "Eebba Itoophiyaa daawwadhu 🇪🇹🇪🇹🇪🇹🇪🇹\n",
+    "explore2": "sagantaa",
+    "header": "Eessa?",
+    "hidden": "— dhangala'aa dhokataa irraa kaasee hanga ayyaana aadaa ifaa — hundi fedhii kee irratti qophaa'aa.",
+    "moveDiscover": "   Karaa Gammachuu Argadhu",
+    "moveexperiance": "muuxannoo",
+    "moveIntrest": "Hundaaf Faayidaa",
+    "over": "ol",
+    "overtext": "Muuxannoo hedduu si eeggachaa jiru. \n        Biyyee, gaara, laggeen, fi kanneen biroo qoradhu — hundi imala keetiif qophaa'aa jiru.",
+    "Tailored": "  Muuxannoo Qopheessame Argadhu",
+    "unique": "40,000+ qophii addaa",
+    "you": "Siif qofa",
+
+    "iconicTitle": "Iddoowwan Beekamoo Kan Dhuftanii Ilaaluu Qabdan",
+    "travelersChoiceTitle": "Filannoo Tajaajiltootaa — Gatii Gubbaa Gubbaa",
+    "travelersChoiceDesc": "Iddoowwan bareedoo fi muuxannoo adda addaa kan siif qophaa'an argadhu.",
+    "seeWinners": "Kan Moo'atan Ilaali",
+
+    "discoverEthiopiaTitle": "Itoophiyaa Beekaa 🇪🇹🇪🇹",
+    "discoverEthiopiaDesc": "Iddoowwan bareedoo fi muuxannoo adda addaa kan siif qophaa’an argadhu.",
+    "learnMore": "Dabalata Beekuu"
+  },
+  "interest": {
+    "birr": "BIRR",
+    "header": "  Fedhii irratti wantoota hojjachuuf barbaadi",
+    "popular": "  Daawwannaa Beekamoo",
+    "subhead": "   Muuxannoo fedhii keetiif qophaa'e argadhu",
+    "viewDetails": "   Odeeffannoo Ilaali"
+  },
+  "near": {
+    "birr": "BIRR",
+    "detail": "Odeeffannoo Ilaali",
+    "head": "   Muuxannoo 300km keessatti iddoo amma jirtu",
+    "header": "Tajaajiloota Si Dhihoo"
+  },
+  "faq": {
+    "title": "GreenWave — Gaaffii fi Quunnamtii",
+    "subtitle": "Fuula Gaaffiiwwan Ijoo fi Quunnamtii bareedaa — magariisaa, salphaa fayyadamu, deebii ariifataa qabu.",
+    "btnEmailUs": "Imeelii nuuf ergaa",
+    "btnContact": "Nu quunnamaa",
+    "faqTitle": "Gaaffiiwwan Yeroo Baayyee Gaafataman",
+    "faqItemHint": "Deebiin gaggabaabaan gadiitti argama.",
+    "faqs": [
+      {
+        "q": "Tajaajila akkamitti kitaaba ykn gargaarsa gaafadha?",
+        "a": "Faawundii quunnamtii gadiitti guutaa yookaan contact@yourdomain.com irratti nuu imeelii ergaa. Sa’aatii 24–48 keessatti akka malee ni deebina."
+      },
+      {
+        "q": "Deebi'ii kaffaltii yookaan haquu ni kennitu?",
+        "a": "Eeyyee — deebi'ii kaffaltii fi haquun seera fuula ‘Terms’ irratti kaa’ametti ni hordofa. Gargaarsa argachuuf deeggarsa quunnamaa."
+      },
+      {
+        "q": "Nama ogummaa qabu waliin dhiyeenyaan haasayu danda'aa?",
+        "a": "Eeyyee! Gaaffii ergameen booda waamicha bilbila yookaan viidiyoo ni qopheessina. Lakkoofsa bilbilaa fi yeroo siif mijataa dabaluu hin dagatin."
+      },
+      {
+        "q": "Kampaniwwan/ykn baay’inaan bituuf gatii xiqqeessaa ni jiraa?",
+        "a": "Eeyyee — dhaabbilee fi hojii irra deddeebi’aniif gatii madaalawaa addaa ni kennina. Karoora siif qophaa’e argachuuf seelzii quunnamaa."
+      },
+      {
+        "q": "Miidiyaa hawaasummaa irratti eessaa isin hordofuu nan danda’a?",
+        "a": "Hidhannoon keenya hundi kutaa ‘Contact’ keessatti jiru — Twitter, LinkedIn, Instagram fi Facebook."
+      }
+    ],
+    "contactTitle": "Nu Quunnamaa",
+    "labelName": "Maqaa",
+    "labelEmail": "Imeelii",
+    "labelMessage": "Ergaa",
+    "phName": "Maqaa guutuu kee",
+    "phEmail": "you@domain.com",
+    "phMessage": "Akka nu si gargaaru gochuun maal akka danda’amu nuu himi…",
+    "btnSend": "Ergaa Ergi",
+    "btnClear": "Haqqi",
+    "socialTitle": "Akkaataan biraa nu quunnamuuf",
+    "socialDesc": "Miidiyaa kamiinuu nu hordofaa, DM yookaan ergaa nuuf ergaa — guyyaa guyyaa ni ilaalla.",
+    "brand": "GreenWave",
+    "rightsReserved": "Mirgi hunda eeggadamee jira.",
+    "help": "Gargaarsa",
+    "mailtoSubjectPrefix": "Quunnamtii irraa",
+    "visitorFallback": "Daawwattoota Weebsaayitii"
+  },
+  "navbar": {
+    "home": "Mana",
+    "tours": "Imala",
+    "about": "Waa'ee Keenya",
+    "dashboard": "Daashboordii",
+    "login": "Seeni",
+    "signout": "Ba'i",
+    "toggleTheme": "Mala Qabduu Jijjiiri",
+    "light": "Ifa",
+    "dark": "Dukkana",
+    "system": "Sistama",
+    "logo":"Ethio-Visit"
+  },
+  "tours": {
+    "filters": {
+      "searchPlaceholder": " maqaan barbaadi...",
+      "searchLabel": "Gosaan barbaadi...",
+      "allTypes": "Gosa Hundaa"
+    },
+    "cards": {
+      "likes": "Jaallatamoo",
+      "leaveComment": "Yaada Keenna",
+      "viewTour": "Daawwannaa Ilaali",
+      "price": "💵{{price}}",
+      "status": {
+        "upcoming": "Dhufaa jiru",
+        "ongoing": "Hojii irra jiru",
+        "ended": "Xumurame"
+      }
+    },
+    "modal": {
+      "title": "💬 Yaada Keessan Kenni",
+      "placeholder": "Yaada keessan asitti barreessi...",
+      "cancel": "Haqi",
+      "post": "Ergi ✨"
+    },
+    "loading": "Daawwannaa fe’amaa jira...",
+    "faq": {
+      "title": "Gaaffilee Hanga Amma Gaafatan ❓",
+      "questions": [
+        { "q": "Daawwannaa akkamitti book gochuu danda’a?", "a": "Daawwannaa online filadhuudhaan kaffaltii raawwachuun ni danda’ama." },
+        { "q": "Akka tasaa yookiin haala jijjiiruu ni danda’ama?", "a": "Eeyyee, sa’aatii 48 dura dursee jijjiiruu yookiin haqamuu ni danda’a." },
+        { "q": "Daawwannaan nageenya qaba?", "a": "Eeyyee! Nageenyi bu’uura keenya dha. Daawwannaan hundi hayyoota naannoo leenji’an qajeelfama." }
+      ]
+    },
+    "heroTitle": "Itoophiyaa Beeki 🇪🇹",
+    "heroDesc": "Iddoo hawwataa, iddoo aadaa adda ta’an fi boqonnaa kennan — kanumti namoota naannoo irraa qophaa’e.",
+    "startJourney": "Imala Kee Jalqabi",
+
+    "whyChooseUs": {
+      "title": "Maaliif Nu Filatta",
+      "localExperts": {
+        "title": "Beektota Naannoo",
+        "desc": "Namoota naannoo iddoo dhokataa hunda beeku waliin imala gaggeeffadhu."
+      },
+      "affordablePackages": {
+        "title": "Paakeejota Gatii Xiqqaa",
+        "desc": "Imala bareedaa baasii xiqqaan gaggeessi."
+      },
+      "safeComfortable": {
+        "title": "Nagaa fi Tasgabbaa",
+        "desc": "Imaloota nageenya fi tasgabbii filatanii qopheessan."
+      },
+      "flexibleBookings": {
+        "title": "Bokkiinga Jijjiiramaa",
+        "desc": "Bokkiinga kee salphatti jijjiiri yookaan haquu danda’a."
+      }
+    },
+
+    "seasonalDeals": {
+      "title": "Tajaajila Addaa Yeroo 🌞",
+      "desc": "Paakeejota imalaa yeroo addaatti qophaa’an ilaali, %30 ol baasi xiqqeessi."
+    }
+  },
+  "login":{
+    "welcomeTitle": "Baga nagaan dhuftan MyTour ✈️",
+    "welcomeSubtitle": "Imalli keessan asitti jalqaba. Bakka ajaa'ibsiisaa baru, qorachuu fi qabadhaa.",
+    "back": "Duubatti",
+    "welcomeBack": "Baga nagaan deebitan 👋",
+    "signInPrompt": "Maaloo gara account keessan seenaa",
+    "email": "Imeelii",
+    "password": "Jecha iccitii",
+    "noAccount": "Akkaawuntii hin qabduu?",
+    "signUp": "Galmaa'i",
+    "forgotPassword": "Jecha iccitii dagatte?",
+    "login": "Seeni",
+    "continueGoogle": "Google waliin itti fufi",
+    "feature1Title": "Bakka daawwachuuf barbaachisaa qoradhu",
+    "feature1Desc": "Iddoo sirrii ta'an, bakka dhokataa fi bakka beekamoo isin qopheessine argadhaa.",
+    "feature2Title": "Ejjannoo keessan too'achi",
+    "feature2Desc": "Ejjannoo keessan ilaali, fooyyessi yookiin haquu salphatti raawwadhu.",
+    "feature3Title": "Pakeejii namaaf mijataa",
+    "feature3Desc": "Tajaajiloota keessan akka filannoo fi fedhii keessaniitti qopheessina.",
+    "feature4Title": "Hojii imaltootaan amaname",
+    "feature4Desc": "MyTour irratti muuxannoo hin irraanfatamne argatan imaltoota kuma hedduu wajjin makamaa.",
+    "ssoMessage": "Waan dabalataa, SSO dhaabbilee fi maamiltootaaf ni kennina.",
+    "needHelp": "Gargaarsa barbaaddaa?",
+    "contactSupport": "Tajaajila gargaarsaa qunnamaa"
+  },
+  "signup":{
+    "joinTitle": "MyTour waliin Hirmaadhaa ✈️",
+    "joinSubtitle": "Akaawuntii keessan uumuudhaan daawwannaa fi muuxannoo haaraa eegaluuf.",
+    "back": "Deebi'ii",
+    "createAccount": "Akaawuntii Uumuu 🚀",
+    "signupPrompt": "Galmaa'aa fi daqiiqaa keessatti eegalaa",
+    "name": "Maqaa",
+    "email": "Imeelii",
+    "password": "Jecha darbaa",
+    "alreadyAccount": "Akaawuntii qabaachuu dandeessa?",
+    "signIn": "Seeni",
+    "signUp": "Galmaa'i",
+    "continueGoogle": "Google waliin itti fufi",
+    "feature1Title": "Dhaabbilee Iddoo Addaa",
+    "feature1Desc": "Gatii adda ta'eefi carraa duraa paakeejii yeroo addaaf argadhu.",
+    "feature2Title": "Filannoo Kee Itti Haammachu",
+    "feature2Desc": "Bakkeewwan hawwataa galmeessi fi yeroo barbaadduuf itti fayyadami.",
+    "feature3Title": "Muuxannoo Namoomaa",
+    "feature3Desc": "Yaada irratti hundaa'ee muuxannoo garaa garaa argadhu.",
+    "feature4Title": "Deeggarsa 24/7",
+    "feature4Desc": "Gargaarsa barbaadaa? Gareen keenya yeroo hunda siif jira.",
+    "termsAgreement1": "Galmee gochuu keetiin, seerota keenya waliin waliigaltee",
+    "termsOfService": "Seerota Tajaajilaa",
+    "privacyPolicy": "Seera Eegumsa Odeeffannoo",
+    "and": "fi",
+    "needHelp": "Gargaarsa barbaadaa?",
+    "contactSupport": "Deeggarsa qunnamti"
+  }
+  
+  
+}

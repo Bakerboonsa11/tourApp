@@ -11,6 +11,7 @@ import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from 'next-auth/react';
+import { useTranslations } from "next-intl";
 
 interface Comment {
   message: string;
@@ -65,6 +66,7 @@ export default function GuideLocations() {
   const [toursOfGuide, setToursOfGuide] = useState<Tour[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const { data: session } = useSession();
+   const t = useTranslations('guideDashboard');
 
   useEffect(() => {
     const email = session?.user?.email;
@@ -108,7 +110,7 @@ export default function GuideLocations() {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold text-green-700 mb-6">My Tour Locations</h2>
+      <h2 className="text-2xl font-bold text-green-700 mb-6">{t("loc.myTourLocations")}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {locationEntries.map(([description, data], idx) => (
           <Card key={idx} className="shadow-md hover:shadow-xl transition-all duration-300">
@@ -124,7 +126,7 @@ export default function GuideLocations() {
             <CardContent>
               <p className="text-sm mb-2">{data.description}</p>
               <span className="inline-block bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
-                {data.count} {data.count === 1 ? 'tour' : 'tours'}
+                {data.count} {data.count === 1 ? t("loc.tour") : t("loc.tours")}
               </span>
             </CardContent>
           </Card>
@@ -132,4 +134,5 @@ export default function GuideLocations() {
       </div>
     </div>
   );
+  
 }

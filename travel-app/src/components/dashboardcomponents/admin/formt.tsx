@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, ChangeEvent } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface EditFields {
   name: string;
@@ -63,6 +64,7 @@ export default function Form() {
   });
 
   const [isediting, setIsEditing] = useState(false);
+  const t = useTranslations('admin');
 
   const handleFieldChange = (field: keyof EditFields, value: unknown) => {
     setEditFields((prev) => ({
@@ -140,14 +142,14 @@ export default function Form() {
 
     
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-2xl border border-gray-200 mt-10">
-      <h2 className="text-2xl font-bold text-blue-800 mb-6"> Create A New  Tour </h2>
+      <h2 className="text-2xl font-bold text-blue-800 mb-6"> {t('form.title')} </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Text inputs */}
-        <InputBlock label="Name" value={editFields.name} onChange={(val) => handleFieldChange('name', val)} />
-        <InputBlock label="Slug" value={editFields.slug} onChange={(val) => handleFieldChange('slug', val)} />
+        <InputBlock label={t('form.labels.name')} value={editFields.name} onChange={(val) => handleFieldChange('name', val)} />
+        <InputBlock label={t('form.labels.slug')} value={editFields.slug} onChange={(val) => handleFieldChange('slug', val)} />
 
         <div className="md:col-span-2">
-          <Label label="Description" />
+          <Label label={t('form.labels.description')} />
           <textarea
             rows={4}
             placeholder="Tour description"
@@ -157,30 +159,30 @@ export default function Form() {
           />
         </div>
 
-        <InputBlock label="Region" value={editFields.region} onChange={(val) => handleFieldChange('region', val)} />
+        <InputBlock label={t('form.labels.region')} value={editFields.region} onChange={(val) => handleFieldChange('region', val)} />
 
         <InputBlock
-          label="Type of Tour"
+          label={t('form.labels.typeOfTour')}
           value={editFields.typeOfTour.join(', ')}
           onChange={(val) => handleFieldChange('typeOfTour', val.split(',').map((s) => s.trim()))}
           placeholder="e.g., adventure, forest, mountain"
         />
 
         <InputBlock
-          label="Price ($)"
+          label={t('form.labels.price')}
           type="number"
           value={editFields.price}
           onChange={(val) => handleFieldChange('price', parseFloat(val))}
         />
 
         <InputBlock
-          label="Duration (days)"
+          label={t('form.labels.duration')}
           type="number"
           value={editFields.duration}
           onChange={(val) => handleFieldChange('duration', parseInt(val))}
         />
         <InputBlock
-          label="Longitude"
+          label={t('form.labels.longitude')}
           type="number"
           value={editFields.location.coordinates[0]}
           onChange={(val) =>
@@ -192,7 +194,7 @@ export default function Form() {
         />
 
         <InputBlock
-          label="Latitude"
+          label={t('form.labels.latitude')}
           type="number"
           value={editFields.location.coordinates[1]}
           onChange={(val) =>
@@ -204,7 +206,7 @@ export default function Form() {
         />
 
         <InputBlock
-          label="Location Description"
+          label={t('form.labels.locationDescription')}
           value={editFields.location.description}
           onChange={(val) =>
             handleFieldChange('location', {
@@ -215,7 +217,7 @@ export default function Form() {
         />
 
         <InputBlock
-          label="Address"
+          label={t('form.labels.address')}
           value={editFields.location.address}
           onChange={(val) =>
             handleFieldChange('location', {
@@ -227,23 +229,23 @@ export default function Form() {
 
 
         <InputBlock
-          label="Max Group Size"
+          label={t('form.labels.maxGroupSize')}
           type="number"
           value={editFields.maxGroupSize}
           onChange={(val) => handleFieldChange('maxGroupSize', parseInt(val))}
         />
 
         <div>
-          <Label label="Difficulty" />
+          <Label label={t('form.labels.difficulty')} />
           <select
             value={editFields.difficulty}
             onChange={(e) => handleFieldChange('difficulty', e.target.value)}
             className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400"
           >
-            <option value="">Select Difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="difficult">Difficult</option>
+            <option value="">{t('form.options.selectDifficulty')}</option>
+            <option value="easy">{t('form.options.easy')}</option>
+            <option value="medium">{t('form.options.medium')}</option>
+            <option value="difficult">{t('form.options.difficult')}</option>
           </select>
         </div>
 
@@ -251,7 +253,7 @@ export default function Form() {
 
         {/* File inputs */}
         <div>
-          <Label label="Cover Image" />
+          <Label label={t('form.labels.coverImage')} />
           <input
             type="file"
             accept="image/*"
@@ -267,7 +269,7 @@ export default function Form() {
         </div>
 
         <div>
-          <Label label="Photos (Multiple)" />
+          <Label label={t('form.labels.photos')} />
           <input
             type="file"
             accept="image/*"
@@ -288,14 +290,14 @@ export default function Form() {
         </div>
 
         <InputBlock
-          label="Start Date"
+          label={t('form.labels.startDate')}
           type="date"
           value={editFields.startDates}
           onChange={(val) => handleFieldChange('startDates', val)}
         />
 
         <InputBlock
-          label="End Date"
+          label={t('form.labels.endDate')}
           type="date"
           value={editFields.endDate}
           onChange={(val) => handleFieldChange('endDate', val)}
@@ -310,15 +312,14 @@ export default function Form() {
           onClick={handleCancelEdit}
           className="px-6 py-2 rounded-xl bg-gray-100 text-gray-800 hover:bg-gray-200 transition"
         >
-          Cancel
+        {t('form.buttons.cancel')}
         </button>
         <button
           type="button"
           onClick={handleSaveEdit}
           className="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
         >
-          Save Changes
-        </button>
+ {t('form.buttons.saveChanges')}        </button>
       </div>
     </div>
   );

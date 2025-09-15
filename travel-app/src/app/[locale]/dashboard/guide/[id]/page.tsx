@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
+import { useLocale } from 'next-intl'
+import { useTranslations } from 'next-intl';
 
 interface Tour {
   _id: string;
@@ -52,8 +54,8 @@ export default function GuideDetailPage() {
   const [bookings, setbookings] = useState<Booking[]>([]);
   const [guide, setGuide] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const [tourChoose, setTourChoose] = useState(false);  
-  
+  const locale = useLocale();
+  const t = useTranslations('guideDetail');
 
    useEffect(() => {
       const fetchAllData = async () => {
@@ -150,7 +152,7 @@ export default function GuideDetailPage() {
           <span className="mt-2 inline-block text-xs px-2 py-1 bg-cyan-100 text-cyan-800 rounded-full">
             {guide?.role}
           </span>
-          <p className="text-xs text-gray-500 mt-1">Joined: {guide?.createdAt}</p>
+          <p className="text-xs text-gray-500 mt-1">{t('joined')}: {guide?.createdAt}</p>
         </div>
       </Card>
 
@@ -158,7 +160,7 @@ export default function GuideDetailPage() {
         {/* FINISHED GUIDED TOURS */}
         <Card>
           <CardHeader>
-            <CardTitle>Tours Guided</CardTitle>
+            <CardTitle>{t('toursGuided')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {loading ? (
@@ -174,7 +176,7 @@ export default function GuideDetailPage() {
                 </p>
               ))
             ) : (
-              <p className="text-gray-500 text-sm">No finished tours yet.</p>
+              <p className="text-gray-500 text-sm">{t('noFinishedTours')}</p>
             )}
           </CardContent>
         </Card>
@@ -182,7 +184,7 @@ export default function GuideDetailPage() {
         {/* DUMMY BOOKED TOURS */}
         <Card>
   <CardHeader>
-    <CardTitle className="text-xl font-semibold text-cyan-900">Tours Booked</CardTitle>
+    <CardTitle className="text-xl font-semibold text-cyan-900">{t('toursBooked')}</CardTitle>
   </CardHeader>
   <CardContent className="grid gap-4">
     {loading ? (
@@ -193,7 +195,7 @@ export default function GuideDetailPage() {
     ) : bookings.length > 0 ? (
       bookings.map((book, i) => (
         <Link
-          href={`/detail/${book.tour._id}`}
+          href={`/${locale}/detail/${book.tour._id}`}
           key={i}
           className="block"
         >
@@ -208,11 +210,11 @@ export default function GuideDetailPage() {
             <div className="flex-1">
               <h3 className="text-lg font-bold text-gray-800">{book.tour.name}</h3>
               <p className="text-sm text-gray-600">
-                <span className="font-medium">Price:</span> ${book.price} &bull;{" "}
-                <span className="font-medium">Status:</span> {book.status}
+                <span className="font-medium">{t('price')}:</span> ${book.price} &bull;{" "}
+                <span className="font-medium">{t('status')}:</span> {book.status}
               </p>
               <p className="text-xs text-gray-400">
-                Booked on {new Date(book.createdAt).toLocaleDateString()}
+                {t('bookedOn')} {new Date(book.createdAt).toLocaleDateString()}
               </p>
             </div>
             <span
@@ -230,7 +232,7 @@ export default function GuideDetailPage() {
         </Link>
       ))
     ) : (
-      <p className="text-sm text-gray-500">No bookings found for this guide.</p>
+      <p className="text-sm text-gray-500">{t('noBookings')}.</p>
     )}
   </CardContent>
        </Card>

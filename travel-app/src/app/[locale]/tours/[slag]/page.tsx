@@ -1,0 +1,660 @@
+'use client';
+
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useSpring, animated } from '@react-spring/web';
+import { HelpCircle, Quote, Info, PhoneCall } from 'lucide-react';
+import { useLocale } from 'next-intl';
+
+import { useTranslations } from "next-intl";
+
+
+
+
+ function InfoSections() {
+  const fadeIn = useSpring({
+    from: { opacity: 0, transform: 'translateY(40px)' },
+    to: { opacity: 1, transform: 'translateY(0px)' },
+    config: { tension: 220, friction: 20 },
+    delay: 100,
+  });
+}
+const sections = [
+  {
+    title: 'Frequently Asked Questions ❓',
+    bg: 'bg-slate-100',
+    icon: <HelpCircle className="text-blue-600 w-6 h-6" />,
+    content: (
+      <ul className="list-disc space-y-2 px-5 text-gray-700 text-lg">
+        <li>How to book tours?</li>
+        <li>Can I get a refund?</li>
+        <li>How early should I book?</li>
+        <li>Do you offer private tours?</li>
+      </ul>
+    ),
+  },
+  {
+    title: 'Customer Testimonials 💬',
+    bg: 'bg-blue-100',
+    icon: <Quote className="text-purple-600 w-6 h-6" />,
+    content: (
+      <>
+        <p className="text-gray-800 text-lg italic">“Amazing experience with Oromia Tours. Highly recommend!”</p>
+        <p className="text-gray-800 text-lg italic">“Everything was smooth and well organized.”</p>
+      </>
+    ),
+  },
+  {
+    title: 'About Oromia Tours',
+    bg: 'bg-purple-100',
+    icon: <Info className="text-indigo-600 w-6 h-6" />,
+    content: (
+      <p className="text-gray-700 text-lg">
+        Oromia Tours was founded by passionate locals to showcase the beauty of Oromia to the world.
+      </p>
+    ),
+  },
+  {
+    title: 'Contact Us 📞',
+    bg: 'bg-gray-200',
+    icon: <PhoneCall className="text-green-600 w-6 h-6" />,
+    content: (
+      <p className="text-gray-800 text-lg">
+        For any queries, call us at <strong>+251-912-345-678</strong> or email at{' '}
+        <a href="mailto:info@oromiatours.com" className="text-blue-600 underline">
+          info@oromiatours.com
+        </a>
+      </p>
+    ),
+    centered: true,
+  },
+];
+type FAQItem = {
+  q: string;
+  a: string;
+};
+
+
+
+
+
+
+export interface ITour {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  region: string;
+  typeOfTour: string[]; // assuming it's an array of categories like ['nature', 'cave', 'hiking']
+  price: number;
+  duration: number;
+  maxGroupSize: number;
+  difficulty: 'easy' | 'medium' | 'difficult';
+  ratingsAverage: number;
+  ratingsQuantity: number;
+  images: string[]; // array of image filenames or URLs
+  coverImage: string;
+  location: {
+    type?: string;
+    coordinates?: number[];
+    description?: string;
+    address?: string;
+  };
+  startDates: string[]; // ISO date strings
+  endDate: string; // ISO date string
+  likes: string[]; // array of user IDs or emails
+  comments: Comment[]; // you can define Comment type separately
+  createdAt: string; // ISO date string
+  guides: string[]; // array of guide user IDs
+}
+const testimonials = [
+  { id: 1, name: 'Amina', avatar: '/avatars/amina.jpg', text: 'Amazing experience with Oromia Tours. Highly recommend!' },
+  { id: 2, name: 'Dawit', avatar: '/avatars/dawit.jpg', text: 'Everything was smooth and well organized.' },
+];
+type Comment = {
+  message: string;
+  userId: string; // or userId
+  userImage: Date;
+};
+
+
+// FAQ questions and answers
+// const faqs = [
+//   { question: 'How to book tours?', answer: 'You can book tours easily by selecting your preferred tour and clicking the Book Now button.' },
+//   { question: 'Can I get a refund?', answer: 'Refund policies vary by tour. Please check the tour details or contact support for info.' },
+//   { question: 'How early should I book?', answer: 'It is recommended to book at least 2 weeks in advance to secure your spot.' },
+//   { question: 'Do you offer private tours?', answer: 'Yes, we offer private tours. Contact us to customize your experience.' },
+// ];
+
+
+
+export default function ToursPage() {
+  const pathname = usePathname();
+  console.log("PATHNAME:", pathname);
+
+
+  const fadeIn = useSpring({
+    from: { opacity: 0, transform: 'translateY(40px)' },
+    to: { opacity: 1, transform: 'translateY(0px)' },
+    config: { tension: 220, friction: 20 },
+    delay: 100,
+  });
+
+  // State for which FAQ is open (-1 means all closed)
+  const [openFaqIndex, setOpenFaqIndex] = useState(-1);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? -1 : index);
+  };
+  
+  const parts = pathname.split('/');
+  console.log("partsssssssss Type from URL hhdddddddddddddddddddd:", parts);
+  
+  const rawType = parts.length > 2 ? parts[3] : 'All';
+  const initialType = decodeURIComponent(rawType);
+  console.log("Initial Type from URL hhdddddddddddddddddddd:", initialType);
+  
+const [selectedType, setSelectedType] = useState(initialType);
+  const [allTours, setAllTours] = useState<ITour[]>([]);
+  const [filteredTours, setFilteredTours] = useState<ITour[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  // const [selectedType, setSelectedType] = useState('All');
+  const [loading, setLoading] = useState(false);
+  const [likes, setLikes] = useState<Record<string, { userId: string }[]>>({});
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [currentCommentTour, setCurrentCommentTour] = useState<string | null>(null);
+  const [comment, setComment] = useState('');
+  const { data: session } = useSession();
+    const locale = useLocale(); // returns current locale, e.g., 'en'
+    const t = useTranslations("tours");
+    const faq = t.raw("faq.questions") as FAQItem[];  
+    const features = [
+      { key: "localExperts" },
+      { key: "affordablePackages" },
+      { key: "safeComfortable" },
+      { key: "flexibleBookings" }
+    ];
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/tours/`);
+        const fetchedTours = res.data.instanceFiltered.map((tour:ITour) => ({
+          ...tour,
+          likes: tour.likes.map((like: string) => like.toString()), // convert ObjectIds to strings
+        }));
+        setAllTours(fetchedTours);
+        setFilteredTours(fetchedTours);
+        console.log("Fetched Tours:nbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", fetchedTours);  
+      } catch (err) {
+        console.error('Error fetching tours:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTours();
+  }, []);
+  
+
+  useEffect(() => {
+    let filtered = [...allTours];
+    if (selectedType !== 'All') {
+      filtered = filtered.filter(tour => tour.typeOfTour.includes(selectedType));
+    }
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(tour => tour.name.includes(searchQuery));
+    }
+    setFilteredTours(filtered);
+  }, [selectedType, searchQuery, allTours]);
+
+  const tourTypes = Array.from(
+    new Set(allTours.flatMap(tour => tour.typeOfTour.map(type => type)))
+  );
+  // const tourTypes = [
+  //   ...new Set(allTours.flatMap(tour => tour.typeOfTour))
+  // ];
+
+
+  
+
+  
+  const handleLike = async (tourId: string, currentLikes: string[]) => {
+    try {
+      const userEmail = session?.user?.email;
+      if (!userEmail) return console.error('User not logged in');
+  
+      const userRes = await axios.get(`/api/user/${userEmail}`);
+      const userId = userRes.data.data._id;
+  
+      const alreadyLiked = currentLikes.includes(userId);
+  
+      const updatedLikes = alreadyLiked
+        ? currentLikes.filter(id => id !== userId)
+        : [...currentLikes, userId];
+  
+      await axios.patch(`/api/tours/${tourId}`, { likes: updatedLikes });
+  
+      setLikes(prev => ({ ...prev, [tourId]: updatedLikes }));
+    } catch (error) {
+      console.error('Failed to like tour:', error);
+    }
+  };
+  
+  
+  
+  
+
+  const openCommentModal = (id: string) => {
+    setCurrentCommentTour(id);
+    setComment('');
+    setShowCommentModal(true);
+  };
+
+  const handleSubmitComment = async () => {
+    console.log(`Comment for Tour ID ${currentCommentTour}: ${comment}`);
+    //  find tour by the id 
+    try {
+      const res = await axios.get(`/api/tours/${currentCommentTour}`);
+      const user=await axios.get(`/api/user/${session?.user?.email}`);
+      const fetchedTour: ITour = res.data.data;
+      const newComment = {
+        message: comment,
+        userId: session?.user.id, // get this from session or context
+        userImage: session?.user.image || '', // get this from session or context
+        name: session?.user.name || `${user.data.first_name}`, // get this from session or context
+      };
+      const updatedComments = [...fetchedTour.comments, newComment];
+       const dataAfterResponse=await axios.patch(`/api/tours/${currentCommentTour}`, { comments: updatedComments });
+      // setCurrentTour(fetchedTour);
+      
+      console.log("Fetched Tours:", fetchedTour);
+      // setFilteredTours(fetchedTours);
+    } catch (err) {
+      console.error('Error fetching tours:', err);
+    } finally {
+      setLoading(false);
+    }
+    // update the comments array of the tour
+    setShowCommentModal(false);
+  };
+
+  const getTourStatus = (startDates: string[], endDate?: string) => {
+    if (!endDate || !startDates || startDates.length === 0) 
+      return { label: 'No Date', color: 'bg-gray-500' };
+    
+    const today = new Date();
+    const end = new Date(endDate);
+    const starts = startDates.map(dateStr => new Date(dateStr)).sort((a, b) => a.getTime() - b.getTime());
+  
+    // If tour is finished
+    if (today > end) {
+      return { label: 'Finished', color: 'bg-red-500' };
+    }
+  
+    // If today is before the earliest start date
+    if (today < starts[0]) {
+      const diffDays = Math.ceil((starts[0].getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+      return { label: `Starts in ${diffDays} day${diffDays > 1 ? 's' : ''}`, color: 'bg-green-500' };
+    }
+  
+    // If today is between any start date and end date => Ongoing
+    for (const start of starts) {
+      if (today >= start && today <= end) {
+        const diffDaysLeft = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDaysLeft === 0) {
+          return { label: 'Last Day', color: 'bg-yellow-500' };
+        }
+        return { label: `${diffDaysLeft} day${diffDaysLeft > 1 ? 's' : ''} left`, color:'bg-red-100' };
+      }
+    }
+  
+    // If today is after all start dates but before end date (unlikely, but fallback)
+    const diffDaysLeft = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    return { label: `${diffDaysLeft} day${diffDaysLeft > 1 ? 's' : ''} left`, color: 'bg-green-500' };
+  };
+  
+  
+
+  return (
+    <div className="max-w-7xl mx-auto p-6 space-y-16">
+
+      {/* Hero Section */}
+      <section className="text-center p-8 bg-yellow-100 rounded-xl shadow space-y-3 mt-12">
+        <h2 className="text-3xl font-bold">{t("seasonalDeals.title")}</h2>
+        <p className="text-lg">{t("seasonalDeals.desc")}</p>
+      </section>
+
+
+
+
+{/* partners */}
+
+
+
+
+
+
+
+
+      {/* Why Choose Us */}
+
+
+      <section className="grid md:grid-cols-4 gap-8 text-center mt-12 px-4">
+        {features.map(({ key }) => (
+          <div
+            key={key}
+            className="group bg-gradient-to-br from-green-400 to-green-600 text-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transform transition-all duration-300"
+          >
+            <div className="bg-white text-green-600 w-14 h-14 mx-auto flex items-center justify-center rounded-full shadow-md group-hover:rotate-12 transform transition duration-300">
+              <span className="text-2xl font-bold">{t(`whyChooseUs.${key}.title`).charAt(0)}</span>
+            </div>
+            <h3 className="mt-6 font-bold text-2xl">{t(`whyChooseUs.${key}.title`)}</h3>
+            <p className="mt-3 text-white/90">{t(`whyChooseUs.${key}.desc`)}</p>
+          </div>
+        ))}
+      </section>
+
+
+      {/* Seasonal Deals */}
+      <section className="text-center p-8 bg-yellow-100 rounded-xl shadow space-y-3 mt-12">
+        <h2 className="text-3xl font-bold">{t("seasonalDeals.title")}</h2>
+        <p className="text-lg">{t("seasonalDeals.desc")}</p>
+      </section>
+
+   {/* Filters */}
+<section className="flex flex-col md:flex-row justify-between items-center gap-6 max-w-4xl mx-auto px-6 py-8 bg-white rounded-3xl shadow-xl ring-1 ring-green-200">
+
+{/* Search Input Container */}
+<div className="relative w-full md:w-1/2">
+  <input
+    id="search"
+    type="text"
+    placeholder="Search tours by name..."
+    className="
+      peer
+      w-full
+      rounded-3xl
+      border-2 border-transparent
+      bg-gradient-to-r from-green-50 to-green-100
+      px-6 py-3
+      font-semibold text-green-900
+      placeholder-transparent
+      focus:outline-none
+      focus:ring-4 focus:ring-green-300
+      focus:border-green-500
+      transition duration-300
+      shadow-md
+      hover:shadow-lg
+    "
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+  <label
+    htmlFor="search"
+    className="
+      absolute left-6 top-1/2 -translate-y-1/2
+      text-green-400
+      font-semibold
+      cursor-text
+      pointer-events-none
+      transition-all duration-300
+      peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-green-400 peer-placeholder-shown:text-base
+      peer-focus:top-2 peer-focus:text-green-600 peer-focus:text-sm
+    "
+  >
+   {t('filters.searchPlaceholder')}
+  </label>
+</div>
+
+{/* Select Dropdown Container */}
+<div className="relative w-full md:w-1/3">
+  <select
+    className="
+      w-full
+      rounded-3xl
+      border-2 border-transparent
+      bg-gradient-to-r from-green-50 to-green-100
+      px-6 py-3
+      font-semibold text-green-900
+      cursor-pointer
+      appearance-none
+      focus:outline-none
+      focus:ring-4 focus:ring-green-300
+      focus:border-green-500
+      shadow-md
+      hover:shadow-lg
+      transition duration-300
+    "
+    value={selectedType}
+    onChange={(e) => setSelectedType(e.target.value)}
+  >
+    <option value="All">{t('filters.allTypes')}</option>
+    {tourTypes.map((type) => (
+      <option key={type} value={type}>
+        {type.charAt(0).toUpperCase() + type.slice(1)}
+      </option>
+    ))}
+  </select>
+
+  {/* Custom arrow */}
+  <div className="pointer-events-none absolute top-1/2 right-6 -translate-y-1/2 text-green-500 select-none">
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+</div>
+</section>
+
+
+      {/* Tour Cards */}
+      <section className="grid md:grid-cols-3 gap-6">
+      {filteredTours.map((tour) => {
+        // alert(tour.endDate);
+        console.log("tour is ", tour);
+        console.log( "end date is ",tour.endDate);
+        const { label, color } = getTourStatus(tour.startDates, tour.endDate);
+
+  
+  return (
+    <Card key={tour.slug} className="hover:shadow-xl transition">
+      <CardHeader className="p-0">
+        <Image
+          src={`/toursphoto/${tour?.coverImage}` || '/wanchi.jpg'}
+          alt={tour.name}
+          width={500}
+          height={300}
+          className="rounded-t-xl object-cover h-56 w-full"
+        />
+      </CardHeader>
+      
+      <CardContent className="p-4 space-y-2">
+        <CardTitle>{tour.name}</CardTitle>
+        <CardDescription>{tour.description.slice(0, 80)}...</CardDescription>
+
+        {/* ✅ Now color and label are accessible */}
+        <Badge className={`${color} text-white font-bold w-fit`}>
+          {label}
+        </Badge>
+
+        <Badge variant="outline">💵{tour.price}</Badge>
+        <div className="flex justify-between items-center pt-2 gap-2">
+        <Button variant="secondary" onClick={() => handleLike(tour._id, tour.likes)}>
+  ❤️❤️ {likes[tour._id]?.length ?? tour.likes.length} {t('cards.likes')}
+
+</Button>
+
+<Button
+  onClick={() => openCommentModal(tour._id)}
+  className="flex items-center gap-2 bg-white text-green-700 border-2 border-green-600 px-5 py-2 rounded-full font-semibold hover:bg-green-600 hover:text-white hover:scale-105 transition-all duration-300 shadow-md ring-1 ring-green-300 hover:ring-green-500"
+>
+  💬 {t('cards.leaveComment')}
+  <span className="ml-1 bg-green-100 text-green-800 text-sm font-medium px-2 py-0.5 rounded-full shadow-inner">
+    {tour.comments?.length || 0}
+  </span>
+</Button>
+
+        </div>
+      </CardContent>
+      <CardFooter className="p-4">
+        <Button asChild className="w-full">
+          <Link href={`/${locale}/detail/${tour._id}`}>{t('cards.viewTour')}</Link>
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+})}
+
+      </section>
+
+      {loading && <p className="text-center text-lg">{t('loading')}...</p>}
+
+      {/* Comment Modal */}
+      {showCommentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 py-6">
+          <div className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-gray-200 p-6 sm:p-8 animate-fade-in">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowCommentModal(false)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition"
+            >
+              ✕
+            </button>
+
+            {/* Header */}
+            <h2 className="text-center text-2xl font-bold text-green-700 mb-4">
+              {t('modal.title')}
+            </h2>
+
+            {/* Textarea */}
+            <textarea
+              className="w-full resize-none rounded-2xl border border-green-300 bg-green-50 px-4 py-3 text-gray-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-green-400 placeholder:text-gray-500"
+              placeholder={t('modal.placeholder')}
+              rows={5}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+
+            {/* Buttons */}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:justify-between">
+              <button
+                onClick={() => setShowCommentModal(false)}
+                className="w-full sm:w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-full py-2.5 transition-all shadow-sm"
+              >
+              {t('modal.cancel')}
+              </button>
+
+              <button
+                onClick={handleSubmitComment}
+                className="w-full sm:w-1/2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-full py-2.5 transition-all shadow-md hover:scale-105"
+              >
+              {t('modal.post')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* upcoming */}
+<section className="bg-green-50 py-16 px-6">
+  <h2 className="text-3xl font-bold text-center text-green-800 mb-10">
+    Upcoming Events 🎉
+  </h2>
+  <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+    {[
+      { title: "Cultural Festival", date: "Oct 15, 2025", desc: "Celebrate local traditions with food, dance, and music." },
+      { title: "Hiking Adventure", date: "Nov 5, 2025", desc: "Join fellow travelers for a guided trek in the Simien Mountains." },
+    ].map((event, idx) => (
+      <div
+        key={idx}
+        className="p-6 rounded-xl bg-white shadow-md border-l-4 border-green-500 hover:shadow-lg transition"
+      >
+        <h3 className="text-xl font-semibold text-green-700">{event.title}</h3>
+        <p className="text-sm text-gray-500">{event.date}</p>
+        <p className="mt-2 text-gray-700">{event.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+      {/* Static Sections */}
+       <div className="max-w-7xl mx-auto p-6 space-y-16">
+      {/* Your existing tour hero, filters, tour cards, modals... */}
+
+      {/* Static Sections with animation */}
+      <div className="max-w-6xl mx-auto p-6 space-y-10">
+
+{/* FAQ Section */}
+
+  <animated.section
+    style={fadeIn}
+    className="bg-green-50 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
+  >
+    {/* Header */}
+    <div className="flex items-center gap-3 mb-6">
+      <HelpCircle className="text-green-700 w-6 h-6" />
+      <h2 className="text-3xl font-extrabold text-green-900">{t('faq.title')}</h2>
+    </div>
+
+    {/* FAQ List */}
+    <ul className="divide-y divide-green-200">
+      {faq.map(({ q, a }, i) => (
+        <li
+          key={i}
+          className="py-3 cursor-pointer select-none"
+          onClick={() => openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i)}
+          aria-expanded={openFaqIndex === i}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i);
+            }
+          }}
+        >
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-green-900">{q}</h3>
+            <span
+              className="text-2xl transition-transform duration-300 text-green-700"
+              style={{ transform: openFaqIndex === i ? 'rotate(45deg)' : 'rotate(0deg)' }}
+            >
+              +
+            </span>
+          </div>
+          {openFaqIndex === i && (
+            <p className="mt-2 text-green-800">{a}</p>
+          )}
+        </li>
+      ))}
+    </ul>
+  </animated.section>
+
+{/* Testimonials Section */}
+
+
+{/* About Section */}
+
+
+
+
+</div>
+
+    </div>
+
+    </div>
+  );
+}
+

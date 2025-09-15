@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import Form from './formt';
 import axios from 'axios';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 export interface Tour {
   _id: string;
   status:string
@@ -52,11 +54,12 @@ const statusColors = {
 };
 
 export default function ToursManagement() {
+  const locale = useLocale();
   const [search, setSearch] = useState('');
   const [filteredTours, setFilteredTours] = useState<Tour[]>([]);
   const [iseditting, setIsEditing] = useState(false);
     const [tours, setTours] = useState<Tour[]>([]);
-  
+  const t = useTranslations('admin');
   const [loading, setLoading] = useState(true);
 
   const handleSearch = (query: string) => {
@@ -87,7 +90,7 @@ export default function ToursManagement() {
   return (
     <div className="h-screen overflow-y-auto bg-gray-50">
       <section className="p-4 sm:p-6 max-w-7xl mx-auto min-h-screen flex flex-col">
-        <h2 className="text-2xl font-semibold text-cyan-800 mb-6">Tours Management</h2>
+        <h2 className="text-2xl font-semibold text-cyan-800 mb-6">{t('toursManagement.title')}</h2>
 
         {/* Search Bar */}
         <div className="mb-6 max-w-sm">
@@ -111,23 +114,23 @@ export default function ToursManagement() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card className="bg-white shadow-md border border-indigo-200 col-span-full">
           <CardHeader>
-            <CardTitle className="text-indigo-700">Tour Statistics</CardTitle>
+            <CardTitle className="text-indigo-700">{t('toursManagement.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3">
               <li>
-                <span className="font-semibold">Total Tours:</span> {tours.length}
+                <span className="font-semibold">{t('toursManagement.statistics.total')}</span> {tours.length}
               </li>
               <li>
-                <span className="font-semibold">Pending Tours:</span>{' '}
+                <span className="font-semibold">{t('toursManagement.statistics.pending')}</span>{' '}
                 {tours.filter((t) => t.status === 'pending').length}
               </li>
               <li>
-                <span className="font-semibold">Inactive Tours:</span>{' '}
+                <span className="font-semibold">{t('toursManagement.statistics.inactive')}</span>{' '}
                 {tours.filter((t) => t.status === 'finished').length}
               </li>
               <li>
-                <span className="font-semibold">active tour</span>       {tours.filter((t) => t.status === 'active').length}
+                <span className="font-semibold">{t('toursManagement.statistics.active')}</span>       {tours.filter((t) => t.status === 'active').length}
               </li>
             </ul>
           </CardContent>
@@ -139,12 +142,12 @@ export default function ToursManagement() {
         {/* Card 1: Tours List */}
         <Card className="bg-white shadow-md border border-cyan-200">
           <CardHeader>
-            <CardTitle className="text-cyan-700">All Tours</CardTitle>
+            <CardTitle className="text-cyan-700">{t('toursManagement.allTours.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 max-h-164 overflow-y-auto">
               {filteredTours.length === 0 && (
-                <p className="text-gray-500 text-center">No tours found.</p>
+                <p className="text-gray-500 text-center">{t('toursManagement.allTours.noTours')}</p>
               )}
               {filteredTours.map((tour) => (
                 <li
@@ -179,7 +182,7 @@ export default function ToursManagement() {
         {/* Card 2: Add New Tour (Spans 2 Columns for Width) */}
         <Card className="bg-white shadow-md border border-green-200 lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-green-700">Add New Tour</CardTitle>
+            <CardTitle className="text-green-700">{t('toursManagement.addNewTour.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Form />
@@ -189,7 +192,7 @@ export default function ToursManagement() {
         {/* Card 3: Tour Actions */}
         <Card className="bg-white shadow-md border border-rose-200 lg:col-span-3">
           <CardHeader>
-            <CardTitle className="text-rose-700">Manage Tour Actions</CardTitle>
+            <CardTitle className="text-rose-700">{t('toursManagement.actions.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             {filteredTours.map((tour) => (
@@ -203,16 +206,16 @@ export default function ToursManagement() {
                   </Badge>
                 </div>
                 <div className="flex gap-2">
-                <Link href={`/edit/${tour._id}`}>
+                <Link href={`/${locale}/edit/${tour._id}`}>
                 <Button size="sm" variant="outline">
-                  Edit
+                {t('toursManagement.actions.edit')}
                 </Button>
               </Link>
                   <Button size="sm" variant="destructive" disabled>
-                    Delete
+                  {t('toursManagement.actions.delete')}
                   </Button>
                   <Button size="sm" variant="ghost" >
-                    Archive
+                  {t('toursManagement.actions.archive')}
                   </Button>
                 </div>
               </div>
@@ -228,10 +231,9 @@ export default function ToursManagement() {
         {/* Footer Tip */}
         <div className="mt-8">
           <div className="bg-gradient-to-r from-cyan-600 to-blue-700 text-white p-6 rounded-xl shadow-md">
-            <h3 className="text-xl font-bold mb-2">Did You Know?</h3>
+            <h3 className="text-xl font-bold mb-2">{t('toursManagement.footer.title')}</h3>
             <p className="text-base leading-relaxed">
-              Ethiopia is home to <strong>11 UNESCO World Heritage Sites</strong>, making it one of the top cultural destinations in Africa.
-              Use this dashboard to manage amazing experiences and share them with the world!
+            {t('toursManagement.footer.text')}
             </p>
           </div>
         </div>

@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { User, Mail, Phone, Globe, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import Link from 'next/link';
-
+import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 interface SocialMedia {
   facebook?: string;
   twitter?: string;
@@ -29,7 +30,8 @@ interface IUser {
 export default function GuideProfile() {
   const [user, setUser] = useState<IUser | null>(null);
   const { data: session } = useSession();
-
+  const locale = useLocale();
+  const t = useTranslations('guideDashboard');
   useEffect(() => {
     const email = session?.user?.email;
     if (!email) return;
@@ -72,31 +74,31 @@ export default function GuideProfile() {
             </div>
           </div>
           <Link
-            href="/edituser"
+            href={`/${locale}/edituser`}
             className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 shadow-md transition"
           >
             <User className="w-6 h-6" />
           </Link>
         </div>
-
+  
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-extrabold text-white drop-shadow-lg tracking-tight">{user.name}</h1>
           <Link
-            href="/edituser"
+            href={`/${locale}/edituser`}
             className="text-lime-300 hover:text-lime-400 transition text-sm font-medium"
           >
-            Edit Profile
+            {t("pro.Edit Profile")}
           </Link>
         </div>
-
+  
         {/* Info Cards */}
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
-            { label: 'Name', icon: <User className="text-lime-300 w-5 h-5" />, value: user.name },
-            { label: 'Email', icon: <Mail className="text-lime-300 w-5 h-5" />, value: user.email },
-            { label: 'Phone', icon: <Phone className="text-lime-300 w-5 h-5" />, value: user.phoneNumber || 'N/A' },
-            { label: 'Location', icon: <Globe className="text-lime-300 w-5 h-5" />, value: user.location || 'N/A' },
-            { label: 'Member Since', icon: <User className="text-lime-300 w-5 h-5" />, value: createdAtFormatted },
+            { label: t("pro.Name"), icon: <User className="text-lime-300 w-5 h-5" />, value: user.name },
+            { label: t("pro.Email"), icon: <Mail className="text-lime-300 w-5 h-5" />, value: user.email },
+            { label: t("pro.Phone"), icon: <Phone className="text-lime-300 w-5 h-5" />, value: user.phoneNumber || 'N/A' },
+            { label: t("pro.Location"), icon: <Globe className="text-lime-300 w-5 h-5" />, value: user.location || 'N/A' },
+            { label: t("pro.Member Since"), icon: <User className="text-lime-300 w-5 h-5" />, value: createdAtFormatted },
           ].map(({ label, icon, value }) => (
             <div
               key={label}
@@ -110,11 +112,11 @@ export default function GuideProfile() {
             </div>
           ))}
         </div>
-
+  
         {/* Social Media */}
         {user.socialMedia && (
           <div className="w-full flex flex-col items-center space-y-3">
-            <span className="text-lime-200 font-semibold">Connect on Social Media</span>
+            <span className="text-lime-200 font-semibold">{t("pro.Connect on Social Media")}</span>
             <div className="flex gap-6 flex-wrap justify-center">
               {user.socialMedia.facebook && (
                 <a
@@ -123,7 +125,7 @@ export default function GuideProfile() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
                 >
-                  <Facebook className="w-5 h-5" /> Facebook
+                  <Facebook className="w-5 h-5" /> {t("pro.Facebook")}
                 </a>
               )}
               {user.socialMedia.twitter && (
@@ -133,7 +135,7 @@ export default function GuideProfile() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
                 >
-                  <Twitter className="w-5 h-5" /> Twitter
+                  <Twitter className="w-5 h-5" /> {t("pro.Twitter")}
                 </a>
               )}
               {user.socialMedia.instagram && (
@@ -143,7 +145,7 @@ export default function GuideProfile() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
                 >
-                  <Instagram className="w-5 h-5" /> Instagram
+                  <Instagram className="w-5 h-5" /> {t("pro.Instagram")}
                 </a>
               )}
               {user.socialMedia.linkedin && (
@@ -153,14 +155,15 @@ export default function GuideProfile() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-white hover:text-lime-400 transition transform hover:scale-110"
                 >
-                  <Linkedin className="w-5 h-5" /> LinkedIn
+                  <Linkedin className="w-5 h-5" /> {t("pro.LinkedIn")}
                 </a>
               )}
             </div>
           </div>
         )}
-
+  
       </div>
     </div>
   );
+  
 }

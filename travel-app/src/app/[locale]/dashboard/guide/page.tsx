@@ -1,30 +1,23 @@
 'use client';
 
-import { Sidebar } from '../../../components/dashboardcomponents/Sidebar';
-import { Topbar } from '../../../components/dashboardcomponents/topbar';
-import GuideLocations from '../../../components/dashboardcomponents/guide/location';
-import GuideBookings from '../../../components/dashboardcomponents/guide/bookings';
-import GuideSettings from '../../../components/dashboardcomponents/guide/setting';
+import { Sidebar } from '../../../../components/dashboardcomponents/Sidebar';
+import { Topbar } from '../../../../components/dashboardcomponents/topbar';
+import GuideLocations from '../../../../components/dashboardcomponents/guide/location';
+import GuideBookings from '../../../../components/dashboardcomponents/guide/bookings';
+import GuideSettings from '../../../../components/dashboardcomponents/guide/setting';
 import { Home, Users, MapPin, Calendar, ClipboardList } from 'lucide-react';
-import GuideDashboardOverview from '../../../components/dashboardcomponents/guide/overview';
-import GuideProfile from '../../../components/dashboardcomponents/guide/profile';
-import GuideMyTours from '../../../components/dashboardcomponents/guide/mytours';
-import { useEffect, useState, Suspense } from 'react';
+import GuideDashboardOverview from '../../../../components/dashboardcomponents/guide/overview';
+import GuideProfile from '../../../../components/dashboardcomponents/guide/profile';
+import GuideMyTours from '../../../../components/dashboardcomponents/guide/mytours';
+import {Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-
+import { useTranslations } from 'next-intl';
 
 // import { Home, Users, Map } from 'lucide-react';
 
 // Define nav items here and pass to Sidebar
 
-const navItems = [
-  { section: 'guide', label: 'Dashboard', Icon: Home },
-  { section: 'profile', label: 'My Profile', Icon: Users },
-  { section: 'assignedTours', label: 'My Tours', Icon: ClipboardList },
-  { section: 'bookings', label: 'Bookings', Icon: Calendar },
-  { section: 'locations', label: 'Locations', Icon: MapPin },
-  { section: 'settings', label: 'Settings', Icon: Users },
-];
+
 
 
 const COLORS = ['#10B981', '#F59E0B', '#0EA5E9'];
@@ -50,8 +43,16 @@ const guideStats = [
  function AdminDashboardHome() {
   const searchParams = useSearchParams();
   const section = searchParams.get('section') || 'guide';
-  console.log('section is vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv',section)
+ const t = useTranslations('guideDashboard');
 
+ const navItems = [
+  { section: 'guide', label:t('nav.dashboard'), Icon: Home },
+  { section: 'profile', label:t('nav.profile'), Icon: Users },
+  { section: 'assignedTours', label:t('nav.myTours'), Icon: ClipboardList },
+  { section: 'bookings',  label:t('nav.bookings'), Icon: Calendar },
+  { section: 'locations',  label:t('nav.locations'), Icon: MapPin },
+  { section: 'settings',  label:t('nav.settings'), Icon: Users },
+];
   const renderContent = () => {
     switch (section) {
       case 'guide':

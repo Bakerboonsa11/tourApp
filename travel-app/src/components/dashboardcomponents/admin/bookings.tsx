@@ -6,6 +6,7 @@ import { Types } from 'mongoose';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from 'next-intl';
 
 import {
   Select,
@@ -87,6 +88,7 @@ export default function BookingsSection() {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [loading, setLoading] = useState(true);
+  const t = useTranslations('admin');
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -318,9 +320,9 @@ export default function BookingsSection() {
       <Card className="shadow-lg border rounded-2xl">
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <CardTitle className="text-cyan-800 text-2xl">Bookings Management</CardTitle>
+            <CardTitle className="text-cyan-800 text-2xl">{t('bookings.title')}</CardTitle>
             <p className="text-sm text-gray-600 mt-1">
-              Search by email or date, and sort bookings by date.
+              {t('bookings.subtitle')}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -333,18 +335,18 @@ export default function BookingsSection() {
             />
             <Input
               type="date"
-              placeholder="Search by date"
+              placeholder={t('bookings.searchEmail')}
               value={dateSearch}
               onChange={(e) => setDateSearch(e.target.value)}
               className="w-44"
             />
             <Select value={sortOrder} onValueChange={(v) => setSortOrder(v as 'newest' | 'oldest')}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Sort by date" />
+                <SelectValue placeholder={t('bookings.sortPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="oldest">Oldest</SelectItem>
+                <SelectItem value="newest">{t('bookings.sort.newest')}</SelectItem>
+                <SelectItem value="oldest">{t('bookings.sort.oldest')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -352,18 +354,18 @@ export default function BookingsSection() {
 
         <CardContent className="overflow-x-auto">
           {loading ? (
-            <p className="text-sm text-gray-500 px-4 py-6">Loading bookings...</p>
+            <p className="text-sm text-gray-500 px-4 py-6">{t('bookings.loading')}...</p>
           ) : (
             <table className="w-full border-collapse mt-2">
               <thead className="bg-cyan-100 text-cyan-800 text-sm">
                 <tr>
-                  <th className="p-3 text-left">Booking ID</th>
-                  <th className="p-3 text-left">Customer</th>
-                  <th className="p-3 text-left">Tour ID</th>
-                  <th className="p-3 text-left">Date</th>
-                  <th className="p-3 text-left">Status</th>
-                  <th className="p-3 text-left">Amount</th>
-                  <th className="p-3 text-left">Actions</th>
+                  <th className="p-3 text-left">{t('bookings.table.id')}</th>
+                  <th className="p-3 text-left">{t('bookings.table.customer')}</th>
+                  <th className="p-3 text-left"> {t('bookings.table.tourId')}</th>
+                  <th className="p-3 text-left">{t('bookings.table.date')}</th>
+                  <th className="p-3 text-left">{t('bookings.table.status')}</th>
+                  <th className="p-3 text-left">{t('bookings.table.amount')}</th>
+                  <th className="p-3 text-left">{t('bookings.table.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -390,7 +392,7 @@ export default function BookingsSection() {
   className="bg-cyan-600 hover:bg-cyan-700 text-white"
   onClick={() => handleViewReceipt(b)}
 >
-  View
+{t('bookings.view')}
 </Button>
 
                        
@@ -400,7 +402,7 @@ export default function BookingsSection() {
                 ) : (
                   <tr>
                     <td colSpan={7} className="text-center text-gray-500 py-6">
-                      No bookings found.
+                     {t('bookings.noResults')}
                     </td>
                   </tr>
                 )}

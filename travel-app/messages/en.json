@@ -1,0 +1,686 @@
+{
+  "admin": {
+    "welcome": "Welcome",
+    "manageText": "Manage all aspects of your travel platform. Use the sidebar.",
+    "totalUsers": "Total Users",
+    "totalTours": "Total Tours",
+    "activeGuides": "Active Guides",
+    "manageUsers": "Manage Users",
+    "manageTours": "Manage Tours",
+    "manageGuides": "Manage Guides",
+    "userGrowth": "User Growth",
+    "tourTypes": "Tour Types",
+    "guideActivity": "Guide Activity",
+    "totalGuides": "Total Guides",
+    "activeRegions": "Active Regions",
+    "topLiked": "Most Liked",
+    "regionsCovered": "Regions Covered",
+    "nav": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "guides": "Guides",
+      "bookings": "Bookings",
+      "tours": "Tours"
+    }
+    ,"bookings": {
+    "title": "Bookings Management",
+    "subtitle": "Search by email or date, and sort bookings by date.",
+    "searchEmail": "Search by email...",
+    "searchDate": "Search by date",
+    "sortPlaceholder": "Sort by date",
+    "sort": {
+      "newest": "Newest",
+      "oldest": "Oldest"
+    },
+    "loading": "Loading bookings...",
+    "table": {
+      "id": "Booking ID",
+      "customer": "Customer",
+      "tourId": "Tour ID",
+      "date": "Date",
+      "status": "Status",
+      "amount": "Amount",
+      "actions": "Actions"
+    },
+    "view": "View",
+    "noResults": "No bookings found."
+  }, 
+   "guideManagement": {
+    "title": "Guide Management",
+    "description": "View and assign registered guides to your tours with ease.",
+    "assignToTour": "Assign to Tour",
+    "hideTours": "Hide Tours",
+    "loadingTours": "Loading tours...",
+    "noToursFound": "No tours found.",
+    "assign": "Assign",
+    "unassign": "Unassign",
+    "loadingGuides": "Loading guides..."
+  },
+  "toursManagement": {
+    "title": "Tours Management",
+    "searchPlaceholder": "Search tours by name...",
+    "statistics": {
+      "title": "Tour Statistics",
+      "total": "Total Tours:",
+      "pending": "Pending Tours:",
+      "inactive": "Inactive Tours:",
+      "active": "Active Tours:"
+    },
+    "allTours": {
+      "title": "All Tours",
+      "noTours": "No tours found."
+    },
+    "addNewTour": {
+      "title": "Add New Tour"
+    },
+    "actions": {
+      "title": "Manage Tour Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "archive": "Archive"
+    },
+    "footer": {
+      "title": "Did You Know?",
+      "text": "Ethiopia is home to 11 UNESCO World Heritage Sites, making it one of the top cultural destinations in Africa. Use this dashboard to manage amazing experiences and share them with the world!"
+    }
+  },
+  "form":{
+    "title": "Create A New Tour",
+    "labels": {
+      "name": "Name",
+      "slug": "Slug",
+      "description": "Description",
+      "region": "Region",
+      "typeOfTour": "Type of Tour",
+      "price": "Price ($)",
+      "duration": "Duration (days)",
+      "longitude": "Longitude",
+      "latitude": "Latitude",
+      "locationDescription": "Location Description",
+      "address": "Address",
+      "maxGroupSize": "Max Group Size",
+      "difficulty": "Difficulty",
+      "coverImage": "Cover Image",
+      "photos": "Photos (Multiple)",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "placeholders": {
+      "description": "Tour description",
+      "typeOfTour": "e.g., adventure, forest, mountain"
+    },
+    "options": {
+      "selectDifficulty": "Select Difficulty",
+      "easy": "Easy",
+      "medium": "Medium",
+      "difficult": "Difficult"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes"
+    }
+  },  
+  "userTable": {
+    "headers": {
+      "profile": "Profile",
+      "email": "Email",
+      "role": "Role",
+      "joined": "Joined",
+      "actions": "Actions"
+    },
+    "buttons": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "update": "Update"
+    },
+    "editModal": {
+      "title": "Edit User Role",
+      "description": "Update the role for",
+      "email": "Email",
+      "newRole": "New Role",
+      "selectRole": "Select a role",
+      "roles": {
+        "admin": "Admin",
+        "user": "User",
+        "guide": "Editor"
+      }
+    },
+    "deleteModal": {
+      "title": "Confirm Delete",
+      "description": "Are you sure you want to delete user"
+    }
+  }
+  
+  },
+  "sidebar": {
+    "header": "Travel",
+    "help": "Need help? Contact support",
+    "version": "Version 2.3.1",
+    "quote": "“Adventure awaits those who dare to explore.”"
+  },
+  "user":{
+    "nav": {
+      "dashboard": "Dashboard",
+      "profile": "Profile",
+      "bookings": "Bookings",
+      "reviews": "Reviews",
+      "wishlist": "Wishlist",
+      "settings": "Settings"
+    },
+    "errors": {
+      "invalidSection": "Invalid section selected."
+    },
+    "topbar": {
+      "role": "User"
+    },
+    "dashboard": {
+      "welcome": "Welcome back,",
+      "subtitle": "Here’s what’s happening with your account today.",
+      "memberSince": "Member since:",
+      "lastLogin": "Last login:",
+      "stats": {
+        "upcomingTrips": "Upcoming Trips",
+        "nextTour": "Next",
+        "reviewsWritten": "Reviews Written",
+        "averageRating": "Average Rating:",
+        "completedTours": "Completed Tours",
+        "visitedCountries": "Visited:"
+      },
+      "recentBookings": "Recent Bookings",
+      "confirmed": "Confirmed",
+      "membershipStatus": "Membership Status:",
+      "plan": "Gold Member",
+      "upgradePlan": "Upgrade Plan",
+      "editProfile": "Edit Profile"
+    },
+    "profile": {
+      "editProfile": "Edit Profile",
+      "contactInfo": {
+        "title": "Contact Info",
+        "description": "Your personal contact details",
+        "email": "Email",
+        "phone": "Phone",
+        "location": "Location",
+        "joined": "Joined"
+      },
+      "socialLinks": {
+        "title": "Social Links",
+        "description": "Connected accounts"
+      },
+      "security": {
+        "title": "Security",
+        "password": "Password",
+        "change": "Change",
+        "2fa": "2FA",
+        "devices": "Devices",
+        "sessions": "Sessions",
+        "logout": "Logout"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "emailAlerts": "Email Alerts",
+        "smsAlerts": "SMS Alerts"
+      },
+      "activity": {
+        "title": "Recent Activity",
+        "lastLogin": "Last login",
+        "lastActivity": "Last activity"
+      },
+      "billing": {
+        "title": "Billing",
+        "plan": "Plan",
+        "nextBilling": "Next Billing"
+      }
+    },
+    "book":{
+      "searchTitle": "Search Bookings",
+      "searchPlaceholder": "Search by tour name",
+      "loading": "Loading bookings...",
+      "noBookings": "No bookings found.",
+      "price": "Price",
+      "created": "Created",
+      "status": "Status"
+    },
+    "review":{
+      "addReviewTitle": "Add a Review",
+      "tourNamePlaceholder": "Tour name...",
+      "commentPlaceholder": "Your comment...",
+      "ratingPlaceholder": "Rating (1–5)",
+      "submitButton": "Submit",
+      "searchPlaceholder": "Search by tour name...",
+      "loadingReviews": "Loading your reviews...",
+      "noReviews": "No reviews found.",
+      "unknownDate": "Unknown date",
+      "region": "Region",
+      "price": "Price",
+      "difficulty": "Difficulty",
+      "duration": "Duration",
+      "days": "days"
+    },
+    "wish":{
+      "wishlistTitle": "✨ Wishlist Wonders",
+      "days": "Days",
+      "bookNow": "Book Now"
+    },
+    "sett":{
+      "settingsTitle": "Settings",
+      "profileTab": "Profile",
+      "securityTab": "Security",
+      "notificationsTab": "Notifications",
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "saveChanges": "Save Changes",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "updatePassword": "Update Password",
+      "emailNotifications": "Email Notifications",
+      "notificationDescription": "You’ll receive booking confirmations, account updates, and offers."
+    }
+    
+    
+    
+  }
+,  
+  
+  "guideDetail": {
+    "joined": "Joined",
+    "toursGuided": "Tours Guided",
+    "noFinishedTours": "No finished tours yet.",
+    "toursBooked": "Tours Booked",
+    "price": "Price",
+    "status": "Status",
+    "bookedOn": "Booked on",
+    "noBookings": "No bookings found for this guide."
+  },
+  "guideDashboard": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "profile": "My Profile",
+      "myTours": "My Tours",
+      "bookings": "Bookings",
+      "locations": "Locations",
+      "settings": "Settings"
+    },
+    "topbar": {
+      "role": "Guide"
+    },
+    "errors": {
+      "invalidSection": "Invalid section."
+    },
+    "overview":{
+      "welcomeBack": "Welcome Back",
+      "guide": "Guide",
+      "latestActivity": "Here’s your latest activity and upcoming tours.",
+      "toursAssigned": "Tours Assigned",
+      "bookingsThisMonth": "Bookings This Month",
+      "averageRating": "Average Rating",
+      "upcomingTours": "Upcoming Tours",
+      "noUpcomingTours": "No upcoming tours assigned.",
+      "recentBookings": "Recent Bookings",
+      "noRecentBookings": "No recent bookings.",
+      "notifications": "Notifications",
+      "noNotifications": "No notifications.",
+      "createNewTour": "Create New Tour",
+      "viewBookings": "View Bookings",
+      "checkMessages": "Check Messages"
+    },
+    "pro":{
+      "Edit Profile": "Edit Profile",
+      "Name": "Name",
+      "Email": "Email",
+      "Phone": "Phone",
+      "Location": "Location",
+      "Member Since": "Member Since",
+      "Connect on Social Media": "Connect on Social Media",
+      "Facebook": "Facebook",
+      "Twitter": "Twitter",
+      "Instagram": "Instagram",
+      "LinkedIn": "LinkedIn"
+    },
+    "tour":{
+      "MyGuidedTours": "My Guided Tours",
+      "ActiveTours": "Active Tours",
+      "Youcurrentlyhavenoassignedtours": "You currently have no assigned tours.",
+      "UnknownLocation": "Unknown Location",
+      "Duration": "Duration",
+      "days": "days",
+      "ViewTour": "View Tour"
+    },
+    "book": {
+      "myTourBookings": "🌿 My Tour Bookings",
+      "bookingId": "Booking ID",
+      "touristEmail": "Tourist Email",
+      "tour": "Tour",
+      "date": "Date",
+      "status": "Status",
+      "noBookings": "No bookings found."
+    },
+    "loc": {
+      "myTourLocations": "My Tour Locations",
+      "tour": "tour",
+      "tours": "tours"
+    },
+    "sett":{
+      "guideSettings": "Guide Settings",
+      "manageTourAvailability": "Manage your tour availability and profile info.",
+      "bio": "Bio",
+      "availableForTours": "Available for Tours"
+    }
+    
+    
+  },
+  "detail": {
+    "badge": "Ethiopia 🌄",
+    "heroText": "Discover the adventure of a lifetime in the heart of Ethiopia.",
+    "startingFrom": "💵 Starting from",
+    "reviews": "reviews",
+    "duration": "⏳ Duration",
+    "groupSize": "👥 Group Size",
+    "difficulty": "⚡ Difficulty",
+    "location": "📍 Location",
+    "userComments": "User Comments 💬",
+    "noComments": "No comments yet.",
+    "leaveComment": "Leave a Comment ✨",
+    "leaveYourThoughts": "💬 Leave Your Thoughts",
+    "cancel": "Cancel",
+    "post": "Post ✨",
+    "aboutTour": "🌍 About this Tour",
+    "whyChoose": "✨ Why Choose This Tour?",
+    "why1": "Guided by local experts who know the region inside out.",
+    "why2": "Get up close with unique wildlife like the Ethiopian wolf.",
+    "why3": "Perfect balance of adventure and relaxation.",
+    "why4": "Includes cultural exposure to nearby communities.",
+    "tourHighlights": "🌟 Tour Highlights",
+    "highlightDuration": "Tour Duration",
+    "highlightDifficulty": "Difficulty Level",
+    "highlightGroup": "Group Size",
+    "highlightSlots": "Available Slots",
+    "heroDescription": "Discover the adventure of a lifetime in the heart of Ethiopia.",
+    "upcoming":"Upcoming Start Dates",
+    "gallery": " Tour Gallery",
+
+    "included": {
+      "title": "What’s Included",
+      "accommodation": "Accommodation & park entrance fees",
+      "meals": "Daily breakfast, packed lunches, and water",
+      "guides": "Professional local guides throughout the tour",
+      "transportation": "All transportation during the tour"
+    },
+    "ready": "Ready to Explore",
+    "book": "Book your tour today and experience the raw beauty of Oromia like never before.",
+    "bookNow": "Book Now",
+    "exactLocation": "Exact location"
+ 
+    
+  },
+
+  "addis": {
+    "birr": "BIRR",
+    "header": " Explore Experiences Near Addis Ababa",
+    "subhead": "  Can’t-miss picks near you",
+    "viewDetails": "view details"
+  },
+  "cheap": {
+    "detail": "  View Details",
+    "head": " Budget-friendly picks just for you",
+    "header": " Top Cheapest Experiences"
+  },
+  "home": {
+    "40choose": " Choose from over",
+    "welcome":"Welcome",
+    "40unforgetable": "unforgettable adventures — book instantly. ",
+    "adventure": "adventure",
+    "book": " Book Now",
+    "discover": "  Discover Your Next adventure",
+    "explore": "  Explore the beauty of Ethiopia 🇪🇹🇪🇹🇪🇹🇪🇹\n",
+    "explore2": "explore",
+    "header": "  Where to?",
+    "hidden": "— from hidden waterfalls to vibrant cultural festivals — all curated for your passions.",
+    "moveDiscover": "   Discover the Best",
+    "moveexperiance": "experiance",
+    "moveIntrest": "  for Every Interest",
+    "over": "over",
+    "overtext": " over experiences are waiting for you.  \n        Explore caves, mountains, lakes, and more — all curated for your next journey.",
+    "Tailored": "  Find Experiences Tailored",
+    "unique": "40,000+ unique adventures",
+    "you": "Just for You",
+
+    "iconicTitle": "Iconic Places You Need to See",
+    "travelersChoiceTitle": "Travelers Choice Awards Best of the Best",
+    "travelersChoiceDesc": "Find breathtaking destinations and unique experiences tailored for you.",
+    "seeWinners": "See the Winners",
+
+    "discoverEthiopiaTitle": "Discover Ethiopia 🇪🇹🇪🇹",
+    "discoverEthiopiaDesc": "Find breathtaking destinations and unique experiences tailored for you.",
+    "learnMore": "Learn More"
+    
+  },
+  "interest": {
+    "birr": "BIRR",
+    "header": "  Find things to do by interest",
+    "popular": "  Popular Tours",
+    "subhead": "   Discover experiences tailored to your interests",
+    "viewDetails": "   View Details"
+  },
+  "near": {
+    "birr": "BIRR",
+    "detail": "View Details",
+    "head": "   Experiences within 300km of your current location",
+    "header": " Tours Near You"
+  },
+
+  "faq": {
+    "title": "GreenWave — FAQ & Contact",
+    "subtitle": "Beautifully designed, ultra-styled FAQ and contact page — green-themed, accessible, and responsive.",
+    "btnEmailUs": "Email Us",
+    "btnContact": "Contact",
+    "faqTitle": "Frequently Asked Questions",
+    "faqItemHint": "Helpful answer below — quick and to the point.",
+    "faqs": [
+      {
+        "q": "How do I book a service or request help?",
+        "a": "Use the contact form below or send an email to contact@yourdomain.com. We usually reply within 24–48 hours."
+      },
+      {
+        "q": "Do you offer refunds or cancellations?",
+        "a": "Yes — refunds and cancellations follow the policy listed on our Terms page. Reach out to support for assistance."
+      },
+      {
+        "q": "Can I speak directly with a specialist?",
+        "a": "Absolutely. After you submit your request we can arrange a call or video chat. Include your phone and best times to reach you."
+      },
+      {
+        "q": "Are there enterprise/volume discounts?",
+        "a": "Yes — for organizations and recurring projects we offer custom pricing. Contact sales for a tailored quote."
+      },
+      {
+        "q": "Where can I follow you on social media?",
+        "a": "All our social links are in the Contact section — Twitter, LinkedIn, Instagram and Facebook."
+      }
+    ],
+    "contactTitle": "Contact Us",
+    "labelName": "Name",
+    "labelEmail": "Email",
+    "labelMessage": "Message",
+    "phName": "Your full name",
+    "phEmail": "you@domain.com",
+    "phMessage": "Tell us how we can help...",
+    "btnSend": "Send Message",
+    "btnClear": "Clear",
+    "socialTitle": "Other ways to reach us",
+    "socialDesc": "Follow, DM or message us on any platform — we check them daily.",
+    "brand": "GreenWave",
+    "rightsReserved": "All rights reserved.",
+    "help": "Help",
+    "mailtoSubjectPrefix": "Contact from",
+    "visitorFallback": "Website Visitor"
+  },
+  "navbar": {
+    "home": "Home",
+    "tours": "Tours",
+    "about": "About Us",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "signout": "Sign Out",
+    "toggleTheme": "Toggle Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "logo":" Ethio-Visit"
+  },
+  "tours": {
+    "filters": {
+      "searchPlaceholder": "Search tours by name...",
+      "searchLabel": "Search tours by name...",
+      "allTypes": "All Types"
+    },
+    "cards": {
+      "likes": "Likes",
+      "leaveComment": "Leave a Comment",
+      "viewTour": "View Tour",
+      "price": "💵{{price}}",
+      "status": {
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "ended": "Ended"
+      }
+    },
+    "modal": {
+      "title": "💬 Leave Your Thoughts",
+      "placeholder": "Type your comment here...",
+      "cancel": "Cancel",
+      "post": "Post ✨"
+    },
+    "loading": "Loading tours...",
+    "faq": {
+      "title": "Frequently Asked Questions ❓",
+      "questions": [
+        { "q": "How do I book a tour?", "a": "You can book a tour online by selecting your preferred tour and completing the payment." },
+        { "q": "Can I cancel or reschedule?", "a": "Yes, you can cancel or reschedule up to 48 hours before the tour." },
+        { "q": "Are the tours safe?", "a": "Yes! Safety is our top priority and all tours are guided by trained local experts." }
+      ]
+    },
+    "heroTitle": "Explore Ethiopia 🇪🇹",
+    "heroDesc": "Discover breathtaking destinations, unique cultural spots, and relaxing escapes — all curated by locals.",
+    "startJourney": "Start Your Journey",
+
+    "whyChooseUs": {
+      "title": "Why Choose Us",
+      "localExperts": {
+        "title": "Local Experts",
+        "desc": "Guided by locals who know every hidden gem."
+      },
+      "affordablePackages": {
+        "title": "Affordable Packages",
+        "desc": "Experience amazing tours without breaking your budget."
+      },
+      "safeComfortable": {
+        "title": "Safe & Comfortable",
+        "desc": "Well-planned tours with safety and comfort as a priority."
+      },
+      "flexibleBookings": {
+        "title": "Flexible Bookings",
+        "desc": "Easily change or cancel your bookings hassle-free."
+      }
+    },
+
+    "seasonalDeals": {
+      "title": "Seasonal Special Deals 🌞",
+      "desc": "Check out our hand-picked seasonal tour packages and save up to 30% on selected tours."
+    }
+  },
+  "about": {
+    "heroTitle": "Discover Ethiopia Like Never Before",
+    "aboutTitle": "About Ethio-Tours",
+    "aboutText": "Ethio-Tours is your trusted partner in exploring the breathtaking beauty, vibrant cultures, and ancient heritage of Ethiopia. From the lush highlands of Oromia to the rock-hewn churches of Lalibela, we design unforgettable journeys tailored to your interests.",
+    "features": {
+      "destinationsTitle": "🌍 Diverse Destinations",
+      "destinationsText": "Travel through Ethiopia’s regions and experience their unique traditions, food, and landscapes.",
+      "travelTitle": "🚌 Comfortable Travel",
+      "travelText": "Enjoy modern vehicles, skilled drivers, and carefully chosen accommodations for your comfort.",
+      "guidesTitle": "🤝 Local Guides",
+      "guidesText": "Explore with passionate guides who share authentic stories, history, and hidden gems."
+    },
+    "missionTitle": "Our Mission",
+    "missionText": "Our mission is to connect travelers with the soul of Ethiopia. We promote sustainable tourism that benefits local communities while preserving Ethiopia’s natural and cultural treasures.",
+    "missionList": {
+      "eco": "✅ Eco-friendly travel options",
+      "local": "✅ Support for local artisans & businesses",
+      "cultural": "✅ Cultural exchange and respect"
+    },
+    "ctaTitle": "Start Your Ethiopian Adventure Today",
+    "ctaText": "Book your next tour with Ethio-Tours and create memories that last a lifetime.",
+    "ctaButton": "View Tours",
+    "footerText": "© {year} Ethio-Tours. All rights reserved.",
+    "footerLinks": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter"
+    }
+  },
+  "login":{
+    "welcomeTitle": "Welcome to MyTour ✈️",
+    "welcomeSubtitle": "Your journey begins here. Discover, explore, and book amazing destinations.",
+    "back": "Back",
+    "welcomeBack": "Welcome Back 👋",
+    "signInPrompt": "Please sign in to your account",
+    "email": "Email",
+    "password": "Password",
+    "noAccount": "No account?",
+    "signUp": "Sign up",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "continueGoogle": "Continue with Google",
+    "feature1Title": "Explore Destinations",
+    "feature1Desc": "Find the best places to visit, from hidden gems to iconic landmarks, curated just for you.",
+    "feature2Title": "Manage Your Bookings",
+    "feature2Desc": "View, modify, or cancel your tour bookings in one place with ease and clarity.",
+    "feature3Title": "Personalized Packages",
+    "feature3Desc": "We tailor experiences to your preferences and interests for the best adventure possible.",
+    "feature4Title": "Trusted by Travelers",
+    "feature4Desc": "Join thousands of happy explorers who trust MyTour for unforgettable experiences.",
+    "ssoMessage": "We also offer SSO for organizations.",
+    "needHelp": "Need help?",
+    "contactSupport": "Contact support"
+  },
+  "signup":{
+    "joinTitle": "Join MyTour ✈️",
+    "joinSubtitle": "Create your account to start booking and exploring new adventures.",
+    "back": "Back",
+    "createAccount": "Create Account 🚀",
+    "signupPrompt": "Sign up and get started right away",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "alreadyAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "continueGoogle": "Continue with Google",
+    "feature1Title": "Member-Only Deals",
+    "feature1Desc": "Enjoy exclusive discounts and early access to seasonal packages.",
+    "feature2Title": "Save Your Favorites",
+    "feature2Desc": "Bookmark dream destinations and access them anytime.",
+    "feature3Title": "Personalized Experience",
+    "feature3Desc": "Receive suggestions based on your travel style and history.",
+    "feature4Title": "24/7 Support",
+    "feature4Desc": "Need help? Our team is always here for you with fast and friendly assistance.",
+    "termsAgreement1": "By signing up, you agree to our",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "and": "and",
+    "needHelp": "Need help?",
+    "contactSupport": "Contact support"
+  }
+  
+  
+}
+
+
+
+
+
+
+
+
+

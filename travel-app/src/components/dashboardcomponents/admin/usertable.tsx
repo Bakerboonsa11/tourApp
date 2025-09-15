@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -37,6 +38,8 @@ export default function UserTable() {
   const [editModal, setEditModal] = useState<null | User>(null);
   const [deleteModal, setDeleteModal] = useState<null | User>(null);
   const [newRole, setNewRole] = useState('');
+
+  const t = useTranslations('admin');
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -83,11 +86,11 @@ export default function UserTable() {
         <table className="min-w-full bg-white border rounded-lg shadow-sm">
           <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
             <tr>
-              <th className="py-3 px-6 text-left">Profile</th>
-              <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3 px-6 text-left">Role</th>
-              <th className="py-3 px-6 text-left">Joined</th>
-              <th className="py-3 px-6 text-center">Actions</th>
+              <th className="py-3 px-6 text-left">{t('userTable.headers.profile')}</th>
+              <th className="py-3 px-6 text-left">{t('userTable.headers.email')}</th>
+              <th className="py-3 px-6 text-left">{t('userTable.headers.role')}</th>
+              <th className="py-3 px-6 text-left">{t('userTable.headers.joined')}</th>
+              <th className="py-3 px-6 text-center">{t('userTable.headers.actions')}</th>
             </tr>
           </thead>
           <tbody className="text-gray-700 text-sm divide-y divide-gray-200">
@@ -118,7 +121,7 @@ export default function UserTable() {
                       }}
                     >
                       <Edit className="h-4 w-4 mr-1" />
-                      Edit
+                      {t('userTable.buttons.edit')}
                     </Button>
                     <Button
                       size="sm"
@@ -127,7 +130,7 @@ export default function UserTable() {
                       onClick={() => setDeleteModal(user)}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Delete
+                      {t('userTable.buttons.delete')}
                     </Button>
                   </div>
                 </td>
@@ -141,30 +144,32 @@ export default function UserTable() {
       <Dialog open={!!editModal} onOpenChange={(open) => !open && setEditModal(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit User Role</DialogTitle>
-            <DialogDescription>Update the role for {editModal?.name}</DialogDescription>
+            <DialogTitle>{t('userTable.editModal.title')}</DialogTitle>
+            <DialogDescription>
+              {t('userTable.editModal.description')} {editModal?.name}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Label>Email</Label>
+            <Label>{t('userTable.editModal.email')}</Label>
             <Input value={editModal?.email ?? ''} readOnly />
 
-            <Label>New Role</Label>
+            <Label>{t('userTable.editModal.newRole')}</Label>
             <Select value={newRole} onValueChange={setNewRole}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a role" />
+                <SelectValue placeholder={t('userTable.editModal.selectRole')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="user">User</SelectItem>
-                <SelectItem value="guide">Editor</SelectItem>
+                <SelectItem value="admin">{t('userTable.editModal.roles.admin')}</SelectItem>
+                <SelectItem value="user">{t('userTable.editModal.roles.user')}</SelectItem>
+                <SelectItem value="guide">{t('userTable.editModal.roles.guide')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditModal(null)}>
-              Cancel
+              {t('userTable.buttons.cancel')}
             </Button>
-            <Button onClick={handleUpdateRole}>Update</Button>
+            <Button onClick={handleUpdateRole}>{t('userTable.buttons.update')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -173,18 +178,17 @@ export default function UserTable() {
       <Dialog open={!!deleteModal} onOpenChange={(open) => !open && setDeleteModal(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogTitle>{t('userTable.deleteModal.title')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete user{' '}
-              <strong>{deleteModal?.name}</strong>?
+              {t('userTable.deleteModal.description')} <strong>{deleteModal?.name}</strong>?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteModal(null)}>
-              Cancel
+              {t('userTable.buttons.cancel')}
             </Button>
             <Button variant="destructive" onClick={handleDeleteUser}>
-              Delete
+              {t('userTable.buttons.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

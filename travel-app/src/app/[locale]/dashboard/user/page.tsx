@@ -1,31 +1,34 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Sidebar } from '../../../components/dashboardcomponents/Sidebar';
-import { Topbar } from '../../../components/dashboardcomponents/topbar';
-import UserDashboardOverview from '../../../components/dashboardcomponents/user/overView';
-import BookingsSection from '../../../components/dashboardcomponents/user/booking';
+import { Sidebar } from '../../../../components/dashboardcomponents/Sidebar';
+import { Topbar } from '../../../../components/dashboardcomponents/topbar';
+import UserDashboardOverview from '../../../../components/dashboardcomponents/user/overView';
+import BookingsSection from '../../../../components/dashboardcomponents/user/booking';
 import UserProfile from '@/components/dashboardcomponents/user/userProfile';
 import ReviewsSection from '@/components/dashboardcomponents/user/review';
 import WishlistSection from '@/components/dashboardcomponents/user/wishlist';
-import Settings from '../../../components/dashboardcomponents/user/setting';
+import Settings from '../../../../components/dashboardcomponents/user/setting';
 import { Home, Users, Map } from 'lucide-react';
 import { Suspense } from 'react';
+import { useTranslations } from 'next-intl';
 
 // === NAVIGATION ITEMS ===
-const navItems = [
-  { section: 'user', label: 'Dashboard', Icon: Home },
-  { section: 'profile', label: 'Profile', Icon: Users },
-  { section: 'bookings', label: 'Bookings', Icon: Map },
-  { section: 'reviews', label: 'Reviews', Icon: Users },
-  { section: 'wishlist', label: 'Wishlist', Icon: Map },
-  { section: 'settings', label: 'Settings', Icon: Users },
-];
+
 
  function AdminDashboardHome() {
   const searchParams = useSearchParams();
   const section = searchParams.get('section') || 'user';
+  const t = useTranslations('user');
 
+  const navItems = [
+    { section: 'user', label: t('nav.dashboard'), Icon: Home },
+    { section: 'profile', label: t('nav.profile'), Icon: Users },
+    { section: 'bookings', label: t('nav.bookings'), Icon: Map },
+    { section: 'reviews', label: t('nav.reviews'), Icon: Users },
+    { section: 'wishlist', label: t('nav.wishlist'), Icon: Map },
+    { section: 'settings', label: t('nav.settings'), Icon: Users }
+  ];
   const renderContent = () => {
     switch (section) {
       case 'user':

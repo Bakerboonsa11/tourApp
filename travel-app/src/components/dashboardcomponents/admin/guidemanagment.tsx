@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import nodemailer from 'nodemailer';
+import { useTranslations } from 'next-intl';
 
 interface Guide {
   id: string;
@@ -40,8 +39,8 @@ export default function GuideManagement() {
   const [expandedGuideId, setExpandedGuideId] = useState<string | null>(null);
   const [tours, setTours] = useState<Tour[]>([]);
   const [loadingTours, setLoadingTours] = useState(false);
-
-
+  const t = useTranslations('admin');
+  
   const handleAssignTour = async (email: string, tourId: string, guideId: string, isAssigned: boolean) => {
     try {
       const tour = await axios.get(`/api/tours/${tourId}`);
@@ -128,10 +127,9 @@ export default function GuideManagement() {
   return (
     <section className=" max-h-screen overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-cyan-300 scrollbar-track-cyan-100    bg-gradient-to-br from-cyan-50 to-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-7xl mx-auto mt-6">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-cyan-900">Guide Management</h2>
+        <h2 className="text-3xl font-bold text-cyan-900">{t('guideManagement.title')}</h2>
         <p className="text-sm text-gray-600 mt-1">
-          View and assign registered guides to your tours with ease.
-        </p>
+        {t('guideManagement.description')}        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -173,13 +171,13 @@ export default function GuideManagement() {
                 className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white text-sm py-2 rounded-xl transition-all font-semibold"
                 onClick={() => handleToggleTours(guide.id)}
               >
-                {expandedGuideId === guide.id ? 'Hide Tours' : 'Assign to Tour'}
+                {expandedGuideId === guide.id ? t('guideManagement.hideTours') : t('guideManagement.assignToTour')}
               </Button>
 
               {expandedGuideId === guide.id && (
   <div className="mt-4 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-cyan-300 scrollbar-track-cyan-100 rounded-lg border border-cyan-200 shadow-inner bg-white">
     {loadingTours ? (
-      <p className="text-gray-500 text-sm p-4 text-center">Loading tours...</p>
+      <p className="text-gray-500 text-sm p-4 text-center">{t('guideManagement.loadingTours')}...</p>
     ) : tours.length > 0 ? (
       tours.map((tour) => {
         const isAssigned = tour.guides?.includes(guide.id);
@@ -202,13 +200,13 @@ export default function GuideManagement() {
                 handleAssignTour(guide.email, tour._id, guide.id, isAssigned ?? false)
               }
             >
-              {isAssigned ? 'Unassign' : 'Assign'}
+              {isAssigned ? t('guideManagement.unassign') : t('guideManagement.assign')}
             </Button>
           </div>
         );
       })
     ) : (
-      <p className="text-sm text-gray-500 p-4 text-center">No tours found.</p>
+      <p className="text-sm text-gray-500 p-4 text-center">{t('guideManagement.noToursFound')}.</p>
     )}
   </div>
 )}

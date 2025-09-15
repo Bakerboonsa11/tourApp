@@ -5,10 +5,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { usePathname } from 'next/navigation';
+
 
 export default function FloatingAdLink() {
   const [position, setPosition] = useState({ top: "0%", left: "0%" });
   const [visible, setVisible] = useState(true);
+    const pathname = usePathname();
+  
+  const lang = pathname.split('/')[1]; // "en" or "am" or "om"
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,7 +49,7 @@ export default function FloatingAdLink() {
       dragMomentum={false}
     >
    <Link
-  href="/itinerary"
+  href={`/${lang}/itinerary`}
   className="relative flex items-center justify-center w-16 h-16 rounded-full bg-yellow-300 text-gray-800 font-bold shadow-lg hover:scale-110 transition-transform"
 >
   🚀

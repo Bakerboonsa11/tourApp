@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import {connectDB }from './../../../lib/db';
+import {connectDB }from '../../../lib/db';
 import BookingModel from '@/model/bookings';
 import { getAll,createMany } from '../../../lib/factoryfun';
 

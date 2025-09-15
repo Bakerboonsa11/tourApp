@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-
+import createNextIintlPlugin from "next-intl/plugin";
 // const nextConfig: NextConfig = {
 //   /* config options here */
 // };
@@ -13,5 +13,6 @@ const nextConfig = {
     domains: ['lh3.googleusercontent.com'],
   },
 };
+const withNextIntl=createNextIintlPlugin()
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

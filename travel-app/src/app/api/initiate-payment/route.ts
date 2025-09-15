@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   if (existing) {
     return NextResponse.json({ message: 'You have already booked this tour.' }, { status: 400 });
   }
-
+ 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://tour-app-smoky.vercel.app';
   
   const tx_ref = `tx-${tourId}-${Date.now()}`;

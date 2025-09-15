@@ -10,7 +10,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react"; // spinner icon
-
+import { useTranslations } from "next-intl";
 interface User {
   _id: string;
   name: string;
@@ -27,7 +27,8 @@ export default function GuideSettings() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false); // track toggle update
-
+     const t = useTranslations('guideDashboard');
+  
   useEffect(() => {
     const fetchUser = async () => {
       const email = session?.user?.email;
@@ -80,13 +81,15 @@ export default function GuideSettings() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <Card className="shadow-lg rounded-2xl border border-gray-200">
         <CardHeader>
-          <CardTitle className="text-2xl text-green-700 font-bold">Guide Settings</CardTitle>
+          <CardTitle className="text-2xl text-green-700 font-bold">
+            {t("sett.guideSettings")}
+          </CardTitle>
           <CardDescription className="text-gray-500">
-            Manage your tour availability and profile info.
+            {t("sett.manageTourAvailability")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-
+  
           {/* Profile Info */}
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
@@ -103,21 +106,23 @@ export default function GuideSettings() {
               <p className="text-sm text-gray-500">{user.email}</p>
             </div>
           </div>
-
+  
           {/* Bio */}
           {user.bio && (
             <div>
-              <Label className="text-sm text-gray-600">Bio</Label>
-              <p className="text-gray-700 text-sm mt-1 bg-gray-50 p-3 rounded-md border">{user.bio}</p>
+              <Label className="text-sm text-gray-600">{t("sett.bio")}</Label>
+              <p className="text-gray-700 text-sm mt-1 bg-gray-50 p-3 rounded-md border">
+                {user.bio}
+              </p>
             </div>
           )}
-
+  
           <Separator />
-
+  
           {/* Availability Toggle */}
           <div className="flex items-center justify-between">
             <Label htmlFor="available" className="text-md font-medium">
-              Available for Tours
+              {t("sett.availableForTours")}
             </Label>
             <div className="flex items-center gap-2">
               {updating && (
@@ -131,9 +136,10 @@ export default function GuideSettings() {
               />
             </div>
           </div>
-
+  
         </CardContent>
       </Card>
     </div>
   );
+  
 }

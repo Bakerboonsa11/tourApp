@@ -5,6 +5,7 @@ import {
     CardDescription,
     CardContent,
   } from "@/components/ui/card";
+  import { useTranslations } from "next-intl";
   import { Button } from "@/components/ui/button";
   import {
     Avatar,
@@ -30,7 +31,8 @@ import {
   import { useEffect,useState } from "react";
   import axios from "axios";
   import { useSession } from 'next-auth/react';
-
+  import Link from "next/link";
+ import { useLocale } from "next-intl";
   interface User {
     _id: string;
     name: string;
@@ -51,7 +53,8 @@ import {
   export default function UserProfile() {
    const { data: session } = useSession();
    const [user ,setUser]=useState<User |null> (null)
-
+ const locale = useLocale();
+ const t = useTranslations("user");
 
   useEffect(() => {
     const email = session?.user?.email;
@@ -75,19 +78,15 @@ import {
   
     fetchUserData();
   }, [session]);
+
   return (
     <div className="max-w-6xl mx-auto p-6 md:p-10 space-y-8 bg-gradient-to-br from-emerald-50 via-white to-emerald-100 rounded-2xl">
       {/* Header */}
       <Card className="p-6 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <Avatar className="w-24 h-24 ring-4 ring-emerald-100 shadow-md">
-            <AvatarImage
-              src={user?.image?`/userimages/${user?.image}`:"/pro.png"}
-              alt="User profile"
-            />
-            <AvatarFallback className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold">
-              BB
-            </AvatarFallback>
+            <AvatarImage src={user?.image? `/userimages/${user?.image}` : "/pro.png"} alt="User profile" />
+            <AvatarFallback className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold">BB</AvatarFallback>
           </Avatar>
           <div className="flex-1 space-y-1 text-center md:text-left">
             <h2 className="text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
@@ -95,22 +94,19 @@ import {
             </h2>
             <p className="text-gray-500">{user?.role}</p>
             <p className="text-sm text-gray-500">
-              Last login:{" "}
+              {t("profile.activity.lastLogin")}:{" "}
               <span className="font-semibold text-emerald-700">
-                {user?.createdAt
-                  ? new Date(user.createdAt).toLocaleString()
-                  : "Unknown"}
+                {user?.createdAt ? new Date(user.createdAt).toLocaleString() : "Unknown"}
               </span>
             </p>
           </div>
           <div className="mt-4 md:mt-0">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-lg border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:scale-105 transition-all"
+            <Link
+              href={`/${locale}/edituser`}
+              className="inline-flex items-center justify-center rounded-lg border border-emerald-300 text-sm font-medium text-emerald-700 hover:bg-emerald-50 hover:scale-105 transition-all px-3 py-1.5"
             >
-              Edit Profile
-            </Button>
+              {t("profile.editProfile")}
+            </Link>
           </div>
         </div>
       </Card>
@@ -120,24 +116,22 @@ import {
         {/* Contact Info */}
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Contact Info</CardTitle>
-            <CardDescription className="text-gray-500">
-              Your personal contact details
-            </CardDescription>
+            <CardTitle className="text-lg font-bold">{t("profile.contactInfo.title")}</CardTitle>
+            <CardDescription className="text-gray-500">{t("profile.contactInfo.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <InfoRow icon={<Mail className="text-emerald-600" />} label="Email" value={user?.email} />
-            <InfoRow icon={<Phone className="text-emerald-600" />} label="Phone" value="+251 911 123 456" />
-            <InfoRow icon={<MapPin className="text-emerald-600" />} label="Location" value="Addis Ababa, Ethiopia" />
-            <InfoRow icon={<Calendar className="text-emerald-600" />} label="Joined" value={user?.createdAt} />
+            <InfoRow icon={<Mail className="text-emerald-600" />} label={t("profile.contactInfo.email")} value={user?.email} />
+            <InfoRow icon={<Phone className="text-emerald-600" />} label={t("profile.contactInfo.phone")} value="+251 911 123 456" />
+            <InfoRow icon={<MapPin className="text-emerald-600" />} label={t("profile.contactInfo.location")} value="Addis Ababa, Ethiopia" />
+            <InfoRow icon={<Calendar className="text-emerald-600" />} label={t("profile.contactInfo.joined")} value={user?.createdAt} />
           </CardContent>
         </Card>
   
         {/* Social Links */}
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Social Links</CardTitle>
-            <CardDescription className="text-gray-500">Connected accounts</CardDescription>
+            <CardTitle className="text-lg font-bold">{t("profile.socialLinks.title")}</CardTitle>
+            <CardDescription className="text-gray-500">{t("profile.socialLinks.description")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col space-y-2">
             <SocialButton icon={<Twitter className="text-sky-500" />} label={`${user?.socialMedia?.twitter}`} />
@@ -149,51 +143,52 @@ import {
         {/* Security */}
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Security</CardTitle>
+            <CardTitle className="text-lg font-bold">{t("profile.security.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <InfoRow icon={<Lock className="text-red-500" />} label="Password" value="********" action="Change" />
-            <InfoRow icon={<ShieldCheck className="text-emerald-600" />} label="2FA" value="Enabled" />
-            <InfoRow icon={<Smartphone className="text-blue-500" />} label="Devices" value="connected" />
-            <InfoRow icon={<LogOut className="text-red-500" />} label="Sessions" action="Logout" />
+            <InfoRow icon={<Lock className="text-red-500" />} label={t("profile.security.password")} value="********" action={t("profile.security.change")} />
+            <InfoRow icon={<ShieldCheck className="text-emerald-600" />} label={t("profile.security.2fa")} value="Enabled" />
+            <InfoRow icon={<Smartphone className="text-blue-500" />} label={t("profile.security.devices")} value="connected" />
+            <InfoRow icon={<LogOut className="text-red-500" />} label={t("profile.security.sessions")} action={t("profile.security.logout")} />
           </CardContent>
         </Card>
   
         {/* Notifications */}
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Notifications</CardTitle>
+            <CardTitle className="text-lg font-bold">{t("profile.notifications.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <InfoRow icon={<Bell className="text-emerald-600" />} label="Email Alerts" value="Enabled" />
-            <InfoRow icon={<Bell className="text-gray-400" />} label="SMS Alerts" value="Disabled" />
+            <InfoRow icon={<Bell className="text-emerald-600" />} label={t("profile.notifications.emailAlerts")} value="Enabled" />
+            <InfoRow icon={<Bell className="text-gray-400" />} label={t("profile.notifications.smsAlerts")} value="Disabled" />
           </CardContent>
         </Card>
   
         {/* Activity */}
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Recent Activity</CardTitle>
+            <CardTitle className="text-lg font-bold">{t("profile.activity.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <InfoRow icon={<Activity className="text-emerald-600" />} label="Last login" value="Chrome on Ubuntu" />
-            <InfoRow icon={<Calendar className="text-emerald-600" />} label="Last activity" value="2 hours ago" />
+            <InfoRow icon={<Activity className="text-emerald-600" />} label={t("profile.activity.lastLogin")} value="Chrome on Ubuntu" />
+            <InfoRow icon={<Calendar className="text-emerald-600" />} label={t("profile.activity.lastActivity")} value="2 hours ago" />
           </CardContent>
         </Card>
   
         {/* Billing */}
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">Billing</CardTitle>
+            <CardTitle className="text-lg font-bold">{t("profile.billing.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <InfoRow icon={<CreditCard className="text-emerald-600" />} label="Plan" value="Premium" />
-            <InfoRow icon={<CreditCard className="text-yellow-500" />} label="Next Billing" value="Aug 12, 2025" />
+            <InfoRow icon={<CreditCard className="text-emerald-600" />} label={t("profile.billing.plan")} value="Premium" />
+            <InfoRow icon={<CreditCard className="text-yellow-500" />} label={t("profile.billing.nextBilling")} value="Aug 12, 2025" />
           </CardContent>
         </Card>
       </div>
     </div>
   );
+  
   
   }
   

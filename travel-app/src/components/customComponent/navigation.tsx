@@ -9,6 +9,10 @@ import Image from 'next/image';
 import axios from 'axios';
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import LanguageSwitcher from './../customComponent/langSwich';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 import {
   DropdownMenu,
@@ -31,6 +35,10 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
+  const locale = useLocale();
+  const t = useTranslations('navbar');
+  const pathname = usePathname();
+  const lang = pathname.split('/')[1];
 
   useEffect(() => {
     const email = session?.user?.email;
@@ -49,207 +57,201 @@ export default function Navbar() {
     fetchUserData();
   }, [session]);
 
-  if (status === 'loading') return null;
-
   const profileImage = user?.image
-    ? `/userimages/${user?.image}`
-    : !user?.image
-    ? `/userimages/${session?.user.image}`
+    ? `/userimages/${user.image}`
+    : session?.user?.image
+    ? `/userimages/${session.user.image}`
     : '/pro.png';
 
+  const navLinks = [
+    { href: `/${locale}/tours/All`, label: t('tours') },
+    { href: `/${locale}/about`, label: t('about') },
+    ...(session?.user ? [{ href: `/${locale}/dashboard/${session.user.role}`, label: t('dashboard') }] : []),
+  ];
+
+  if (status === 'loading') {
+    return (
+      <header className="sticky top-0 z-50 h-16 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto max-w-6xl flex items-center justify-between h-full px-4">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-muted animate-pulse"></div>
+            <div className="h-6 w-24 rounded bg-muted animate-pulse"></div>
+          </div>
+          <div className="hidden md:flex items-center gap-6">
+            <div className="h-5 w-16 rounded bg-muted animate-pulse"></div>
+            <div className="h-5 w-16 rounded bg-muted animate-pulse"></div>
+          </div>
+          <div className="h-9 w-20 rounded-md bg-muted animate-pulse hidden md:block"></div>
+          <div className="md:hidden h-9 w-9 rounded-md bg-muted animate-pulse"></div>
+        </div>
+      </header>
+    );
+  }
+
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
-      <div className="container mx-auto max-w-6xl flex justify-between items-center p-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         
         {/* Logo */}
-        <div className="flex items-center space-x-3">
+        <Link href={`/${lang}`} className="flex items-center gap-3">
           <Image
             src="/static/log.png"
             alt="logo"
-            width={55}
-            height={55}
-            className="rounded-full object-cover border-2 border-green-600 shadow-lg"
+            width={40}
+            height={40}
+            className="rounded-full object-cover"
           />
-          <Link
-            href="/"
-            className="text-2xl md:text-3xl font-extrabold text-green-700 tracking-wide hover:opacity-90 transition"
-          >
-            Ethio-Visit
-          </Link>
-        </div>
+          <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">
+            {t('logo')}
+          </span>
+        </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/tours/All" className="text-gray-700 hover:text-green-600 font-medium">
-            Tours
-          </Link>
-          <Link href="/about" className="text-gray-700 hover:text-green-600 font-medium">
-            About Us
-          </Link>
-
-          {session?.user && (
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+          {navLinks.map((link) => (
             <Link
-              href={`/dashboard/${session.user.role}`}
-              className="text-gray-700 hover:text-green-600 font-medium"
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "font-medium transition-colors hover:text-primary",
+                pathname.startsWith(link.href) ? "text-foreground" : "text-muted-foreground"
+              )}
             >
-              Dashboard
+              {link.label}
             </Link>
-          )}
+          ))}
+        </nav>
 
+        <div className="hidden md:flex items-center justify-end gap-4">
           {session?.user ? (
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 shadow-sm">
-                <Image
-                  src={profileImage}
-                  alt="profile"
-                  width={40}
-                  height={40}
-                  className="object-cover w-full h-full"
-                />
-              </div>
+            <div className="flex items-center gap-4">
+             <Link href={`/${locale}/dashboard/${session.user.role}`}>
+  <Image
+    src={profileImage}
+    alt="profile"
+    width={40}
+    height={40}
+    className="w-10 h-10 rounded-full object-cover border-2 border-transparent hover:border-primary transition-colors"
+  />
+</Link>
+
               <Button
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="bg-green-600 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:bg-green-700 hover:scale-105 transition-all"
+                variant="secondary"
               >
-                Sign Out
+                {t('signout')}
               </Button>
             </div>
           ) : (
-            <Link
-              href="/login"
-              className="bg-green-600 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:bg-green-700 hover:scale-105 transition-all"
-            >
-              Login
-            </Link>
+            <Button asChild>
+              <Link href={`/${locale}/login`}>{t('login')}</Link>
+            </Button>
           )}
-
-          {/* Desktop Theme Toggle */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative rounded-full p-2
-                           bg-gradient-to-r from-amber-400 to-pink-500 
-                           dark:from-indigo-500 dark:to-purple-600
-                           text-white shadow-lg shadow-amber-500/30 dark:shadow-indigo-500/30
-                           hover:shadow-xl hover:scale-105
-                           transition-all duration-300 ease-out"
-              >
-                <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1">
-              <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </nav>
+                 
+          {/* Desktop Theme Toggle & Language */}
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">{t('toggleTheme')}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>{t('light')}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>{t('dark')}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>{t('system')}</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <LanguageSwitcher />
+          </div>
+        </div>
 
         {/* Mobile Navigation */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden w-12 h-12 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 transition-all"
-            >
-              <Menu className="w-7 h-7" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-72 p-6 bg-white dark:bg-gray-900">
-            <div className="flex flex-col space-y-5">
-              <Link href="/" className="text-lg font-medium text-gray-800 dark:text-gray-200">
-                Home
-              </Link>
-              <Link href="/tours/All" className="text-lg font-medium text-gray-800 dark:text-gray-200">
-                Tours
-              </Link>
-              <Link href="/about" className="text-lg font-medium text-gray-800 dark:text-gray-200">
-                About Us
-              </Link>
-
-              {session?.user && (
-                <Link
-                  href={`/dashboard/${session.user.role}`}
-                  className="text-lg font-medium text-gray-800 dark:text-gray-200"
-                >
-                  Dashboard
+        <div className="md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] flex flex-col">
+              <nav className="mt-8 flex flex-col gap-6">
+                <Link href={`/${lang}`} className="flex items-center gap-3 mb-4">
+                  <Image
+                    src="/static/log.png"
+                    alt="logo"
+                    width={32}
+                    height={32}
+                    className="rounded-full object-cover"
+                  />
+                  <span className="text-xl font-bold">{t('logo')}</span>
                 </Link>
-              )}
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={cn(
+                      "text-lg font-medium transition-colors hover:text-primary",
+                      pathname.startsWith(link.href) ? "text-foreground" : "text-muted-foreground"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
 
-              {/* Theme Toggle in Mobile */}
-              <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="mt-auto flex flex-col gap-4">
+                <div className="pt-4 border-t">
+                  <LanguageSwitcher />
+                </div>
+                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full flex justify-center rounded-full
-                                 bg-gradient-to-r from-amber-400 to-pink-500 
-                                 dark:from-indigo-500 dark:to-purple-600
-                                 text-white shadow-md hover:shadow-lg transition-all"
-                    >
-                      <Sun className="h-5 w-5 dark:hidden" />
-                      <Moon className="h-5 w-5 hidden dark:block" />
-                      <span className="ml-2">Toggle Theme</span>
+                    <Button variant="outline" className="w-full justify-center">
+                      <Sun className="h-5 w-5 mr-2 dark:hidden" />
+                      <Moon className="h-5 w-5 mr-2 hidden dark:block" />
+                      <span>{t('toggleTheme')}</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-1">
-                    <DropdownMenuItem onClick={() => setTheme("light")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-                      Light
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("dark")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-                      Dark
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setTheme("system")} className="hover:bg-amber-100 dark:hover:bg-indigo-600">
-                      System
-                    </DropdownMenuItem>
+                  <DropdownMenuContent align="center" className="w-[268px]">
+                    <DropdownMenuItem onClick={() => setTheme("light")}>{t('light')}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>{t('dark')}</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")}>{t('system')}</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
 
-              {session?.user ? (
-                <>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-300">
+                {session?.user ? (
+                  <div className="flex flex-col gap-4">
+                    <Link href={`/${locale}/dashboard/${session.user.role}`} className="flex items-center gap-3 rounded-md border p-2 bg-muted/50">
                       <Image
                         src={profileImage}
                         alt="profile"
-                        width={36}
-                        height={36}
-                        className="object-cover w-full h-full"
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
                       />
-                    </div>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">{session.user.name}</span>
+      
+                      <div>
+                        <p className="font-semibold">{session.user.name}</p>
+                        <p className="text-sm text-muted-foreground">{session.user.email}</p>
+                      </div>
+                    </Link>
+                    <Button onClick={() => signOut({ callbackUrl: '/' })}>
+                      {t('signout')}
+                    </Button>
                   </div>
-                  <Button
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    className="bg-green-600 text-white px-4 py-2 rounded-full font-medium shadow hover:bg-green-700 transition"
-                  >
-                    Sign Out
+                ) : (
+                  <Button asChild className="w-full">
+                    <Link href={`/${locale}/login`}>{t('login')}</Link>
                   </Button>
-                </>
-              ) : (
-                <Link
-                  href="/login"
-                  className="bg-green-600 text-white px-4 py-2 rounded-full font-medium shadow hover:bg-green-700 transition text-center"
-                >
-                  Login
-                </Link>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

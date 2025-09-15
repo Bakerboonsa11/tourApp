@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: NextRequest) => {
   await connectDB();
-
+  
   const url = new URL(req.url);
   const id = url.pathname.split('/').pop();
 
