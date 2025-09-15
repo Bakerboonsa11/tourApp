@@ -6,19 +6,20 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SessionWrapper } from "@/components/customComponent/session-provider";
 import Navbar from "@/components/customComponent/navigation";
 import { Geist, Geist_Mono } from "next/font/google";
+import type { ReactNode } from "react";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-// @ts-expect-error
+// Define the props type for your async layout
+type LocaleLayoutProps = {
+  children: ReactNode;
+  params: {
+    locale: string;
+  };
+};
 
-export default async function LocaleLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = params;
 
   if (!hasLocale(routing.locales, locale)) {
