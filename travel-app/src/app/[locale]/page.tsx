@@ -132,15 +132,15 @@ const t = useTranslations("home");
       </section>
 
       {/* Redesigned Trusted Partners Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Our Trusted Partners</h2>
+      <section className="py-12 bg-gray-50 dark:bg-gray-800">
+        <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Our Trusted Partners</h2>
         </div>
         <div className="relative w-full overflow-hidden">
             <div className="flex animate-marquee">
                 {partners.map((partner, i) => (
-                    <div key={`p1-${i}`} className="flex-shrink-0 w-64 mx-8 flex items-center justify-center">
-                        <Image src={partner.logo} alt={partner.name} width={150} height={60} className="object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+                    <div key={`p1-${i}`} className="flex-shrink-0 w-24 sm:w-32 mx-4 flex items-center justify-center">
+                        <Image src={partner.logo} alt={partner.name} width={80} height={30} className="object-contain grayscale hover:grayscale-0 transition-all duration-300" />
                     </div>
                 ))}
             </div>
@@ -150,7 +150,7 @@ const t = useTranslations("home");
                     100% { transform: translateX(-50%); }
                 }
                 .animate-marquee {
-                    animation: marquee 30s linear infinite;
+                    animation: marquee 8s linear infinite;
                 }
             `}</style>
         </div>

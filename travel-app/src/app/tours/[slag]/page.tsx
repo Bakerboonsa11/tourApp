@@ -564,42 +564,63 @@ const [selectedType, setSelectedType] = useState(initialType);
 {/* FAQ Section */}
 <animated.section
   style={fadeIn}
-  className="bg-green-50 rounded-xl p-10 shadow-md hover:shadow-xl transition transform hover:scale-[1.02] duration-300"
+  className="relative bg-gradient-to-br from-green-50 via-white to-green-100 rounded-2xl px-6 sm:px-12 py-16 shadow-lg border border-green-100 max-w-6xl mx-auto"
 >
-  <div className="flex items-center gap-3 mb-6">
-    <HelpCircle className="text-green-700 w-6 h-6" />
-    <h2 className="text-3xl font-extrabold text-green-900">Frequently Asked Questions ❓</h2>
+  {/* Section Header */}
+  <div className="flex flex-col items-center text-center mb-12">
+    <div className="flex items-center gap-3 mb-4">
+      <HelpCircle className="text-green-700 w-8 h-8 drop-shadow" />
+      <h2 className="text-4xl sm:text-5xl font-extrabold text-green-900 tracking-tight">
+        Frequently Asked Questions
+      </h2>
+    </div>
+    <p className="text-lg text-green-700 max-w-2xl">
+      Find quick answers to the most common questions we receive.
+    </p>
   </div>
 
-  <ul className="divide-y divide-green-200">
+  {/* FAQ List */}
+  <ul className="space-y-6">
     {faqs.map(({ question, answer }, i) => (
       <li
         key={i}
-        className="py-3 cursor-pointer select-none"
-        onClick={() => openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i)}
+        className="group bg-white/80 backdrop-blur rounded-xl border border-green-100 p-6 shadow-sm hover:shadow-xl hover:border-green-300 transition-all duration-300 cursor-pointer"
+        onClick={() =>
+          openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i)
+        }
         aria-expanded={openFaqIndex === i}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') {
-          openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i);
-        }}}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            openFaqIndex === i ? setOpenFaqIndex(-1) : setOpenFaqIndex(i);
+          }
+        }}
       >
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-green-900">{question}</h3>
+          <h3 className="text-xl font-semibold text-green-900 group-hover:text-green-700 transition">
+            {question}
+          </h3>
           <span
-            className="text-2xl transition-transform duration-300 text-green-700"
-            style={{ transform: openFaqIndex === i ? 'rotate(45deg)' : 'rotate(0deg)' }}
+            className={`text-3xl font-bold text-green-600 transform transition-transform duration-300 ${
+              openFaqIndex === i ? "rotate-45" : "rotate-0"
+            }`}
           >
             +
           </span>
         </div>
+
+        {/* Answer */}
         {openFaqIndex === i && (
-          <p className="mt-2 text-green-800">{answer}</p>
+          <p className="mt-4 text-green-800 leading-relaxed">
+            {answer}
+          </p>
         )}
       </li>
     ))}
   </ul>
 </animated.section>
+
 
 {/* Testimonials Section */}
 

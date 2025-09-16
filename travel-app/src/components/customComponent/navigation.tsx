@@ -35,6 +35,7 @@ export default function Navbar() {
   const { data: session, status } = useSession();
   const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const locale = useLocale();
   const t = useTranslations('navbar');
   const pathname = usePathname();
@@ -68,6 +69,10 @@ export default function Navbar() {
     { href: `/${locale}/about`, label: t('about') },
     ...(session?.user ? [{ href: `/${locale}/dashboard/${session.user.role}`, label: t('dashboard') }] : []),
   ];
+
+  const handleLinkClick = () => {
+    setIsSheetOpen(false);
+  };
 
   if (status === 'loading') {
     return (
@@ -170,16 +175,21 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden">
-          <Sheet>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] flex flex-col">
-              <nav className="mt-8 flex flex-col gap-6">
-                <Link href={`/${lang}`} className="flex items-center gap-3 mb-4">
+            <SheetContent side="right" className="w-[300px] flex flex-col p-0">
+              <div className="relative h-40 bg-cover bg-center" style={{ backgroundImage: "url('/static/ethio4.webp')" }}>
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                  <h2 className="text-2xl font-bold text-white">Visitoro</h2>
+                </div>
+              </div>
+              <nav className="mt-6 flex flex-col gap-6 px-6">
+                <Link href={`/${lang}`} className="flex items-center gap-3 mb-4" onClick={handleLinkClick}>
                   <Image
                     src="/static/log.png"
                     alt="logo"
@@ -193,6 +203,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={handleLinkClick}
                     className={cn(
                       "text-lg font-medium transition-colors hover:text-primary",
                       pathname.startsWith(link.href) ? "text-foreground" : "text-muted-foreground"
@@ -203,10 +214,8 @@ export default function Navbar() {
                 ))}
               </nav>
 
-              <div className="mt-auto flex flex-col gap-4">
-                <div className="pt-4 border-t">
-                  <LanguageSwitcher />
-                </div>
+              <div className="mt-auto flex flex-col gap-4 p-6 border-t">
+                <LanguageSwitcher />
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -216,7 +225,7 @@ export default function Navbar() {
                       <span>{t('toggleTheme')}</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="w-[268px]">
+                  <DropdownMenuContent align="center" className="w-[248px]">
                     <DropdownMenuItem onClick={() => setTheme("light")}>{t('light')}</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setTheme("dark")}>{t('dark')}</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setTheme("system")}>{t('system')}</DropdownMenuItem>
@@ -225,7 +234,7 @@ export default function Navbar() {
 
                 {session?.user ? (
                   <div className="flex flex-col gap-4">
-                    <Link href={`/${locale}/dashboard/${session.user.role}`} className="flex items-center gap-3 rounded-md border p-2 bg-muted/50">
+                    <Link href={`/${locale}/dashboard/${session.user.role}`} onClick={handleLinkClick} className="flex items-center gap-3 rounded-md border p-2 bg-muted/50">
                       <Image
                         src={profileImage}
                         alt="profile"
@@ -239,13 +248,16 @@ export default function Navbar() {
                         <p className="text-sm text-muted-foreground">{session.user.email}</p>
                       </div>
                     </Link>
-                    <Button onClick={() => signOut({ callbackUrl: '/' })}>
+                    <Button onClick={() => {
+                      signOut({ callbackUrl: '/' });
+                      handleLinkClick();
+                    }}>
                       {t('signout')}
                     </Button>
                   </div>
                 ) : (
                   <Button asChild className="w-full">
-                    <Link href={`/${locale}/login`}>{t('login')}</Link>
+                    <Link href={`/${locale}/login`} onClick={handleLinkClick}>{t('login')}</Link>
                   </Button>
                 )}
               </div>
