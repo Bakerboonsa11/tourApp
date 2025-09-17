@@ -41,7 +41,7 @@ export default function LanguageSwitcher() {
 
       {/* Dropdown Menu */}
       <div
-        className={`absolute right-0 mt-2 w-36 bg-white rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 overflow-hidden z-50 transform transition-all duration-300 origin-top ${
+        className={`absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 overflow-hidden z-50 transform transition-all duration-300 origin-top ${
           open ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
         }`}
       >
@@ -49,7 +49,7 @@ export default function LanguageSwitcher() {
           <li>
             <button
               onClick={() => changeLanguage('en')}
-              className="w-full text-left px-4 py-2 hover:bg-green-100 transition-all text-sm font-medium"
+              className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-gray-700 transition-all text-sm font-medium"
             >
               English
             </button>
@@ -57,7 +57,7 @@ export default function LanguageSwitcher() {
           <li>
             <button
               onClick={() => changeLanguage('am')}
-              className="w-full text-left px-4 py-2 hover:bg-green-100 transition-all text-sm font-medium"
+              className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-gray-700 transition-all text-sm font-medium"
             >
               Amharic
             </button>
@@ -65,7 +65,7 @@ export default function LanguageSwitcher() {
           <li>
             <button
               onClick={() => changeLanguage('om')}
-              className="w-full text-left px-4 py-2 hover:bg-green-100 transition-all text-sm font-medium"
+              className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-gray-700 transition-all text-sm font-medium"
             >
               Afaan Oromo
             </button>
