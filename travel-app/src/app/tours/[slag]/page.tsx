@@ -348,9 +348,9 @@ const [selectedType, setSelectedType] = useState(initialType);
 
 
       {/* Seasonal Deals */}
-      <section className="text-center p-8 bg-yellow-100 rounded-xl shadow space-y-3">
-        <h2 className="text-3xl font-bold">Seasonal Special Deals 🌞</h2>
-        <p className="text-lg">Check out our hand-picked seasonal tour packages and save up to 30% on selected tours.</p>
+      <section className="text-center p-8 bg-yellow-100 rounded-xl shadow space-y-3 dark:text-black">
+        <h2 className="text-3xl font-bold  dark:text-black">Seasonal Special Deals 🌞</h2>
+        <p className="text-lg  dark:text-black">Check out our hand-picked seasonal tour packages and save up to 30% on selected tours.</p>
       </section>
 
    {/* Filters */}

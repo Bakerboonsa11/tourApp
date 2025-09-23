@@ -107,7 +107,7 @@ export default function BookingsSection() {
                 </CardHeader>
                 <CardContent className="px-6 py-5 text-green-800 space-y-4 text-base">
                   <p>
-                    <span className="font-medium">{t("book.price")}:</span> ${booking.price}
+                    <span className="font-medium">{t("book.price")}:</span> ETB {booking.price}
                   </p>
                   <p>
                     <span className="font-medium">{t("book.created")}:</span>{" "}

@@ -134,7 +134,7 @@ export default function CardCarouselCH() {
                   <div className="flex items-end justify-between">
                     <div>
                       <p className="text-sm text-gray-300">Price</p>
-                      <p className="text-3xl font-bold text-emerald-400 leading-tight">Br {card.price.toLocaleString()}</p>
+                      <p className="text-3xl font-bold text-emerald-400 leading-tight">ETB {card.price.toLocaleString()}</p>
                     </div>
                     <Link href={`/${locale}/detail/${card._id}`} className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm text-white font-semibold px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
                       Details <ArrowRight size={16} />

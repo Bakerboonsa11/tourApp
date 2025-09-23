@@ -24,10 +24,10 @@ export async function POST(request: Request) {
         <h1>Thank you for booking ${tourName}!</h1>
         <p>Your booking was successful.</p>
         <ul>
-          <li><strong>Tour:</strong> ${tourName}</li>
-          <li><strong>Price:</strong> $${price}</li>
-          <li><strong>Start Date:</strong> ${startDates}</li>
-          <li><strong>Duration:</strong> ${duration} days</li>
+          <li><strong>Tour:</strong> {tourName}</li>
+          <li><strong>Price:</strong> ETB {price}</li>
+          <li><strong>Start Date:</strong> {startDates}</li>
+          <li><strong>Duration:</strong> {duration} days</li>
         </ul>
         <p>See you soon!</p>
       `,

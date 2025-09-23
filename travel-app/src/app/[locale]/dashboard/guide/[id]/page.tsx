@@ -210,7 +210,7 @@ export default function GuideDetailPage() {
             <div className="flex-1">
               <h3 className="text-lg font-bold text-gray-800">{book.tour.name}</h3>
               <p className="text-sm text-gray-600">
-                <span className="font-medium">{t('price')}:</span> ${book.price} &bull;{" "}
+                <span className="font-medium">{t('price')}:</span> ETB {book.price} &bull;{" "}
                 <span className="font-medium">{t('status')}:</span> {book.status}
               </p>
               <p className="text-xs text-gray-400">

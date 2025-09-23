@@ -47,12 +47,12 @@ export async function PATCH(req: NextRequest) {
         to: admin.email,
         subject: 'We are notifying you 🎉',
         html: `
-          <h1>Guide ${updatedUser.name} is ${availabilityStatus} to guide assigned tours</h1>
+          <h1>Guide {updatedUser.name} is {availabilityStatus} to guide assigned tours</h1>
           <ul>
-            <li><strong>User:</strong> Guide ${updatedUser.name}</li>
-            <li><strong>At:</strong> ${new Date().toLocaleString()}</li>
+            <li><strong>User:</strong> Guide {updatedUser.name}</li>
+            <li><strong>At:</strong> {new Date().toLocaleString()}</li>
           </ul>
-          <p>Try to connect through ${updatedUser.email}</p>
+          <p>Try to connect through {updatedUser.email}</p>
         `,
       });
     }

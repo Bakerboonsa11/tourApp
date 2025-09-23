@@ -93,9 +93,9 @@ export default function Home() {
               onChange={(e) => setBudget(e.target.value)}
               className="w-full p-3 rounded-xl border border-green-300 focus:outline-none focus:ring-2 focus:ring-green-400"
             >
-              <option value="low">💸 Low</option>
-              <option value="medium">💵 Medium</option>
-              <option value="luxury">💎 Luxury</option>
+              <option value="low">ETB Low</option>
+              <option value="medium">ETB Medium</option>
+              <option value="luxury">ETB Luxury</option>
             </select>
           </div>
 

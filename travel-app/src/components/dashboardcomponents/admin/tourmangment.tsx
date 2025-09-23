@@ -166,7 +166,7 @@ export default function ToursManagement() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-cyan-700">${tour.price}</p>
+                    <p className="font-bold text-cyan-700">ETB {tour.price}</p>
                     <Badge
                       className={`${statusColors['active' as keyof typeof statusColors]} mt-1 capitalize`}
                     >

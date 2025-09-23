@@ -198,7 +198,7 @@ export default function ReviewsSection() {
                       {/* Additional Tour Info */}
                       <div className="text-sm text-gray-600 space-y-1">
                         <p><strong>{t('review.region')}:</strong> {tour.region}</p>
-                        <p><strong>{t('review.price')}:</strong> ${tour.price}</p>
+                        <p><strong>{t('review.price')}:</strong> ETB {tour.price}</p>
                         <p><strong>{t('review.difficulty')}:</strong> {tour.difficulty}</p>
                         <p><strong>{t('review.duration')}:</strong> {tour.duration} {t('review.days')}</p>
                       </div>

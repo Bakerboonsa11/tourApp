@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: 'You have been assigned as a guide 🎉',
       html: `
-        <h1>You are assigned to guide the ${tourName} Tour</h1>
-        <p>Description: ${des}</p>
+        <h1>You are assigned to guide the {tourName} Tour</h1>
+        <p>Description: {des}</p>
         <p>If you can't guide this tour, contact us.</p>
       `,
     });

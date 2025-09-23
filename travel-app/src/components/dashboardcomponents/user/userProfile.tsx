@@ -92,8 +92,8 @@ import {
             <h2 className="text-3xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
               {user?.name}
             </h2>
-            <p className="text-gray-500">{user?.role}</p>
-            <p className="text-sm text-gray-500">
+            <p className="text-muted-foreground">{user?.role}</p>
+            <p className="text-sm text-muted-foreground">
               {t("profile.activity.lastLogin")}:{" "}
               <span className="font-semibold text-emerald-700">
                 {user?.createdAt ? new Date(user.createdAt).toLocaleString() : "Unknown"}
@@ -117,7 +117,7 @@ import {
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
             <CardTitle className="text-lg font-bold">{t("profile.contactInfo.title")}</CardTitle>
-            <CardDescription className="text-gray-500">{t("profile.contactInfo.description")}</CardDescription>
+            <CardDescription className="text-muted-foreground">{t("profile.contactInfo.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <InfoRow icon={<Mail className="text-emerald-600" />} label={t("profile.contactInfo.email")} value={user?.email} />
@@ -131,7 +131,7 @@ import {
         <Card className="p-4 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg hover:shadow-xl transition-all">
           <CardHeader>
             <CardTitle className="text-lg font-bold">{t("profile.socialLinks.title")}</CardTitle>
-            <CardDescription className="text-gray-500">{t("profile.socialLinks.description")}</CardDescription>
+            <CardDescription className="text-muted-foreground">{t("profile.socialLinks.description")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col space-y-2">
             <SocialButton icon={<Twitter className="text-sky-500" />} label={`${user?.socialMedia?.twitter}`} />
@@ -207,7 +207,7 @@ import {
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <span className="text-muted-foreground">{icon}</span>
-          <span className="font-medium">{label}:</span>
+          <span className="font-medium text-foreground">{label}:</span>
         </div>
         <div className="flex items-center gap-2 text-right">
           {value && <span className="font-semibold text-foreground">{value}</span>}
@@ -223,7 +223,7 @@ import {
   
   function SocialButton({ icon, label }: { icon: React.ReactNode; label: string }) {
     return (
-      <Button variant="outline" className="justify-start gap-2 text-sm">
+      <Button variant="outline" className="justify-start gap-2 text-sm text-foreground">
         {icon}
         {label}
       </Button>

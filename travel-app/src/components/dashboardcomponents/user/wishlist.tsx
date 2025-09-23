@@ -183,7 +183,7 @@ export default function Wishlist() {
                   {item.duration} {t('wish.days')}
                 </div>
                 <div className="absolute bottom-4 right-4 bg-white/80 text-sky-800 font-bold px-4 py-1 rounded-full shadow text-sm">
-                  ${item.price}
+                  ETB {item.price}
                 </div>
               </div>
     

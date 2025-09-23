@@ -261,7 +261,7 @@ export default function Formedit() {
         />
 
         <InputBlock
-          label="Price ($)"
+          label="Price (ETB)"
           type="number"
           value={editFields.price}
           onChange={(val) => handleFieldChange('price', parseFloat(val))}

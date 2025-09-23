@@ -44,11 +44,11 @@ export async function DELETE(
               to:deletedUser.email,
               subject: 'we are notifiying u that  🎉',
               html: `
-                <h1> dear our customer ${deletedUser.name} you are not our user after thanck you for your time   </h1>
+                <h1> dear our customer {deletedUser.name} you are not our user after thanck you for your time   </h1>
                 
                 <ul>
-                  <li><strong>user:</strong> dear  ${deletedUser.name}</li>
-                  <li><strong>at:</strong> ${Date.now().toLocaleString()}</li>
+                  <li><strong>user:</strong> dear  {deletedUser.name}</li>
+                  <li><strong>at:</strong> {Date.now().toLocaleString()}</li>
               
                 </ul>
                 <p> hope see you again  </p>
@@ -115,14 +115,14 @@ export async function PATCH(req: NextRequest) {
       to: updatedUser.email,
       subject: 'we are notifiying u that  🎉',
       html: `
-        <h1> dear our member  ${updatedUser.name}! user data is changed sign in to website and see it </h1>
+        <h1> dear our member  {updatedUser.name}! user data is changed sign in to website and see it </h1>
         
         <ul>
-          <li><strong>user:</strong> user ure role is   ${updatedUser.role}</li>
+          <li><strong>user:</strong> user ure role is   {updatedUser.role}</li>
           <!-- CORRECTED: Use 'new Date()' to get a proper Date object before calling toLocaleString() -->
-          <li><strong>at:</strong> ${new Date().toLocaleString()}</li>
+          <li><strong>at:</strong> {new Date().toLocaleString()}</li>
         </ul>
-        <p>try and ur email is  ${updatedUser.email} </p>
+        <p>try and ur email is  {updatedUser.email} </p>
       `,
     });
 

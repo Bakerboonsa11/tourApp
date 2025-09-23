@@ -229,24 +229,24 @@ export default function BookingsSection() {
       
               <div class="section">
                 <div class="section-title">👤 Customer Info</div>
-                <div class="info"><strong>Name:</strong> ${data.first_name}</div>
-                <div class="info"><strong>Email:</strong> ${user.data.data.email}</div>
+                <div class="info"><strong>Name:</strong> {data.first_name}</div>
+                <div class="info"><strong>Email:</strong> {user.data.data.email}</div>
               </div>
       
               <div class="section">
                 <div class="section-title">💳 Payment Details 
-                  <span class="badge">${data.status.toUpperCase()}</span>
+                  <span class="badge">{data.status.toUpperCase()}</span>
                 </div>
-                <div class="info"><strong>Transaction ID:</strong> ${data.tx_ref}</div>
-                <div class="info"><strong>Amount:</strong> <span class="highlight">${data.amount} ${data.currency}</span></div>
-                <div class="info"><strong>Date:</strong> ${new Date(data.created_at).toLocaleString()}</div>
+                <div class="info"><strong>Transaction ID:</strong> {data.tx_ref}</div>
+                <div class="info"><strong>Amount:</strong> <span class="highlight">{data.amount} {data.currency}</span></div>
+                <div class="info"><strong>Date:</strong> {new Date(data.created_at).toLocaleString()}</div>
               </div>
       
               <div class="section">
                 <div class="section-title">🌍 Tour Info</div>
-                <div class="info"><strong>Tour Name:</strong> ${data.tour?.name ?? 'N/A'}</div>
-                <div class="info"><strong>Region:</strong> ${data.tour?.region ?? 'N/A'}</div>
-                <div class="info"><strong>Duration:</strong> ${data.tour?.duration ?? 'N/A'} days</div>
+                <div class="info"><strong>Tour Name:</strong> {data.tour?.name ?? 'N/A'}</div>
+                <div class="info"><strong>Region:</strong> {data.tour?.region ?? 'N/A'}</div>
+                <div class="info"><strong>Duration:</strong> {data.tour?.duration ?? 'N/A'} days</div>
               </div>
       
               <div class="footer">
@@ -271,7 +271,7 @@ export default function BookingsSection() {
                 const width = pdf.internal.pageSize.getWidth();
                 const height = (canvas.height * width) / canvas.width;
                 pdf.addImage(imgData, 'PNG', 0, 0, width, height);
-                pdf.save('${data.tx_ref}_receipt.pdf');
+                pdf.save('{data.tx_ref}_receipt.pdf');
               }
               function handlecancel() {
               alert('Receipt download cancelled.');
@@ -385,7 +385,7 @@ export default function BookingsSection() {
                           {b.status}
                         </Badge>
                       </td>
-                      <td className="p-3 font-semibold text-green-700">{b.price} 💵</td>
+                      <td className="p-3 font-semibold text-green-700">{b.price} ETB</td>
                       <td className="p-3 space-x-2">
                       <Button
   size="sm"

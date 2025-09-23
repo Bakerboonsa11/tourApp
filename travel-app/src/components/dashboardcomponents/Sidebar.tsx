@@ -32,7 +32,7 @@ export function Sidebar({ navItems }: SidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex w-64 bg-white border-r border-gray-200 shadow-lg flex-col h-screen">
+      <aside className="hidden md:fixed md:top-0 md:left-0 md:flex w-64 bg-white border-r border-gray-200 shadow-lg flex-col h-screen z-40">
         {/* Header */}
         <div className="px-8 py-6 font-extrabold text-2xl tracking-wide text-green-700 border-b border-gray-200 select-none">
           {t("header")} {dashboardRole}
@@ -92,33 +92,35 @@ export function Sidebar({ navItems }: SidebarProps) {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around py-2 z-50">
-        {navItems.map(({ section, label, Icon }: any) => {
-          const isActive = currentSection === section;
-          return (
-            <button
-              key={section}
-              onClick={() => handleNavigate(section)}
-              className={clsx(
-                "flex flex-col items-center justify-center px-3 py-1 text-xs font-medium transition-all duration-300",
-                isActive ? "text-green-700" : "text-gray-500 hover:text-green-600"
-              )}
-            >
-              <span
+      <div className="md:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around py-2 z-50">
+          {navItems.map(({ section, label, Icon }: any) => {
+            const isActive = currentSection === section;
+            return (
+              <button
+                key={section}
+                onClick={() => handleNavigate(section)}
                 className={clsx(
-                  "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 mb-1",
-                  isActive
-                    ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-500 group-hover:bg-green-100 group-hover:text-green-700"
+                  "flex flex-col items-center justify-center px-3 py-1 text-xs font-medium transition-all duration-300",
+                  isActive ? "text-green-700" : "text-gray-500 hover:text-green-600"
                 )}
               >
-                <Icon className="w-5 h-5" />
-              </span>
-              {label}
-            </button>
-          );
-        })}
-      </nav>
+                <span
+                  className={clsx(
+                    "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 mb-1",
+                    isActive
+                      ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-md"
+                      : "bg-gray-100 text-gray-500 group-hover:bg-green-100 group-hover:text-green-700"
+                  )}
+                >
+                  <Icon className="w-5 h-5" />
+                </span>
+                {label}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </>
   );
 }

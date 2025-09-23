@@ -53,14 +53,11 @@ import { useTranslations } from 'next-intl';
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-tr from-stone-100 via-white to-emerald-50">
-      {/* Sidebar */}
-      <div className="w-full md:w-64 flex-shrink-0 h-full">
-        <Sidebar navItems={navItems} />
-      </div>
+    <div className="min-h-screen bg-gradient-to-tr from-stone-100 via-white to-emerald-50">
+      <Sidebar navItems={navItems} />
 
       {/* Content area */}
-      <div className="flex-1 flex flex-col h-screen">
+      <div className="flex-1 flex flex-col md:ml-64">
       <Topbar role="User" imageUrl="/images/profile.jpg" />
       <main className="flex-1 overflow-y-auto p-4 sm:p-6">{renderContent()}</main>
       </div>

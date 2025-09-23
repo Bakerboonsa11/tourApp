@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Loader2, DollarSign, Calendar, Heart, ArrowRight } from "lucide-react";
+import { Loader2, Calendar, Heart, ArrowRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 interface ITour {

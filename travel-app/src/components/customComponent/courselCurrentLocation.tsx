@@ -76,17 +76,28 @@ export default function CardCarouselCurrent() {
 
         const toursWithDistance = fetchedTours
           .map(tour => {
-            if (!tour.location?.coordinates) return null;
-            const [tourLng, tourLat] = tour.location.coordinates;
+            if (!tour.location?.coordinates || tour.location.coordinates.length < 2) return null;
+
+            let tourLng, tourLat;
+            // Heuristic to handle inconsistent [lon, lat] vs [lat, lon] formats.
+            // For locations in Ethiopia, longitude is always greater than latitude.
+            if (tour.location.coordinates[0] > tour.location.coordinates[1]) {
+              // This is likely the correct [longitude, latitude] format
+              [tourLng, tourLat] = tour.location.coordinates;
+            } else {
+              // This is likely an inverted [latitude, longitude] format, so we swap them
+              [tourLat, tourLng] = tour.location.coordinates;
+            }
+
             const distance = getDistanceFromLatLonInKm(lat, lng, tourLat, tourLng);
             return { ...tour, distance };
           })
-          .filter((tour): tour is ITour & { distance: number } => tour !== null && tour.distance <= 200)
+          .filter((tour): tour is ITour & { distance: number } => tour !== null && tour.distance <= 300)
           .sort((a, b) => a.distance - b.distance);
 
         setAllTours(toursWithDistance);
         if (toursWithDistance.length === 0) {
-          setStatusMessage("No tours found within 200km of your location.");
+          setStatusMessage("No tours found within 300km of your location.");
         }
       } catch (err) {
         console.error('Error fetching tours:', err);
@@ -105,6 +116,7 @@ export default function CardCarouselCurrent() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         fetchToursNearUser(position.coords.latitude, position.coords.longitude);
+        console.log('Geolocation success bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb:', position.coords);
       },
       (error) => {
         console.warn('Geolocation failed:', error.message);
@@ -185,7 +197,7 @@ export default function CardCarouselCurrent() {
                         <div className="absolute bottom-0 left-0 p-4 text-white">
                           <h3 className="text-lg font-bold tracking-tight leading-tight">{card.name}</h3>
                           {card.distance !== undefined && (
-                            <p className="text-sm font-medium text-gray-200 flex items-center gap-1.5 mt-1">
+                            <p className="text-sm font-semibold text-white flex items-center gap-1.5 mt-1 bg-black/50 rounded-full px-2 py-1">
                               <MapPin size={14} />
                               {card.distance.toFixed(0)} km away
                             </p>

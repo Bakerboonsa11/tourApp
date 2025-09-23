@@ -141,7 +141,7 @@ export default function Navbar() {
 </Link>
 
               <Button
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={async () => { await signOut({ redirect: false }); window.location.href = '/'; }}
                 variant="secondary"
               >
                 {t('signout')}
@@ -185,7 +185,7 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[300px] flex flex-col p-0">
               <div className="relative h-40 bg-cover bg-center" style={{ backgroundImage: "url('/static/ethio4.webp')" }}>
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                  <h2 className="text-2xl font-bold text-white">Visitoro</h2>
+                  <h2 className="text-2xl font-bold text-white">Visit-Ethio</h2>
                 </div>
               </div>
               <nav className="mt-6 flex flex-col gap-6 px-6">
@@ -248,10 +248,7 @@ export default function Navbar() {
                         <p className="text-sm text-muted-foreground">{session.user.email}</p>
                       </div>
                     </Link>
-                    <Button onClick={() => {
-                      signOut({ callbackUrl: '/' });
-                      handleLinkClick();
-                    }}>
+                    <Button onClick={async () => { await signOut({ redirect: false }); window.location.href = '/'; handleLinkClick(); }}>
                       {t('signout')}
                     </Button>
                   </div>

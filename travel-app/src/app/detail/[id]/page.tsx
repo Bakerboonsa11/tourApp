@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -10,7 +9,7 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
-import { Currency } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 const Map = dynamic(() => import('../../../components/customComponent/Map'), { ssr: false });
 // 
 
@@ -267,7 +266,7 @@ export default function TourDetailPage() {
   <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
     <div className="text-center">
       <p className="text-3xl font-bold text-green-700">
-        💵 Starting from {currentour?.price}
+        ETB Starting from {currentour?.price}
       </p>
       <p className="text-gray-600 mt-2">
         {currentour?.ratingsAverage} ★ ({currentour?.ratingsQuantity} reviews)

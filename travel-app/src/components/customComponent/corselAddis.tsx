@@ -216,7 +216,7 @@ export default function CardCarousel() {
                     </p>
                     <div className="mt-4 flex justify-between items-center">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">Br {card.price.toLocaleString()}</span>
+                        <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">ETB {card.price.toLocaleString()}</span>
                       </div>
                       <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
                         <Clock size={14} />
