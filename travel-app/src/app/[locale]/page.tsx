@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 import clsx from "clsx";
-
+import CardCarousel from '@/components/customComponent/carousalNearHarar';
 export default function Home() {
 
 const t = useTranslations("home");
@@ -106,6 +106,7 @@ const t = useTranslations("home");
 
       <CardCarouselCurrent/>
       <CardCarouselCH/>
+    
 
       {/* Redesigned Iconic Places Section */}
       <section className="max-w-7xl mx-auto py-20 px-6">
@@ -130,6 +131,7 @@ const t = useTranslations("home");
             ))}
         </div>
       </section>
+        <CardCarousel/>
 
       {/* Redesigned Trusted Partners Section */}
       <section className="py-12 bg-gray-50 dark:bg-gray-800">

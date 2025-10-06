@@ -445,6 +445,8 @@
   "addis": {
     "birr": "BIRR",
     "header": "Dhiyeenya Addis Ababaatti Muuxannoo Barbaadi",
+        "header2": "Dhiyeenya Hararitti Muuxannoo Barbaadi",
+
     "subhead": "Filannoo si bira jiru kan hin dhumne",
     "viewDetails":"Odeeffannoo Ilaali"
   },
