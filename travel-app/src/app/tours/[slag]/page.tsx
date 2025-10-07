@@ -196,7 +196,12 @@ const [selectedType, setSelectedType] = useState(initialType);
       filtered = filtered.filter(tour => tour.typeOfTour.includes(selectedType));
     }
     if (searchQuery.trim()) {
-      filtered = filtered.filter(tour => tour.name.includes(searchQuery));
+      const lowercasedQuery = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        tour =>
+          tour.name.toLowerCase().includes(lowercasedQuery) ||
+          tour.region.toLowerCase().includes(lowercasedQuery),
+      );
     }
     setFilteredTours(filtered);
   }, [selectedType, searchQuery, allTours]);
@@ -361,7 +366,7 @@ const [selectedType, setSelectedType] = useState(initialType);
   <input
     id="search"
     type="text"
-    placeholder="Search tours by name..."
+    placeholder="Search by name or region..."
     className="
       peer
       w-full
@@ -394,7 +399,7 @@ const [selectedType, setSelectedType] = useState(initialType);
       peer-focus:top-2 peer-focus:text-green-600 peer-focus:text-sm
     "
   >
-    Search tours by name...
+    Search by name or region...
   </label>
 </div>
 

@@ -132,10 +132,10 @@ export default function TourDetailPage() {
       }
     
       // ⛔️ Stop if tour is active but not pending
-      if (currentour.status === 'active') {
-        alert("This tour is already booked or process.");
-        return;
-      }
+      // if (currentour.status === 'active') {
+      //   alert("This tour is already booked or process.");
+      //   return;
+      // }
     
       try {
         setPaymentLoading(true);
@@ -268,9 +268,10 @@ export default function TourDetailPage() {
   {/* === TOUR DETAILS === */}
   <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 py-20 space-y-16">
     <div className="text-center">
-      <p className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-emerald-500 to-green-700 bg-clip-text text-transparent drop-shadow-lg">
-        💵 {t('startingFrom')} {currentour?.price}
-      </p>
+   <p className="inline-block mt-10  bg-gradient-to-r from-green-400 to-emerald-600 text-white text-3xl md:text-4xl font-bold px-8 py-4 rounded-full shadow-lg hover:shadow-green-400/40 transition-all duration-500 transform hover:-translate-y-1">
+   {t('startingFrom')} <span className="ml-2 text-5xl font-extrabold">{currentour?.price} ETB</span>
+</p>
+
       <p className="text-gray-600 mt-4 text-lg">
         {currentour?.ratingsAverage} ★ ({currentour?.ratingsQuantity} {t('reviews')})
       </p>
@@ -280,28 +281,61 @@ export default function TourDetailPage() {
    {/* Highlights */}
 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
   {[
-    { label: t('duration'), value: currentour?.duration || '5 days' },
-    { label: t('groupSize'), value: currentour?.maxGroupSize || '10 people' },
-    { label: t('difficulty'), value: currentour?.difficulty || 'Moderate' },
-    { label: t('location'), value: currentour?.region }
+    {
+      label: t('duration'),
+      value: currentour?.duration || '5 days',
+      icon: '⏳',
+      color: 'from-green-400 to-emerald-500'
+    },
+    {
+      label: t('groupSize'),
+      value: currentour?.maxGroupSize || '10 people',
+      icon: '👥',
+      color: 'from-blue-400 to-cyan-500'
+    },
+    {
+      label: t('difficulty'),
+      value: currentour?.difficulty || 'Moderate',
+      icon: '💪',
+      color: 'from-orange-400 to-yellow-500'
+    },
+    {
+      label: t('location'),
+      value: currentour?.region || 'Unknown',
+      icon: '📍',
+      color: 'from-purple-400 to-pink-500'
+    }
   ].map((item, idx) => (
     <div
       key={idx}
-      className="bg-gradient-to-br from-white/80 to-green-50/70 
-                 backdrop-blur-md shadow-lg hover:shadow-2xl 
-                 rounded-3xl p-6 border border-green-100 
+      className={`relative group bg-white/80 backdrop-blur-xl rounded-3xl p-8 border border-gray-100 
+                 shadow-[0_10px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_50px_rgba(16,185,129,0.3)] 
                  transition-all transform hover:-translate-y-2 hover:scale-105 
-                 flex flex-col items-center justify-center min-h-[120px] max-w-full"
+                 flex flex-col items-center justify-center overflow-hidden`}
     >
-      <h4 className="text-lg md:text-xl font-bold text-emerald-700 tracking-wide whitespace-normal break-words">
+      {/* Background Accent Glow */}
+      <div
+        className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${item.color} blur-2xl`}
+      ></div>
+
+      {/* Icon */}
+      <div className="relative text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+        {item.icon}
+      </div>
+
+      {/* Label */}
+      <h4 className="relative text-lg md:text-xl font-semibold text-gray-800 tracking-wide capitalize">
         {item.label}
       </h4>
-      <p className="mt-2 text-sm md:text-lg text-gray-700 font-medium whitespace-normal break-words max-w-[10rem] md:max-w-[12rem] leading-snug">
+
+      {/* Value */}
+      <p className="relative mt-2 text-base md:text-lg font-bold text-emerald-700 group-hover:text-emerald-800 transition-colors duration-300">
         {item.value}
       </p>
     </div>
   ))}
 </div>
+
 
 
     {/* === COMMENTS / REVIEWS === */}

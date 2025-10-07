@@ -20,6 +20,12 @@ export const createOne = <T extends Document>(Model: Model<T>) =>
         data: createdInstance,
       }, { status: 201 });
     } catch (err: unknown) {
+      if (err.code === 11000 && err.keyPattern?.email) {
+        return NextResponse.json(
+          { success: false, message: "This email is already registered" },
+          { status: 400 }
+        );
+      }
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       return NextResponse.json({ status: "fail", message: errorMessage }, { status: 500 });
     }

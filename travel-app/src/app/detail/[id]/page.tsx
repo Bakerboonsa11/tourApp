@@ -263,33 +263,33 @@ export default function TourDetailPage() {
   </div>
 
   {/* === TOUR DETAILS === */}
-  <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+  <div className="max-w-6xl mx-auto bg-gray-900 text-white rounded-2xl px-6 py-12 space-y-10">
     <div className="text-center">
-      <p className="text-3xl font-bold text-green-700">
+      <p className="text-3xl font-bold text-green-400">
         ETB Starting from {currentour?.price}
       </p>
-      <p className="text-gray-600 mt-2">
+      <p className="text-gray-400 mt-2">
         {currentour?.ratingsAverage} ★ ({currentour?.ratingsQuantity} reviews)
       </p>
     </div>
 
     {/* Highlights */}
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-      <div className="bg-white shadow-md rounded-xl p-6 border hover:shadow-xl transition">
-        <h4 className="text-lg font-bold text-emerald-700">⏳ Duration</h4>
-        <p className="text-gray-600">{currentour?.duration || '5 days'}</p>
+      <div className="bg-gray-800 shadow-lg rounded-xl p-6 border border-gray-700 hover:shadow-green-400/20 hover:border-green-400 transition">
+        <h4 className="text-lg font-bold text-emerald-400">⏳ Duration</h4>
+        <p className="text-gray-300">{currentour?.duration || '5 days'}</p>
       </div>
-      <div className="bg-white shadow-md rounded-xl p-6 border hover:shadow-xl transition">
-        <h4 className="text-lg font-bold text-emerald-700">👥 Group Size</h4>
-        <p className="text-gray-600">{currentour?.maxGroupSize || '10 people'}</p>
+      <div className="bg-gray-800 shadow-lg rounded-xl p-6 border border-gray-700 hover:shadow-green-400/20 hover:border-green-400 transition">
+        <h4 className="text-lg font-bold text-emerald-400">👥 Group Size</h4>
+        <p className="text-gray-300">{currentour?.maxGroupSize || '10 people'}</p>
       </div>
-      <div className="bg-white shadow-md rounded-xl p-6 border hover:shadow-xl transition">
-        <h4 className="text-lg font-bold text-emerald-700">⚡ Difficulty</h4>
-        <p className="text-gray-600">{currentour?.difficulty || 'Moderate'}</p>
+      <div className="bg-gray-800 shadow-lg rounded-xl p-6 border border-gray-700 hover:shadow-green-400/20 hover:border-green-400 transition">
+        <h4 className="text-lg font-bold text-emerald-400">⚡ Difficulty</h4>
+        <p className="text-gray-300">{currentour?.difficulty || 'Moderate'}</p>
       </div>
-      <div className="bg-white shadow-md rounded-xl p-6 border hover:shadow-xl transition">
-        <h4 className="text-lg font-bold text-emerald-700">📍 Location</h4>
-        <p className="text-gray-600">{currentour?.region}</p>
+      <div className="bg-gray-800 shadow-lg rounded-xl p-6 border border-gray-700 hover:shadow-green-400/20 hover:border-green-400 transition">
+        <h4 className="text-lg font-bold text-emerald-400">📍 Location</h4>
+        <p className="text-gray-300">{currentour?.region}</p>
       </div>
     </div>
 

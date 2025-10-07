@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs';
 // Define a custom interface for your user schema
 interface IUser extends Document {
   name?: string;
+  resetPasswordToken?: string;
+  resetPasswordExpire?: Date;
   email: string;
   role: string;
   password: string;
@@ -49,6 +51,9 @@ const userSchema = new Schema<IUser>({
   phoneNumber: {
     type: String,
   },
+  resetPasswordToken: String,
+resetPasswordExpire: Date,
+
   socialMedia: {
     type: Map,
     of: String,
