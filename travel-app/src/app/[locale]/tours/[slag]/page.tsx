@@ -12,7 +12,8 @@ import { useSession } from 'next-auth/react';
 import { useSpring, animated } from '@react-spring/web';
 import { HelpCircle, Quote, Info, PhoneCall } from 'lucide-react';
 import { useLocale } from 'next-intl';
-
+import { motion } from "framer-motion";
+import { Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 
@@ -125,13 +126,6 @@ type Comment = {
 };
 
 
-// FAQ questions and answers
-// const faqs = [
-//   { question: 'How to book tours?', answer: 'You can book tours easily by selecting your preferred tour and clicking the Book Now button.' },
-//   { question: 'Can I get a refund?', answer: 'Refund policies vary by tour. Please check the tour details or contact support for info.' },
-//   { question: 'How early should I book?', answer: 'It is recommended to book at least 2 weeks in advance to secure your spot.' },
-//   { question: 'Do you offer private tours?', answer: 'Yes, we offer private tours. Contact us to customize your experience.' },
-// ];
 
 
 
@@ -168,6 +162,8 @@ const [selectedType, setSelectedType] = useState(initialType);
   // const [selectedType, setSelectedType] = useState('All');
   const [loading, setLoading] = useState(false);
   const [likes, setLikes] = useState<Record<string, { userId: string }[]>>({});
+    const [isLiked, setIsLiked] = useState(false);
+
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [currentCommentTour, setCurrentCommentTour] = useState<string | null>(null);
   const [comment, setComment] = useState('');
@@ -181,6 +177,8 @@ const [selectedType, setSelectedType] = useState(initialType);
       { key: "safeComfortable" },
       { key: "flexibleBookings" }
     ];
+  const [likedTours, setLikedTours] = useState<string[]>([]);
+
 
   useEffect(() => {
     const fetchTours = async () => {
@@ -202,6 +200,37 @@ const [selectedType, setSelectedType] = useState(initialType);
     };
     fetchTours();
   }, []);
+  useEffect(() => {
+  const fetchTours = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`/api/tours/`);
+      const fetchedTours = res.data.instanceFiltered.map((tour: ITour) => ({
+        ...tour,
+        likes: tour.likes.map((like: string) => like.toString()),
+      }));
+      setAllTours(fetchedTours);
+      setFilteredTours(fetchedTours);
+
+      // Determine liked tours for the current user
+      if (session?.user?.email) {
+        const userRes = await axios.get(`/api/user/${session.user.email}`);
+        const userId = userRes.data.data._id;
+        const liked = fetchedTours
+          .filter(tour => tour.likes.includes(userId))
+          .map(tour => tour._id);
+        setLikedTours(liked);
+      }
+
+    } catch (err) {
+      console.error('Error fetching tours:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchTours();
+}, [session]);
+
   
 
   useEffect(() => {
@@ -210,7 +239,7 @@ const [selectedType, setSelectedType] = useState(initialType);
       filtered = filtered.filter(tour => tour.typeOfTour.includes(selectedType));
     }
     if (searchQuery.trim()) {
-      filtered = filtered.filter(tour => tour.name.includes(searchQuery));
+      filtered = filtered.filter(tour => tour.name.toLowerCase().includes(searchQuery.toLowerCase()));
     }
     setFilteredTours(filtered);
   }, [selectedType, searchQuery, allTours]);
@@ -226,27 +255,38 @@ const [selectedType, setSelectedType] = useState(initialType);
   
 
   
-  const handleLike = async (tourId: string, currentLikes: string[]) => {
-    try {
-      const userEmail = session?.user?.email;
-      if (!userEmail) return console.error('User not logged in');
-  
-      const userRes = await axios.get(`/api/user/${userEmail}`);
-      const userId = userRes.data.data._id;
-  
-      const alreadyLiked = currentLikes.includes(userId);
-  
-      const updatedLikes = alreadyLiked
-        ? currentLikes.filter(id => id !== userId)
-        : [...currentLikes, userId];
-  
-      await axios.patch(`/api/tours/${tourId}`, { likes: updatedLikes });
-  
-      setLikes(prev => ({ ...prev, [tourId]: updatedLikes }));
-    } catch (error) {
-      console.error('Failed to like tour:', error);
-    }
-  };
+const handleLike = async (tourId: string, currentLikes: string[]) => {
+  try {
+    const userEmail = session?.user?.email;
+    if (!userEmail) return console.error('User not logged in');
+
+    const userRes = await axios.get(`/api/user/${userEmail}`);
+    const userId = userRes.data.data._id;
+
+    const alreadyLiked = currentLikes.includes(userId);
+    const updatedLikes = alreadyLiked
+      ? currentLikes.filter(id => id !== userId)
+      : [...currentLikes, userId];
+
+    await axios.patch(`/api/tours/${tourId}`, { likes: updatedLikes });
+
+    setAllTours(prev =>
+      prev.map(tour =>
+        tour._id === tourId ? { ...tour, likes: updatedLikes } : tour
+      )
+    );
+
+    // Update likedTours state
+    setLikedTours(prev =>
+      alreadyLiked
+        ? prev.filter(id => id !== tourId)
+        : [...prev, tourId]
+    );
+  } catch (error) {
+    console.error('Failed to like tour:', error);
+  }
+};
+
   
   
   
@@ -363,11 +403,6 @@ const [selectedType, setSelectedType] = useState(initialType);
       </section>
 
 
-      {/* Seasonal Deals */}
-      <section className="text-center p-8 bg-yellow-100 rounded-xl shadow space-y-3 mt-12">
-        <h2 className="text-3xl font-bold">{t("seasonalDeals.title")}</h2>
-        <p className="text-lg">{t("seasonalDeals.desc")}</p>
-      </section>
 
    {/* Filters */}
 <section className="flex flex-col md:flex-row justify-between items-center gap-6 max-w-4xl mx-auto px-6 py-8 bg-white rounded-3xl shadow-xl ring-1 ring-green-200">
@@ -493,9 +528,31 @@ const [selectedType, setSelectedType] = useState(initialType);
 
         <Badge variant="outline">💵{tour.price}</Badge>
         <div className="flex justify-between items-center pt-2 gap-2">
-        <Button variant="secondary" onClick={() => handleLike(tour._id, tour.likes)}>
-  ❤️❤️ {likes[tour._id]?.length ?? tour.likes.length} {t('cards.likes')}
+ <Button
+  variant="secondary"
+  onClick={() => handleLike(tour._id, tour.likes)}
+  className="flex items-center space-x-2"
+>
+  <motion.div
+    whileTap={{ scale: 0.8 }}
+    animate={{
+      scale: likedTours.includes(tour._id) ? [1, 1.4, 1] : 1,
+      color: likedTours.includes(tour._id) ? "#ec4899" : "#6b7280",
+    }}
+    transition={{ duration: 0.3 }}
+  >
+    <Heart
+      className={`w-5 h-5 transition-all duration-300 ${
+        likedTours.includes(tour._id)
+          ? "fill-pink-500 text-pink-500"
+          : "text-gray-400"
+      }`}
+    />
+  </motion.div>
 
+  <span>
+    {tour.likes.length} {t("cards.likes")}
+  </span>
 </Button>
 
 <Button

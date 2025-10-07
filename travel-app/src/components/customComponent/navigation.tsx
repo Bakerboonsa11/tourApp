@@ -112,20 +112,41 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 text-sm">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "font-medium transition-colors hover:text-primary",
-                pathname.startsWith(link.href) ? "text-foreground" : "text-muted-foreground"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+      <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium">
+     {navLinks.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={cn(
+            // Base style
+            "relative px-1 py-2 transition-all duration-300",
+            // Hover + active color transitions
+            "text-muted-foreground hover:text-emerald-500 dark:hover:text-emerald-400",
+            pathname.startsWith(link.href)
+              ? "text-foreground"
+              : "text-muted-foreground"
+          )}
+        >
+          {/* Label */}
+          <span className="relative z-10">{link.label}</span>
+
+          {/* Hover underline effect */}
+          <span
+            className={cn(
+              "absolute left-0 bottom-0 w-full h-[2px] rounded-full bg-emerald-500 dark:bg-emerald-400 transform scale-x-0 origin-right transition-transform duration-300 ease-out",
+              "group-hover:scale-x-100 group-hover:origin-left",
+              pathname.startsWith(link.href) && "scale-x-100 origin-left"
+            )}
+          ></span>
+
+          {/* Soft glowing hover background */}
+          <span
+            className="absolute inset-0 -z-10 opacity-0 bg-gradient-to-r from-emerald-500/10 to-transparent rounded-md blur-sm transition-opacity duration-500 group-hover:opacity-100"
+          ></span>
+        </Link>
+      ))}
+</nav>
+
 
         <div className="hidden md:flex items-center justify-end gap-4">
           {session?.user ? (
@@ -140,17 +161,62 @@ export default function Navbar() {
   />
 </Link>
 
-              <Button
-                onClick={async () => { await signOut({ redirect: false }); window.location.href = '/'; }}
-                variant="secondary"
-              >
-                {t('signout')}
-              </Button>
+               <Button
+                    onClick={async () => {
+                      await signOut({ redirect: false });
+                      window.location.href = '/';
+                      handleLinkClick();
+                    }}
+                    className="
+                      relative overflow-hidden rounded-lg 
+                      bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500
+                      text-white font-semibold px-6 py-3
+                      shadow-lg hover:shadow-xl 
+                      transition-all duration-300 ease-out
+                      hover:scale-[1.05] active:scale-95
+                    "
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      🚪 {t('signout')}
+                    </span>
+
+                    {/* subtle glowing effect */}
+                    <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-lg"></span>
+                  </Button>
             </div>
           ) : (
-            <Button asChild>
-              <Link href={`/${locale}/login`}>{t('login')}</Link>
-            </Button>
+           <Button
+  asChild
+  className="
+    relative overflow-hidden rounded-lg
+    bg-gradient-to-r from-emerald-500 via-green-500 to-lime-500
+    text-white font-semibold px-6 py-3
+    shadow-lg hover:shadow-emerald-500/40
+    transition-all duration-300 ease-out
+    hover:scale-[1.05] active:scale-95
+  "
+>
+  <Link href={`/${locale}/login`} className="flex items-center gap-2 relative z-10">
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      className='w-5 h-5'
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M10 16l4-4m0 0l-4-4m4 4H3m13 4v1a2 2 0 002 2h4a2 2 0 002-2V7a2 2 0 00-2-2h-4a2 2 0 00-2 2v1'
+      />
+    </svg>
+    {t('login')}
+      {/* Subtle glossy shine */}
+  <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-lg"></span>
+  </Link>
+</Button>
+
           )}
                  
           {/* Desktop Theme Toggle & Language */}
@@ -248,14 +314,44 @@ export default function Navbar() {
                         <p className="text-sm text-muted-foreground">{session.user.email}</p>
                       </div>
                     </Link>
-                    <Button onClick={async () => { await signOut({ redirect: false }); window.location.href = '/'; handleLinkClick(); }}>
-                      {t('signout')}
-                    </Button>
+                   <Button
+                    onClick={async () => {
+                      await signOut({ redirect: false });
+                      window.location.href = '/';
+                      handleLinkClick();
+                    }}
+                    className="
+                      relative overflow-hidden rounded-lg 
+                      bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500
+                      text-white font-semibold px-6 py-3
+                      shadow-lg hover:shadow-xl 
+                      transition-all duration-300 ease-out
+                      hover:scale-[1.05] active:scale-95
+                    "
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      🚪 {t('signout')}
+                    </span>
+
+                    {/* subtle glowing effect */}
+                    <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-lg"></span>
+                  </Button>
+
                   </div>
                 ) : (
-                  <Button asChild className="w-full">
-                    <Link href={`/${locale}/login`} onClick={handleLinkClick}>{t('login')}</Link>
-                  </Button>
+               <Button
+                asChild
+                className="relative overflow-hidden bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 text-white font-semibold transition-all duration-300 rounded-xl hover:scale-105 hover:shadow-[0_0_15px_rgba(16,185,129,0.6)] active:scale-95"
+              >
+                {/* Must be a single React element inside Button when using asChild */}
+                <Link
+                  href={`/${locale}/login`}
+                  className="flex items-center justify-center gap-2 px-4 py-2"
+                >
+                  {t('login')}
+                </Link>
+              </Button>
+
                 )}
               </div>
             </SheetContent>

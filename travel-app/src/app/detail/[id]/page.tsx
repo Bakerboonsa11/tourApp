@@ -518,12 +518,14 @@ export default function TourDetailPage() {
 <section className="relative mt-16">
   <div className="absolute inset-0 bg-[url('/cta-bg.jpg')] bg-cover bg-center rounded-3xl opacity-20"></div>
   <div className="relative text-center bg-emerald-800/90 p-12 rounded-3xl shadow-2xl space-y-6 text-white">
-    <h2 className="text-5xl font-extrabold drop-shadow-lg">
-      Ready to Explore <span className="text-yellow-300">{currentour?.name}</span>?
-    </h2>
-    <p className="text-lg max-w-2xl mx-auto">
-      {`Book your ${currentour?.typeOfTour[0]} today and experience the raw beauty of Oromia like never before.`}
-    </p>
+   <h2 className="text-5xl font-extrabold drop-shadow-lg mb-6">
+  Ready to Explore <span className="text-yellow-300">{currentour?.name}</span>?
+</h2>
+
+<p className="text-lg max-w-2xl mx-auto">
+  {`Book your ${currentour?.typeOfTour[0]} today and experience the raw beauty of Oromia like never before.`}
+</p>
+
     <Button
       onClick={handlePayment}
       className="bg-yellow-400 hover:bg-yellow-500 text-emerald-900 font-bold text-lg px-10 py-4 rounded-full shadow-lg hover:scale-105 transition"
